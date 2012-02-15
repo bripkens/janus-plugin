@@ -9,6 +9,7 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
 import javax.management.DescriptorAccess;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,11 +34,8 @@ public class Root implements RootAction, Describable<Root>{
         return new DescriptorImpl();
     }
 
-    public List<String> getScaffolds() {
-        // TODO receive list of scaffolds from file system
-        return Arrays.asList("Spring/Vadin web app",
-                "Batch file processing", "Single page web app",
-                "Transaction aware system");
+    public Catalog getCatalog() {
+        return Catalog.from(new File(getDescriptor().getCatalogFile()));
     }
 
     @Extension

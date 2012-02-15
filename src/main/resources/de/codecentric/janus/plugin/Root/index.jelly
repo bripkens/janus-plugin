@@ -2,22 +2,21 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <l:layout title="Janus: New project">
     <l:main-panel>
-      <h1>Janus: New project</h1>
+      <form action="submit" method="post">
+          <table>
+        <h1>Janus: New project</h1>
 
-      <h2>Available scaffolds</h2>
-      <ul>
-        <j:forEach var="scaffold" items="${it.scaffolds}">
-          <li><j:out value="${scaffold}"/></li>
-        </j:forEach>
-      </ul>
+        <h2>Available scaffolds</h2>
 
-      <f:dropdownList name="fruit" title="Fruits">
-        <j:forEach var="scaffold" items="${it.scaffolds}" varStatus="loop">
-          <f:dropdownListBlock title="${scaffold}" value="${loop.index}">
-            bla blub
-          </f:dropdownListBlock>
-        </j:forEach>
-      </f:dropdownList>
+        <f:dropdownList name="scaffold" title="Scaffold">
+          <j:forEach var="scaffold" items="${it.catalog.scaffolds}" varStatus="loop">
+            <f:dropdownListBlock title="${scaffold.name}" value="${loop.index}">
+              <st:include page="scaffold-options.jelly" />
+            </f:dropdownListBlock>
+          </j:forEach>
+        </f:dropdownList>
+          </table>
+      </form>
     </l:main-panel>
   </l:layout>
 </j:jelly>
