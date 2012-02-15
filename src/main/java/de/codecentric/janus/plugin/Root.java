@@ -43,6 +43,7 @@ public class Root implements RootAction, Describable<Root>{
     @Extension
     public static final class DescriptorImpl extends Descriptor<Root> {
         private String scaffoldDirectory;
+        private String catalogFile;
 
         public DescriptorImpl() {
             load();
@@ -57,12 +58,17 @@ public class Root implements RootAction, Describable<Root>{
         public boolean configure(StaplerRequest req, JSONObject formData)
                 throws FormException {
             scaffoldDirectory = formData.getString("scaffoldDirectory");
+            catalogFile = formData.getString("catalogFile");
             save();
             return super.configure(req,formData);
         }
 
         public String getScaffoldDirectory() {
             return scaffoldDirectory;
+        }
+
+        public String getCatalogFile() {
+            return catalogFile;
         }
     }
 }
