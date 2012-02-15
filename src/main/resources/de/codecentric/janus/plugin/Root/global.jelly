@@ -1,0 +1,11 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+  <f:section title="Janus configuration">
+
+    <f:entry title="Scaffold directory"
+      description="Point to the directory which contains the catalog and scaffolds, e.g., /home/jenkins/janus/"
+      help="/plugin/janus-plugin/help/scaffold-directory.html">
+        <f:textbox name="scaffoldDirectory" value="${descriptor.getScaffoldDirectory()}" />
+    </f:entry>
+  </f:section>
+</j:jelly>
