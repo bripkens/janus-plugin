@@ -10,6 +10,14 @@
           <li><j:out value="${scaffold}"/></li>
         </j:forEach>
       </ul>
+
+      <f:dropdownList name="fruit" title="Fruits">
+        <j:forEach var="scaffold" items="${it.scaffolds}" varStatus="loop">
+          <f:dropdownListBlock title="${scaffold}" value="${loop.index}">
+            bla blub
+          </f:dropdownListBlock>
+        </j:forEach>
+      </f:dropdownList>
     </l:main-panel>
   </l:layout>
 </j:jelly>
