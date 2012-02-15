@@ -4,7 +4,12 @@
     <l:main-panel>
       <h1>Janus: New project</h1>
 
-      Lorem ipsum...
+      <h2>Available scaffolds</h2>
+      <ul>
+        <j:forEach var="scaffold" items="${it.scaffolds}">
+          <li><j:out value="${scaffold}"/></li>
+        </j:forEach>
+      </ul>
     </l:main-panel>
   </l:layout>
 </j:jelly>
