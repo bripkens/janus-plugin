@@ -29,7 +29,7 @@
                         </f:dropdownList>
                     </f:section>
                     <f:entry title="">
-                        <f:submit value="Submit"/>
+                        <f:submit value="Initialize project"/>
                     </f:entry>
                 </table>
             </form>

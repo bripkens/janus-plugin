@@ -169,8 +169,10 @@ public class Root implements RootAction, Describable<Root> {
                 if (this.vcs == vcs) {
                     m.add(new ListBoxModel.Option(vcs.name(), vcs.name(),
                             true));
+                } else {
+                    m.add(vcs.name());
                 }
-                
+
             }
 
             return m;
@@ -186,7 +188,7 @@ public class Root implements RootAction, Describable<Root> {
 
         private FormValidation validatePresence(String value, String msg) {
             if (value == null || value.trim().isEmpty()) {
-                return FormValidation.error(msg);
+                return FormValidation.warning(msg);
             } else {
                 return FormValidation.ok();
             }
@@ -203,26 +205,34 @@ public class Root implements RootAction, Describable<Root> {
         public FormValidation doCheckBuildParameter(@QueryParameter String value) {
             return validatePresence(value, "Please define the parameter.");
         }
-        int i = 0, j = 0;
+
         public FormValidation doCheckVcs(@QueryParameter String value) {
-            
-            System.out.println(i + ": value: " + value);
-            i++;
+            if (value.trim().isEmpty()) {
+                return FormValidation.warning("Please select one of the " +
+                        "Version Control Systems.");
+            }
+
             try {
                 VersionControlSystem.valueOf(value);
-                return FormValidation.ok();
             } catch (IllegalArgumentException ex) {
-                return FormValidation.error("Please select one of the Version Control Systems.");
+                return FormValidation.error("This Version Control " +
+                        "System is not supported.");
             }
+
+            return FormValidation.ok();
+
         }
 
         public FormValidation doCheckBuildJob(@QueryParameter String value) {
-            System.out.println(j + ": value: " + value);
-            j++;
+            if (value.trim().isEmpty()) {
+                return FormValidation.warning("Please select one of the " +
+                        "build jobs.");
+            }
+
             if (Hudson.getInstance().getJobNames().contains(value)) {
                 return FormValidation.ok();
             } else {
-                return FormValidation.error("Please select one of the build jobs.");
+                return FormValidation.error("This build job doesn't exist.");
             }
         }
     }
