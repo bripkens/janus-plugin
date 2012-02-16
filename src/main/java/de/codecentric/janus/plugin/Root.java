@@ -1,5 +1,6 @@
 package de.codecentric.janus.plugin;
 
+import de.codecentric.janus.VersionControlSystem;
 import de.codecentric.janus.scaffold.Catalog;
 import de.codecentric.janus.scaffold.CatalogEntry;
 import hudson.Extension;
@@ -77,8 +78,9 @@ public class Root implements RootAction, Describable<Root> {
 
     @Extension
     public static final class DescriptorImpl extends Descriptor<Root> {
-        private String scaffoldDirectory;
-        private String catalogFile;
+        private String scaffoldDirectory, catalogFile, addCommand,
+                checkoutCommand, commitCommand, buildParameter, buildJob;
+        private VersionControlSystem vcs;
 
         public DescriptorImpl() {
             load();
@@ -92,10 +94,19 @@ public class Root implements RootAction, Describable<Root> {
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData)
                 throws FormException {
+            System.out.println(formData.toString());
             scaffoldDirectory = formData.getString("scaffoldDirectory");
             catalogFile = formData.getString("catalogFile");
+            addCommand = formData.getString("addCommand");
+            checkoutCommand = formData.getString("checkoutCommand");
+            commitCommand = formData.getString("commitCommand");
+            buildParameter = formData.getString("buildParameter");
+            buildJob = formData.getString("buildJob");
+            vcs = VersionControlSystem.valueOf(formData.getString("vcs"));
+
             save();
-            return super.configure(req,formData);
+
+            return super.configure(req, formData);
         }
 
         public String getScaffoldDirectory() {
@@ -106,16 +117,113 @@ public class Root implements RootAction, Describable<Root> {
             return catalogFile;
         }
 
+        public String getAddCommand() {
+            return addCommand;
+        }
+
+        public void setAddCommand(String addCommand) {
+            this.addCommand = addCommand;
+        }
+
+        public String getCheckoutCommand() {
+            return checkoutCommand;
+        }
+
+        public void setCheckoutCommand(String checkoutCommand) {
+            this.checkoutCommand = checkoutCommand;
+        }
+
+        public String getCommitCommand() {
+            return commitCommand;
+        }
+
+        public void setCommitCommand(String commitCommand) {
+            this.commitCommand = commitCommand;
+        }
+
+        public String getBuildParameter() {
+            return buildParameter;
+        }
+
         public ListBoxModel doFillBuildJobItems() {
             ListBoxModel m = new ListBoxModel();
             m.add("Please select", "");
 
             Collection<String> allJobs = Hudson.getInstance().getJobNames();
-            for(String job : allJobs) {
-                m.add(job);
+            for (String job : allJobs) {
+                if (buildJob != null && job.equals(buildJob)) {
+                    m.add(new ListBoxModel.Option(job, job, true));
+                } else {
+                    m.add(job);
+                }
             }
 
             return m;
+        }
+
+        public ListBoxModel doFillVcsItems() {
+            ListBoxModel m = new ListBoxModel();
+            m.add("Please select", "");
+
+            for (VersionControlSystem vcs : VersionControlSystem.values()) {
+                if (this.vcs == vcs) {
+                    m.add(new ListBoxModel.Option(vcs.name(), vcs.name(),
+                            true));
+                }
+                
+            }
+
+            return m;
+        }
+
+        public FormValidation doCheckAddCommand(@QueryParameter String value) {
+            return validatePresence(value);
+        }
+
+        private FormValidation validatePresence(String value) {
+            return validatePresence(value, "Please provide a command.");
+        }
+
+        private FormValidation validatePresence(String value, String msg) {
+            if (value == null || value.trim().isEmpty()) {
+                return FormValidation.error(msg);
+            } else {
+                return FormValidation.ok();
+            }
+        }
+
+        public FormValidation doCheckCheckoutCommand(@QueryParameter String value) {
+            return validatePresence(value);
+        }
+
+        public FormValidation doCheckCommitCommand(@QueryParameter String value) {
+            return validatePresence(value);
+        }
+
+        public FormValidation doCheckBuildParameter(@QueryParameter String value) {
+            return validatePresence(value, "Please define the parameter.");
+        }
+        int i = 0, j = 0;
+        public FormValidation doCheckVcs(@QueryParameter String value) {
+            
+            System.out.println(i + ": value: " + value);
+            i++;
+            try {
+                VersionControlSystem.valueOf(value);
+                return FormValidation.ok();
+            } catch (IllegalArgumentException ex) {
+                return FormValidation.error("Please select one of the Version Control Systems.");
+            }
+        }
+
+        public FormValidation doCheckBuildJob(@QueryParameter String value) {
+            System.out.println(j + ": value: " + value);
+            j++;
+            if (Hudson.getInstance().getJobNames().contains(value)) {
+                return FormValidation.ok();
+            } else {
+                return FormValidation.error("Please select one of the build jobs.");
+            }
         }
     }
 }

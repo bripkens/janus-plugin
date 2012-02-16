@@ -1,45 +1,57 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
-    <f:section title="Janus configuration">
+    <f:section title="Janus scaffold configuration">
         <f:entry title="Catalog file"
                  description="Point to the scaffold catalog file, e.g., /home/jenkins/janus/catalog.json."
-                 help="/plugin/janus-plugin/help/catalog-example.html">
-            <f:textbox name="catalogFile"
-                       value="${descriptor.getCatalogFile()}"/>
+                 help="/plugin/janus-plugin/help/catalog-example.html"
+                field="catalogFile">
+            <f:textbox name="catalogFile"/>
         </f:entry>
 
         <f:entry title="Scaffold directory"
                  description="Point to the directory which contains scaffolds, e.g., /home/jenkins/janus/"
-                 help="/plugin/janus-plugin/help/scaffold-directory.html">
-            <f:textbox name="scaffoldDirectory"
-                       value="${descriptor.getScaffoldDirectory()}"/>
+                 help="/plugin/janus-plugin/help/scaffold-directory.html"
+                field="scaffoldDirectory">
+            <f:textbox name="scaffoldDirectory"/>
+        </f:entry>
+    </f:section>
+
+    <f:section title="Janus Version Control System configuration">
+        <f:entry title="Version Control System type"
+                 field="vcs">
+            <f:select/>
         </f:entry>
 
-        <f:entry title="Repository generation build"
+        <f:entry title="Generation build"
                  description="The parameterized build which can be started to create a repository."
-                field="buildJob">
+                 field="buildJob">
             <f:select/>
         </f:entry>
 
         <f:entry title="Build parameter"
-                 description="The parameter name (case-sensitive) for the previously assigned build job.">
+                 description="The parameter name (case-sensitive) for the previously assigned build job."
+                field="buildParameter">
             <f:textbox name="buildParameter"/>
         </f:entry>
 
         <f:entry title="Checkout command"
-                 description="How do you check out the repository?">
+                 description="How do you check out the repository?"
+                field="checkoutCommand">
             <f:textbox name="checkoutCommand"/>
         </f:entry>
 
         <f:entry title="Add command"
-                 description="How do you add files to the repository?">
+                 description="How do you add files to the repository?"
+                 field="addCommand">
             <f:textbox name="addCommand"/>
         </f:entry>
 
         <f:entry title="Commit command"
-                 description="How do you commit to the repository?">
+                 description="How do you commit to the repository?"
+                field="commitCommand">
             <f:textbox name="commitCommand"/>
         </f:entry>
     </f:section>
+
 </j:jelly>
