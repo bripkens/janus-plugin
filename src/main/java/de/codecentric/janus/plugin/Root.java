@@ -5,8 +5,10 @@ import de.codecentric.janus.scaffold.CatalogEntry;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
+import hudson.model.Hudson;
 import hudson.model.RootAction;
 import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.QueryParameter;
@@ -18,6 +20,7 @@ import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -101,6 +104,18 @@ public class Root implements RootAction, Describable<Root> {
 
         public String getCatalogFile() {
             return catalogFile;
+        }
+
+        public ListBoxModel doFillBuildJobItems() {
+            ListBoxModel m = new ListBoxModel();
+            m.add("Please select", "");
+
+            Collection<String> allJobs = Hudson.getInstance().getJobNames();
+            for(String job : allJobs) {
+                m.add(job);
+            }
+
+            return m;
         }
     }
 }
