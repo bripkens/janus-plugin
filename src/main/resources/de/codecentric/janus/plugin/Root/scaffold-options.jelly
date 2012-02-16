@@ -1,6 +1,15 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <f:entry title="">
-    <div><j:out value="${scaffold.description}"/></div>
+        <j:out value="${scaffold.description}" />
     </f:entry>
+    <f:section
+            title="Mandatory configuration parameters">
+    <j:forEach var="requiredContext" items="${scaffold.requiredContext.entrySet()}" varStatus="loop">
+        <f:entry title="${requiredContext.key}"
+                 description="${requiredContext.value}">
+            <f:textbox name="context-${requiredContext.key}" />
+        </f:entry>
+    </j:forEach>
+    </f:section>
 </j:jelly>

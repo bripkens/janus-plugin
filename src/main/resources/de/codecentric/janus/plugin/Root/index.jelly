@@ -1,22 +1,38 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <l:layout title="Janus: New project">
-    <l:main-panel>
-      <form action="submit" method="post">
-          <table>
-        <h1>Janus: New project</h1>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout title="Janus: New project">
+        <l:main-panel>
+            <h1>Janus: New project</h1>
 
-        <h2>Available scaffolds</h2>
+            <form action="submit" method="post">
+                <table>
+                    <f:section title="Base information">
+                        <f:entry title="Name">
+                            <f:textbox name="name" />
+                        </f:entry>
+                        <f:entry title="Description">
+                            <f:textbox name="description" />
+                        </f:entry>
+                    </f:section>
 
-        <f:dropdownList name="scaffold" title="Scaffold">
-          <j:forEach var="scaffold" items="${it.catalog.scaffolds}" varStatus="loop">
-            <f:dropdownListBlock title="${scaffold.name}" value="${loop.index}">
-              <st:include page="scaffold-options.jelly" />
-            </f:dropdownListBlock>
-          </j:forEach>
-        </f:dropdownList>
-          </table>
-      </form>
-    </l:main-panel>
-  </l:layout>
+                    <f:section title="Project template">
+                        <f:dropdownList name="scaffold" title="Please select">
+                            <j:forEach var="scaffold"
+                                       items="${it.catalog.scaffolds}"
+                                       varStatus="loop">
+                                <f:dropdownListBlock title="${scaffold.name}"
+                                                     value="${loop.index}">
+                                    <st:include page="scaffold-options.jelly"/>
+                                </f:dropdownListBlock>
+                            </j:forEach>
+                        </f:dropdownList>
+                    </f:section>
+                    <f:entry title="">
+                        <f:submit value="Submit"/>
+                    </f:entry>
+                </table>
+            </form>
+        </l:main-panel>
+    </l:layout>
 </j:jelly>
