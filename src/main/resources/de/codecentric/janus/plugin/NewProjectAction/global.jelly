@@ -24,33 +24,15 @@
         </f:entry>
 
         <f:entry title="Generation build"
-                 description="The parameterized build which can be started to create a repository."
+                 description="The parameterized build which can be started to create a repository. Use $NAME as build parameter for the project name."
                  field="buildJob">
             <f:select/>
         </f:entry>
 
-        <f:entry title="Build parameter"
-                 description="The parameter name (case-sensitive) for the previously assigned build job."
-                field="buildParameter">
-            <f:textbox name="buildParameter"/>
-        </f:entry>
-
-        <f:entry title="Checkout command"
-                 description="How do you check out the repository?"
-                field="checkoutCommand">
-            <f:textbox name="checkoutCommand"/>
-        </f:entry>
-
-        <f:entry title="Add command"
-                 description="How do you add files to the repository?"
-                 field="addCommand">
-            <f:textbox name="addCommand"/>
-        </f:entry>
-
-        <f:entry title="Commit command"
-                 description="How do you commit to the repository?"
-                field="commitCommand">
-            <f:textbox name="commitCommand"/>
+        <f:entry title="Repository URL"
+                 description="How do you check out the repository? Use $NAME as a placeholder for the repository name."
+                field="repositoryURL">
+            <f:textbox name="repositoryURL"/>
         </f:entry>
     </f:section>
 

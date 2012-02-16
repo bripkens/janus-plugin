@@ -1,7 +1,12 @@
 package de.codecentric.janus.plugin;
 
+import de.codecentric.janus.VersionControlSystem;
+import de.codecentric.janus.conf.Project;
+import de.codecentric.janus.conf.vcs.VCSConfig;
 import de.codecentric.janus.scaffold.Catalog;
 import de.codecentric.janus.scaffold.CatalogEntry;
+import de.codecentric.janus.scaffold.Scaffold;
+import de.codecentric.janus.scaffold.ScaffoldLoadingException;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.RootAction;
@@ -13,6 +18,7 @@ import org.kohsuke.stapler.StaplerResponse;
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
@@ -42,12 +48,32 @@ public class NewProjectAction implements RootAction, Describable<NewProjectActio
     public void doSubmit(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
         JSONObject submittedForm = req.getSubmittedForm();
 
-        // the scaffold dropdown has no name
-        CatalogEntry entry = getCatalogEntry(submittedForm);
+        Project project = new Project();
+        project.setName(submittedForm.getString("name"));
+        project.setDescription(submittedForm.getString("description"));
+        project.setPckg(submittedForm.getString("pckg"));
 
-        System.out.println(req.getSubmittedForm().toString());
-        System.out.println("Form was submitted!");
-        System.out.println(req.getSubmittedForm().get(""));
+        Map<String, Object> context = req.getSubmittedForm()
+                .getJSONObject("scaffold");
+
+        Scaffold scaffold;
+        try {
+            scaffold = getScaffold(submittedForm);
+        } catch (ScaffoldLoadingException ex) {
+            // TODO show error message (scaffold couldn't be loaded)
+            return;
+        }
+
+        VersionControlSystem vcs = getDescriptor().getVcs();
+        VCSConfig vcsConfig = getVCSConfig(project, vcs);
+    }
+    
+    private Scaffold getScaffold(JSONObject submittedForm) {
+        CatalogEntry entry = getCatalogEntry(submittedForm);
+        
+        String filePath = getDescriptor().getScaffoldDirectory() +
+                File.separator + entry.getFilename();
+        return Scaffold.from(new File(filePath));
     }
 
     private CatalogEntry getCatalogEntry(JSONObject submittedForm) {
@@ -64,5 +90,12 @@ public class NewProjectAction implements RootAction, Describable<NewProjectActio
         }
 
         return entry;
+    }
+
+    private VCSConfig getVCSConfig(Project project, VersionControlSystem vcs) {
+        VCSConfig config = vcs.newConfig();
+        config.setUrl(getDescriptor().getRepositoryURL()
+                .replace("$NAME", project.getName()));
+        return config;
     }
 }

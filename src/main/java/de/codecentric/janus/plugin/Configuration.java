@@ -17,8 +17,8 @@ import java.util.Collection;
  */
 @Extension
 public final class Configuration extends Descriptor<NewProjectAction> {
-    private String scaffoldDirectory, catalogFile, addCommand,
-            checkoutCommand, commitCommand, buildParameter, buildJob;
+    private String scaffoldDirectory, catalogFile, repositoryURL,
+            buildJob;
     private VersionControlSystem vcs;
 
     public Configuration() {
@@ -34,55 +34,15 @@ public final class Configuration extends Descriptor<NewProjectAction> {
     @Override
     public boolean configure(StaplerRequest req, JSONObject formData)
             throws FormException {
-        System.out.println(formData.toString());
         scaffoldDirectory = formData.getString("scaffoldDirectory");
         catalogFile = formData.getString("catalogFile");
-        addCommand = formData.getString("addCommand");
-        checkoutCommand = formData.getString("checkoutCommand");
-        commitCommand = formData.getString("commitCommand");
-        buildParameter = formData.getString("buildParameter");
+        repositoryURL = formData.getString("repositoryURL");
         buildJob = formData.getString("buildJob");
         vcs = VersionControlSystem.valueOf(formData.getString("vcs"));
 
         save();
 
         return super.configure(req, formData);
-    }
-
-    public String getScaffoldDirectory() {
-        return scaffoldDirectory;
-    }
-
-    public String getCatalogFile() {
-        return catalogFile;
-    }
-
-    public String getAddCommand() {
-        return addCommand;
-    }
-
-    public void setAddCommand(String addCommand) {
-        this.addCommand = addCommand;
-    }
-
-    public String getCheckoutCommand() {
-        return checkoutCommand;
-    }
-
-    public void setCheckoutCommand(String checkoutCommand) {
-        this.checkoutCommand = checkoutCommand;
-    }
-
-    public String getCommitCommand() {
-        return commitCommand;
-    }
-
-    public void setCommitCommand(String commitCommand) {
-        this.commitCommand = commitCommand;
-    }
-
-    public String getBuildParameter() {
-        return buildParameter;
     }
 
     public ListBoxModel doFillBuildJobItems() {
@@ -118,12 +78,8 @@ public final class Configuration extends Descriptor<NewProjectAction> {
         return m;
     }
 
-    public FormValidation doCheckAddCommand(@QueryParameter String value) {
-        return validatePresence(value);
-    }
-
-    private FormValidation validatePresence(String value) {
-        return validatePresence(value, "Please provide a command.");
+    public FormValidation doCheckRepositoryURL(@QueryParameter String value) {
+        return validatePresence(value, "Please provide the repository URL.");
     }
 
     private FormValidation validatePresence(String value, String msg) {
@@ -132,18 +88,6 @@ public final class Configuration extends Descriptor<NewProjectAction> {
         } else {
             return FormValidation.ok();
         }
-    }
-
-    public FormValidation doCheckCheckoutCommand(@QueryParameter String value) {
-        return validatePresence(value);
-    }
-
-    public FormValidation doCheckCommitCommand(@QueryParameter String value) {
-        return validatePresence(value);
-    }
-
-    public FormValidation doCheckBuildParameter(@QueryParameter String value) {
-        return validatePresence(value, "Please define the parameter.");
     }
 
     public FormValidation doCheckVcs(@QueryParameter String value) {
@@ -174,5 +118,25 @@ public final class Configuration extends Descriptor<NewProjectAction> {
         } else {
             return FormValidation.error("This build job doesn't exist.");
         }
+    }
+
+    public String getScaffoldDirectory() {
+        return scaffoldDirectory;
+    }
+
+    public String getCatalogFile() {
+        return catalogFile;
+    }
+
+    public String getRepositoryURL() {
+        return repositoryURL;
+    }
+
+    public String getBuildJob() {
+        return buildJob;
+    }
+
+    public VersionControlSystem getVcs() {
+        return vcs;
     }
 }
