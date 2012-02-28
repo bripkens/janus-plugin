@@ -1,0 +1,9 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core"
+         xmlns:l="/lib/layout">
+    <l:layout title="Janus: New project">
+        <l:main-panel>
+            <h1>Janus: New Repository</h1>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

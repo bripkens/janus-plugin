@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-@Extension
+//@Extension
 public final class Configuration extends Descriptor<NewProjectAction> {
     private String scaffoldDirectory, catalogFile, repositoryURL,
             buildJob;

@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.451</version>
+        <version>1.452</version>
     </parent>
 
     <groupId>de.codencentric.janus</groupId>
     <artifactId>janus-plugin</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <repositories>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>de.codecentric.janus</groupId>
             <artifactId>common</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

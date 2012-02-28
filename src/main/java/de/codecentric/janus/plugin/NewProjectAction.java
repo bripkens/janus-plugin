@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-@Extension
+//@Extension
 public class NewProjectAction implements RootAction, Describable<NewProjectAction> {
     public String getIconFileName() {
         return "new-package.png";
