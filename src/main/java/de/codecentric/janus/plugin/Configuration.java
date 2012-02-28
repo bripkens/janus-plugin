@@ -104,7 +104,6 @@ public final class Configuration extends Descriptor<NewProjectAction> {
         }
 
         return FormValidation.ok();
-
     }
 
     public FormValidation doCheckBuildJob(@QueryParameter String value) {

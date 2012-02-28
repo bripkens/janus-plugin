@@ -10,7 +10,10 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
 public class VCSConfiguration implements Describable<VCSConfiguration> {
-    private String name;
+    private String name,
+            checkoutBuildJob,
+            commitBuildJob,
+            generationBuildJob;
     private VersionControlSystem vcs;
 
     public String getName() {
@@ -19,6 +22,30 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCheckoutBuildJob() {
+        return checkoutBuildJob;
+    }
+
+    public void setCheckoutBuildJob(String checkoutBuildJob) {
+        this.checkoutBuildJob = checkoutBuildJob;
+    }
+
+    public String getCommitBuildJob() {
+        return commitBuildJob;
+    }
+
+    public void setCommitBuildJob(String commitBuildJob) {
+        this.commitBuildJob = commitBuildJob;
+    }
+
+    public String getGenerationBuildJob() {
+        return generationBuildJob;
+    }
+
+    public void setGenerationBuildJob(String generationBuildJob) {
+        this.generationBuildJob = generationBuildJob;
     }
 
     public VersionControlSystem getVcs() {

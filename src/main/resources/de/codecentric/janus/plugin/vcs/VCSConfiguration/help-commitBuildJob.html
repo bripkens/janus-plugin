@@ -1,0 +1,19 @@
+<div>
+    After project sources have been placed in the repository's current working
+    copy, they need to be committed by this build.
+
+    <p>
+        Example build job:
+        <pre>
+            cd /home/jenkins/janus-bootstrap/$NAME
+            git add .
+            git commit -m "Initialized project."
+            git push -u origin master
+        </pre>
+    </p>
+
+    <p>
+        The build job should be parameterized with a string
+        parameter called <em>NAME</em>. The value will be the repository's name.
+    </p>
+</div>
