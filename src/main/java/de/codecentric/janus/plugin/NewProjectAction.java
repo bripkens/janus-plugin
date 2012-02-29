@@ -7,7 +7,6 @@ import de.codecentric.janus.scaffold.Catalog;
 import de.codecentric.janus.scaffold.CatalogEntry;
 import de.codecentric.janus.scaffold.Scaffold;
 import de.codecentric.janus.scaffold.ScaffoldLoadingException;
-import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.RootAction;
 import net.sf.json.JSONException;
@@ -81,12 +80,12 @@ public class NewProjectAction implements RootAction, Describable<NewProjectActio
         try {
             scaffoldIndex = submittedForm.getInt("");
         } catch (JSONException ex) {
-            throw new JanusGenerationException("Invalid scaffold index.");
+            throw new JanusPluginGenerationException("Invalid scaffold index.");
         }
         CatalogEntry entry = getCatalog().getScaffolds().get(scaffoldIndex);
 
         if (entry == null) {
-            throw new JanusGenerationException("Invalid scaffold index.");
+            throw new JanusPluginGenerationException("Invalid scaffold index.");
         }
 
         return entry;

@@ -1,0 +1,35 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout title="Janus: New project" norefresh="true">
+        <st:include page="sidepanel.jelly"/>
+        <l:main-panel>
+            <h1>Janus: New Repository</h1>
+
+            <form action="submit" method="post">
+                <table>
+                    <f:section title="Required information">
+                        <f:entry title="Name" field="name">
+                            <f:textbox/>
+                        </f:entry>
+
+                        <f:dropdownList name="vcs" title="Version Control System" field="vcs">
+                            <j:forEach var="configuration"
+                                       items="${it.configurations}"
+                                       varStatus="loop">
+                                <f:dropdownListBlock
+                                        title="${configuration.vcs.name()} - ${configuration.name}"
+                                        value="${configuration.name}">
+                                </f:dropdownListBlock>
+                            </j:forEach>
+                        </f:dropdownList>
+
+                        <f:entry title="">
+                            <f:submit value="Create repository"/>
+                        </f:entry>
+                    </f:section>
+                </table>
+            </form>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>
