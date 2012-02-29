@@ -1,6 +1,7 @@
 package de.codecentric.janus.plugin.vcs;
 
 import de.codecentric.janus.plugin.JanusPluginException;
+import de.codecentric.janus.plugin.JanusPluginGenerationException;
 import hudson.Extension;
 import hudson.model.*;
 import hudson.util.FormValidation;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 public class NewRepositoryAction implements RootAction {
     private static final Logger LOGGER = Logger
             .getLogger(NewRepositoryAction.class.getName());
+    public static final String URL = "new-repository";
 
     public String getIconFileName() {
         return "new-package.png";
@@ -34,7 +36,7 @@ public class NewRepositoryAction implements RootAction {
     }
 
     public String getUrlName() {
-        return "new-repository";
+        return URL;
     }
 
     public VCSConfiguration[] getConfigurations() {
@@ -61,24 +63,44 @@ public class NewRepositoryAction implements RootAction {
             Build build = f.get();
 
             if (build.getResult().isBetterOrEqualTo(Result.SUCCESS)) {
-                LOGGER.info("Yeah, success!");
+                LOGGER.log(Level.INFO,
+                        "Successfully created repository {0}.",
+                        repositoryName);
                 // Adding a slash because the getUrl() method returns a relative
                 // URL and we are currently at /new-repository/.
-                rsp.sendRedirect("/" + build.getUrl());
+                rsp.sendRedirect("/" +
+                        getUrlName() +
+                        "/" +
+                        RepositoryCreationSuccessAction.URL);
             } else {
-                rsp.forwardToPreviousPage(req);
-                LOGGER.info("Oh noes, failure!");
+                LOGGER.log(Level.WARNING,
+                        "Repository creation failed for name {0} and " +
+                                "VCS configuration {1}.",
+                        new String[]{repositoryName, config.getName()});
+
+                req.setAttribute("name", repositoryName);
+                req.setAttribute("selectedVCS", config.getName());
+                req.setAttribute("buildURL", "/" + build.getUrl());
+                req.setAttribute("error", true);
+
+                // leading and training slash as Jenkins otherwise issues an
+                // HTTP status code 301 (moved permanently), which would then
+                // result in the loss of the request attributes.
+
+                // rsp.forwardToPreviousPage() can't be used as this method
+                // loses the request attributes due to a HTTP redirect instead
+                // of forward
+
+                req.getRequestDispatcher("/" + URL + "/").forward(req, rsp);
             }
-
-
         } catch (InterruptedException e) {
-            LOGGER.log(Level.WARNING, "Got interrupted while waiting " +
+            LOGGER.log(Level.SEVERE, "Got interrupted while waiting " +
                     "on repository build to finish.", e);
+            throw new JanusPluginGenerationException(e);
         } catch (ExecutionException e) {
-//            req.setAttribute();
-            rsp.forwardToPreviousPage(req);
-            LOGGER.log(Level.WARNING, "Error occurred while creating" +
+            LOGGER.log(Level.SEVERE, "Error occurred while creating" +
                     "repository.", e);
+            throw new JanusPluginGenerationException(e);
         }
     }
     
@@ -103,15 +125,12 @@ public class NewRepositoryAction implements RootAction {
                 "name " + name + " doesn't exist.");
     }
 
-    public FormValidation doCheckName(@QueryParameter String value) {
-        return validatePresence(value, "Please provide a valid name.");
-    }
-
-    private FormValidation validatePresence(String value, String msg) {
-        if (value == null || value.trim().isEmpty()) {
-            return FormValidation.error(msg);
-        } else {
-            return FormValidation.ok();
+    public Action getDynamic(String name) {
+        if (name.equals("success")) {
+            return new RepositoryCreationSuccessAction();
         }
+
+        return null;
+
     }
 }

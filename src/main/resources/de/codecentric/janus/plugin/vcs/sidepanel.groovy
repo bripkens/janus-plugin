@@ -1,4 +1,4 @@
-package hudson.PluginManager;
+package de.codecentric.janus.plugin.vcs;
 l=namespace(lib.LayoutTagLib)
 
 l.header()

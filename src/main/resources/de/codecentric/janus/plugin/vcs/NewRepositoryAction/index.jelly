@@ -2,15 +2,33 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <l:layout title="Janus: New project" norefresh="true">
-        <st:include page="sidepanel.jelly"/>
+        <st:include page="../sidepanel.jelly"/>
         <l:main-panel>
             <h1>Janus: New Repository</h1>
 
+            <j:if test="${error}">
+                <div class="error">
+                    Repository creation failed. Check out the Jenkins
+                    <a href="${buildURL}" target="_blank">
+                        build for more information</a>.
+                </div>
+            </j:if>
+
+
+
             <form action="submit" method="post">
                 <table>
+
+                    <!--
+                        Need to save it in a temporary variable as the
+                        name variable is overwritten by some Jelly procedure.
+                    -->
+                    <j:set var="tempName" value="${name}"/>
+
                     <f:section title="Required information">
-                        <f:entry title="Name" field="name">
-                            <f:textbox/>
+                        <f:entry title="Name"
+                                 field="name">
+                            <f:textbox default="${tempName}"/>
                         </f:entry>
 
                         <f:dropdownList name="vcs" title="Version Control System" field="vcs">
@@ -19,7 +37,8 @@
                                        varStatus="loop">
                                 <f:dropdownListBlock
                                         title="${configuration.vcs.name()} - ${configuration.name}"
-                                        value="${configuration.name}">
+                                        value="${configuration.name}"
+                                        selected="${configuration.name == selectedVCS}">
                                 </f:dropdownListBlock>
                             </j:forEach>
                         </f:dropdownList>
