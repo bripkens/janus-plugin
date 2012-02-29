@@ -16,6 +16,22 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
             generationBuildJob;
     private VersionControlSystem vcs;
 
+    public VCSConfiguration() {
+    }
+
+    @DataBoundConstructor
+    public VCSConfiguration(String name,
+                            String checkoutBuildJob,
+                            String commitBuildJob,
+                            String generationBuildJob,
+                            VersionControlSystem vcs) {
+        this.name = name;
+        this.checkoutBuildJob = checkoutBuildJob;
+        this.commitBuildJob = commitBuildJob;
+        this.generationBuildJob = generationBuildJob;
+        this.vcs = vcs;
+    }
+
     public String getName() {
         return name;
     }

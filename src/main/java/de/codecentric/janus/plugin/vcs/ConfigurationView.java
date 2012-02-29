@@ -32,42 +32,11 @@ public class ConfigurationView extends Descriptor<VCSConfiguration> {
     @Override
     public boolean configure(StaplerRequest req, JSONObject formData)
             throws FormException {
-        configurations = parseData(formData);
+        Object data = formData.get(CONFIGURATION_FIELD_NAME);
+        configurations = req.bindJSONToList(VCSConfiguration.class, data)
+                .toArray(new VCSConfiguration[]{});
         save();
         return super.configure(req, formData);
-    }
-
-    private VCSConfiguration[] parseData(JSONObject data) {
-        try {
-            JSONArray array = data.getJSONArray(CONFIGURATION_FIELD_NAME);
-            return parseMultiple(array);
-        } catch (JSONException ex) {
-            JSONObject singleData;
-            singleData = data.getJSONObject(CONFIGURATION_FIELD_NAME);
-            return new VCSConfiguration[]{ parseSingle(singleData) };
-        }
-    }
-
-    private VCSConfiguration[] parseMultiple(JSONArray formData) {
-        VCSConfiguration[] parsedData = new VCSConfiguration[formData.size()];
-        
-        for(int i = 0; i < formData.size(); i++) {
-            parsedData[i] = parseSingle(formData.getJSONObject(i));
-        }
-        
-        return parsedData;
-    }
-
-    private VCSConfiguration parseSingle(JSONObject data) {
-        VCSConfiguration config = new VCSConfiguration();
-        
-        config.setName(data.getString("name"));
-        config.setVcs(VersionControlSystem.valueOf(data.getString("vcs")));
-        config.setCheckoutBuildJob(data.getString("checkoutBuildJob"));
-        config.setCommitBuildJob(data.getString("commitBuildJob"));
-        config.setGenerationBuildJob(data.getString("generationBuildJob"));
-        
-        return config;
     }
 
     public ListBoxModel doFillVcsItems() {

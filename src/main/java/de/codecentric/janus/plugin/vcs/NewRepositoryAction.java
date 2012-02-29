@@ -5,6 +5,7 @@ import hudson.Extension;
 import hudson.model.*;
 import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -38,12 +39,6 @@ public class NewRepositoryAction implements RootAction {
 
     public VCSConfiguration[] getConfigurations() {
         return new ConfigurationView().getConfigurations();
-    }
-
-    public boolean configure(StaplerRequest req, JSONObject formData)
-            throws Descriptor.FormException {
-        System.out.println("Configure called.");
-        return true;
     }
 
     public void doSubmit(StaplerRequest req, StaplerResponse rsp)
