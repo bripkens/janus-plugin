@@ -71,7 +71,9 @@ public class NewRepositoryAction implements RootAction {
                 rsp.sendRedirect("/" +
                         getUrlName() +
                         "/" +
-                        RepositoryCreationSuccessAction.URL);
+                        RepositoryCreationSuccessAction.URL +
+                        "?checkoutBuild=" +
+                        config.getCheckoutBuildJob());
             } else {
                 LOGGER.log(Level.WARNING,
                         "Repository creation failed for name {0} and " +

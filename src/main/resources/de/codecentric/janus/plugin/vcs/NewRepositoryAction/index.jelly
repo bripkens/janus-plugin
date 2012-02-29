@@ -14,8 +14,6 @@
                 </div>
             </j:if>
 
-
-
             <form action="submit" method="post">
                 <table>
 

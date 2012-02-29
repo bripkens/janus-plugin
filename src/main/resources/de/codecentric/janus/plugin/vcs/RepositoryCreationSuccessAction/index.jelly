@@ -6,7 +6,16 @@
         <l:main-panel>
             <h1>Repository successfully created</h1>
 
-            Great job, now start coding!
+            <p>Great job, now start coding!</p>
+
+            <p>
+                You are still reading this? Well, you are probably looking
+                for some information on how to check out or clone the
+                repository. Unfortunately, I can't tell you, but check
+                out
+                <a href="/job/${request.getParameter('checkoutBuild')}">
+                    this build job which may contain some hints</a>!
+            </p>
         </l:main-panel>
     </l:layout>
 </j:jelly>
