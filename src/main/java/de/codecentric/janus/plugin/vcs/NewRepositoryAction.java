@@ -1,13 +1,17 @@
 package de.codecentric.janus.plugin.vcs;
 
+import de.codecentric.janus.plugin.JanusPlugin;
 import de.codecentric.janus.plugin.JanusPluginException;
 import de.codecentric.janus.plugin.JanusPluginGenerationException;
 import hudson.Extension;
 import hudson.model.*;
-import hudson.util.FormValidation;
+import hudson.security.ACL;
+import hudson.security.AccessControlled;
+import hudson.security.Permission;
+import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
+import org.acegisecurity.AccessDeniedException;
+import org.acegisecurity.Authentication;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -22,13 +26,21 @@ import java.util.logging.Logger;
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
 @Extension
-public class NewRepositoryAction implements RootAction {
-    private static final Logger LOGGER = Logger
-            .getLogger(NewRepositoryAction.class.getName());
+public class NewRepositoryAction implements RootAction, AccessControlled {
     public static final String URL = "new-repository";
 
+    private static final Logger LOGGER = Logger
+            .getLogger(NewRepositoryAction.class.getName());
+
+    public static final Permission PERMISSION = JanusPlugin.CREATE_REPOSITORY;
+
     public String getIconFileName() {
-        return "new-package.png";
+        // returning null hides the menu item
+        if (Hudson.getInstance().hasPermission(PERMISSION)) {
+            return "new-package.png";
+        } else {
+            return null;
+        }
     }
 
     public String getDisplayName() {
@@ -45,6 +57,7 @@ public class NewRepositoryAction implements RootAction {
 
     public void doSubmit(StaplerRequest req, StaplerResponse rsp)
             throws ServletException, IOException {
+        checkPermission(PERMISSION);
         JSONObject submittedForm = req.getSubmittedForm();
 
         String repositoryName = submittedForm.getString("name");
@@ -133,6 +146,19 @@ public class NewRepositoryAction implements RootAction {
         }
 
         return null;
+    }
 
+    public ACL getACL() {
+        return Jenkins.getInstance()
+                .getAuthorizationStrategy()
+                .getACL(Jenkins.getInstance().getComputers()[0]);
+    }
+
+    public void checkPermission(Permission p) throws AccessDeniedException {
+        getACL().checkPermission(p);
+    }
+
+    public boolean hasPermission(Permission p) {
+        return getACL().hasPermission(p);
     }
 }
