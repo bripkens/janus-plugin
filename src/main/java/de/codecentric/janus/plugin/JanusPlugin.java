@@ -9,11 +9,11 @@ import hudson.security.PermissionScope;
  */
 public interface JanusPlugin {
 
-    public static final PermissionGroup PERMISSIONS = new PermissionGroup(
+    PermissionGroup PERMISSIONS = new PermissionGroup(
             JanusPlugin.class, Messages._permissions_group_title());
 
     Permission CREATE_REPOSITORY = new Permission(PERMISSIONS,
-            "Create repository",
+            "CreateRepository",
             null,
             Permission.CREATE,
             PermissionScope.COMPUTER);
