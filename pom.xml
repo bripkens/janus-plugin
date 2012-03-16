@@ -8,10 +8,40 @@
         <version>1.452</version>
     </parent>
 
-    <groupId>de.codencentric.janus</groupId>
+    <groupId>de.codecentric.janus</groupId>
     <artifactId>janus-plugin</artifactId>
     <version>0.2-SNAPSHOT</version>
     <packaging>hpi</packaging>
+
+    <properties>
+        <janus.base.version>0.2-SNAPSHOT</janus.base.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jbehave.core.version>3.5.4</jbehave.core.version>
+        <jbehave.site.version>3.1.1</jbehave.site.version>
+        <selenium.version>2.20.0</selenium.version>
+        <embeddables>**/*Stories.java</embeddables>
+        <SELENIUM_SERVER_HOST>localhost</SELENIUM_SERVER_HOST>
+        <SELENIUM_PORT>4455</SELENIUM_PORT>
+    </properties>
+
+    <developers>
+        <developer>
+            <name>Ben Ripkens</name>
+            <email>bripkens.dev@gmail.com</email>
+            <url>http://bripkens.de</url>
+            <organization>codecentric AG</organization>
+            <organizationUrl>http://www.codecentric.de/</organizationUrl>
+            <id>bripkens</id>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <repositories>
         <repository>
@@ -31,8 +61,83 @@
         <dependency>
             <groupId>de.codecentric.janus</groupId>
             <artifactId>common</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>${janus.base.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.jbehave</groupId>
+            <artifactId>jbehave-core</artifactId>
+            <version>${jbehave.core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jbehave</groupId>
+            <artifactId>jbehave-guice</artifactId>
+            <version>${jbehave.core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jbehave.site</groupId>
+            <artifactId>jbehave-site-resources</artifactId>
+            <version>${jbehave.site.version}</version>
+            <type>zip</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-remote-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-chrome-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-htmlunit-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-ie-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/stories</directory>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
+    </build>
 </project>
