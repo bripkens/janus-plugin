@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>plugin</artifactId>
+        <version>1.452</version>
+    </parent>
+
+    <groupId>de.codecentric.janus</groupId>
+    <artifactId>janus-plugin</artifactId>
+    <version>0.2-SNAPSHOT</version>
+    <packaging>hpi</packaging>
+
+    <properties>
+        <janus.base.version>0.2-SNAPSHOT</janus.base.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>m.g.o-public</id>
+            <url>http://maven.glassfish.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>m.g.o-public</id>
+            <url>http://maven.glassfish.org/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.codecentric.janus</groupId>
+            <artifactId>common</artifactId>
+            <version>${janus.base.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+</project>

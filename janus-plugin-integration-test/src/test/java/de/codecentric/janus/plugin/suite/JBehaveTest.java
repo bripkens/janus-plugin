@@ -1,4 +1,4 @@
-package de.codecentric.janus.plugin;
+package de.codecentric.janus.plugin.suite;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 import static org.jbehave.core.reporters.Format.CONSOLE;
@@ -34,9 +34,9 @@ import com.google.inject.Scopes;
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-public class AcceptanceTestConfiguration extends JUnitStories {
+public class JBehaveTest extends JUnitStories {
 
-    public AcceptanceTestConfiguration() {
+    public JBehaveTest() {
         configuredEmbedder().embedderControls()
                 .doGenerateViewAfterStories(true)
                 .doIgnoreFailureInStories(true)

@@ -4,6 +4,7 @@
     <f:section title="Janus Version Control System Configuration">
         <f:entry title="Version Control Systems"
                  description="List of Version Control Systems which can be configured using the Janus application.">
+            <a class="janusConfig"></a>
             <f:repeatable var="inst" field="configurations">
                 <table width="100%">
                     <f:entry title="Name"
