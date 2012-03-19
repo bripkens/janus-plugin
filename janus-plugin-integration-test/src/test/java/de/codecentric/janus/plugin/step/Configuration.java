@@ -26,12 +26,17 @@ public class Configuration {
      * ### GIVEN
      * ############################
      */
+    @Given("a clean Jenkins installation")
+    public void givenACleanJenkinsInstallation() throws Exception {
+        seleniumAdapter.cleanJenkinsConfiguration();
+    }
+
     @Given("an installation with three builds named <creationBuild>, <checkoutBuild> and <commitBuild>")
     public void givenAnInstallationWithThreeBuilds(@Named("creationBuild") String creationBuild,
                                                    @Named("checkoutBuild") String checkoutBuild,
                                                    @Named("commitBuild") String commitBuild)
                                                    throws Exception {
-        goToConfigurationPage();
+        seleniumAdapter.goToConfigurationPage();
     }
 
     /*
@@ -56,10 +61,5 @@ public class Configuration {
     @Then("a <type> installation <name> can be found")
     public void thenAnCanBeFound(@Named("type") String type,
                                  @Named("name") String name) {
-    }
-
-    private void goToConfigurationPage() throws Exception {
-        driver.get(Config.getJenkinsBaseUrl() + "configure");
-        seleniumAdapter.waitUntilPageContainsId(By.className("janusConfig"));
     }
 }

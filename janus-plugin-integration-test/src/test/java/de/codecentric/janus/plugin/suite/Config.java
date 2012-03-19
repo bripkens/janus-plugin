@@ -26,6 +26,10 @@ public class Config {
         }
     }
     
+    public static int getInt(String key) {
+        return Integer.parseInt(getString(key));
+    }
+    
     public static String getSeleniumServer() {
         return getString("selenium.server");
     }
@@ -41,5 +45,9 @@ public class Config {
 
     public static String getJenkinsBaseUrl() {
         return getString("jenkins.base");
+    }
+    
+    public static int getTimeoutInSeconds() {
+        return getInt("timeout");
     }
 }

@@ -1,10 +1,11 @@
 package de.codecentric.janus.plugin.library;
 
 import de.codecentric.janus.plugin.suite.Config;
-import org.jbehave.core.annotations.AfterScenario;
+import org.apache.commons.io.FileUtils;
 import org.jbehave.core.annotations.AfterStories;
+import org.jbehave.core.annotations.BeforeScenario;
 import org.jbehave.core.annotations.BeforeStories;
-import org.jbehave.core.annotations.ScenarioType;
+import org.jbehave.core.annotations.BeforeStory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +13,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.MalformedURLException;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.regex.Pattern;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
@@ -25,7 +29,7 @@ public class SeleniumAdapter {
     }
 
     @BeforeStories
-    public void initSelenium() throws MalformedURLException {
+    public void initSelenium() throws Exception {
         if (Config.isLocalSeleniumExecution()) {
             driver = new FirefoxDriver();
         } else {
@@ -34,18 +38,84 @@ public class SeleniumAdapter {
         }
     }
 
+    @BeforeScenario
+    public void cleanJenkinsConfiguration() throws Exception {
+        deleteConfigurationFiles();
+        reloadConfiguration();
+    }
+
+    private void deleteConfigurationFiles() throws Exception {
+        String cwd = System.getProperty("user.dir");
+        String jenkinsWorkspace;
+        jenkinsWorkspace = cwd.replace("janus-plugin-integration-test",
+                "janus-plugin" + File.separator + "work" + File.separator);
+
+        // delete all jobs
+        FileUtils.cleanDirectory(new File(jenkinsWorkspace + "jobs"));
+
+        // delete all configuration files
+        File[] configFile = new File(jenkinsWorkspace)
+                .listFiles(new JenkinsConfigurationFilenameFilter());
+        for (File file : configFile) {
+            FileUtils.forceDelete(file);
+        }
+    }
+
+    private void reloadConfiguration() throws Exception {
+        assert driver != null;
+        driver.get(Config.getJenkinsBaseUrl() + "reload");
+        waitUntilPageTitleStartsWith("Dashboard");
+    }
+
     @AfterStories
     public void afterStories() {
         driver.quit();
     }
 
-    public void waitUntilPageContainsId(final By by) throws
+    public void goToConfigurationPage() throws Exception {
+        driver.get(Config.getJenkinsBaseUrl() + "configure");
+        waitUntilPageContains(By.className("janusConfig"));
+    }
+
+    public void goToBuildCreationPage() throws Exception {
+        driver.get(Config.getJenkinsBaseUrl() + "view/All/newJob");
+        waitUntilPageContains(By
+                .cssSelector("form[name=\"createItem\"] #name"));
+    }
+
+    public void waitUntilPageContains(final By by) throws
             InterruptedException {
-        new WebDriverWait(driver, 10)
-                .until(new ExpectedCondition<WebElement>(){
-                    @Override
-                    public WebElement apply(WebDriver d) {
-                        return d.findElement(by);
-                    }});
+        waitUntil(new ExpectedCondition<WebElement>() {
+            @Override
+            public WebElement apply(WebDriver d) {
+                return d.findElement(by);
+            }
+        });
+    }
+
+    public <T> void waitUntil(ExpectedCondition<T> condition) {
+        new WebDriverWait(driver, Config.getTimeoutInSeconds())
+                .until(condition);
+    }
+
+    public void waitUntilPageTitleStartsWith(final String prefix) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(@Nullable WebDriver driver) {
+                return driver.getTitle().startsWith(prefix);
+            }
+        });
+    }
+
+    private static final class JenkinsConfigurationFilenameFilter
+            implements FilenameFilter {
+
+        private static final Pattern configPattern = Pattern
+                .compile("^(hudson\\.|de\\.codecentric\\.).*\\.xml$");
+
+        @Override
+        public boolean accept(File dir, String name) {
+            return configPattern.matcher(name).matches();
+        }
     }
 }
