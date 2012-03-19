@@ -63,8 +63,24 @@ public class SeleniumAdapter {
 
     private void reloadConfiguration() throws Exception {
         assert driver != null;
-        driver.get(Config.getJenkinsBaseUrl() + "reload");
-        waitUntilPageTitleStartsWith("Dashboard");
+
+        int timeoutInSeconds = Config.getTimeoutInSeconds();
+        if (Config.isRestartReloadStrategy()) {
+            driver.get(Config.getJenkinsBaseUrl() + "restart");
+            driver.findElement(By.cssSelector("form[action=\"restart\"] " +
+                    "button")).click();
+            timeoutInSeconds *= 6;
+        } else {
+            driver.get(Config.getJenkinsBaseUrl() + "reload");
+        }
+
+        new WebDriverWait(driver, timeoutInSeconds)
+                .until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(@Nullable WebDriver driver) {
+                        return driver.getTitle().startsWith("Dashboard");
+                    }
+                });
     }
 
     @AfterStories

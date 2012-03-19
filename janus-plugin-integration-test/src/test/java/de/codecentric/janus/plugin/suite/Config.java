@@ -46,6 +46,13 @@ public class Config {
     public static String getJenkinsBaseUrl() {
         return getString("jenkins.base");
     }
+
+    public static boolean isRestartReloadStrategy() {
+        // matching against reload, because restart should be the default.
+        // reloading is problematic because not all descriptors are actually
+        // reloaded!
+        return !getString("reload.strategy").equalsIgnoreCase("reload");
+    }
     
     public static int getTimeoutInSeconds() {
         return getInt("timeout");

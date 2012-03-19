@@ -15,6 +15,7 @@
     <properties>
         <SELENIUM_SERVER_HOST>localhost</SELENIUM_SERVER_HOST>
         <SELENIUM_PORT>4455</SELENIUM_PORT>
+        <RELOAD_STRATEGY>RESTART</RELOAD_STRATEGY>
     </properties>
 
     <dependencies>

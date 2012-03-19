@@ -4,6 +4,7 @@ import de.codecentric.janus.VersionControlSystem;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
+import hudson.model.Hudson;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -73,7 +74,9 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
     }
 
     public ConfigurationView getDescriptor() {
-        return new ConfigurationView();
+        return (ConfigurationView) Hudson
+                .getInstance()
+                .getDescriptor(VCSConfiguration.class);
     }
 
 }

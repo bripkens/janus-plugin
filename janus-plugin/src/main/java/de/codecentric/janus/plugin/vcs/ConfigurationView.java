@@ -39,6 +39,8 @@ public class ConfigurationView extends Descriptor<VCSConfiguration> {
         return super.configure(req, formData);
     }
 
+
+
     public ListBoxModel doFillVcsItems() {
         ListBoxModel m = new ListBoxModel();
         m.add("Please select", "");
