@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import com.google.inject.Inject;
+import org.openqa.selenium.support.ui.Select;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
@@ -31,14 +32,6 @@ public class Configuration {
         seleniumAdapter.cleanJenkinsConfiguration();
     }
 
-    @Given("an installation with three builds named <creationBuild>, <checkoutBuild> and <commitBuild>")
-    public void givenAnInstallationWithThreeBuilds(@Named("creationBuild") String creationBuild,
-                                                   @Named("checkoutBuild") String checkoutBuild,
-                                                   @Named("commitBuild") String commitBuild)
-                                                   throws Exception {
-        seleniumAdapter.goToConfigurationPage();
-    }
-
     /*
      * ############################
      * ### WHEN
@@ -46,11 +39,28 @@ public class Configuration {
      */
     @When("a VCS configuration <name> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>")
     public void whenAVCSConfigurationIsAdded(@Named("name") String name,
-                                                 @Named("type") String type,
-                                                 @Named("creationBuild") String creationBuild,
-                                                 @Named("checkoutBuild") String checkoutBuild,
-                                                 @Named("commitBuild") String commitBuild) {
-        // PENDING
+                                             @Named("type") String type,
+                                             @Named("creationBuild") String creationBuild,
+                                             @Named("checkoutBuild") String checkoutBuild,
+                                             @Named("commitBuild") String commitBuild)
+            throws Exception {
+        seleniumAdapter.goToConfigurationPage();
+
+        // add a new entry to the list
+        driver.findElement(By
+                .cssSelector(".janusConfig + div .repeatable-add button"))
+                .click();
+
+        // wait until a new configuration entry is added the repeatable list
+        String repeatedChunkSelector = ".janusConfig + div .repeated-chunk";
+        seleniumAdapter.waitUntilPageContains(By
+                .cssSelector(repeatedChunkSelector));
+        
+        Select vcsSelect = new Select(driver
+                .findElement(By.cssSelector(repeatedChunkSelector + ":nth-child(1)")));
+
+        vcsSelect.deselectAll();
+        vcsSelect.selectByValue(type);
     }
 
     /*
