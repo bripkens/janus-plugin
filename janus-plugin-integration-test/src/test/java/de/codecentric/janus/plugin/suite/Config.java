@@ -1,7 +1,5 @@
 package de.codecentric.janus.plugin.suite;
 
-import org.junit.Test;
-
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -54,6 +52,14 @@ public class Config {
         return !getString("reload.strategy").equalsIgnoreCase("reload");
     }
     
+    public static String getSingleExecutionTarget() {
+        return getString("execute.single");
+    }
+
+    public static boolean isSingleExecutionTargetSet() {
+        return !getSingleExecutionTarget().isEmpty();
+    }
+
     public static int getTimeoutInSeconds() {
         return getInt("timeout");
     }

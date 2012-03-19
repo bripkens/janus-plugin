@@ -2,10 +2,7 @@ package de.codecentric.janus.plugin.step;
 
 import com.google.inject.Inject;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Named;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
+import org.jbehave.core.annotations.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -43,6 +40,7 @@ public class Configuration {
      * ############################
      */
     @When("a VCS configuration <name> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>")
+    @Given("a VCS configuration <name> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>")
     public void whenAVCSConfigurationIsAdded(@Named("name") String name,
                                              @Named("type") String type,
                                              @Named("creationBuild") String creationBuild,

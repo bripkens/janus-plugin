@@ -88,7 +88,7 @@ public class JBehaveTest extends JUnitStories {
 
     @Override
     protected List<String> storyPaths() {
-        String singleStoryName = System.getProperty("jbehave.story");
+        String singleStoryName = Config.getSingleExecutionTarget();
         String includePattern = "**/*.story";
         if (singleStoryName != null && singleStoryName.endsWith(".story")) {
             includePattern = "**/" + singleStoryName;
@@ -96,7 +96,6 @@ public class JBehaveTest extends JUnitStories {
         return new StoryFinder().findPaths(
                 codeLocationFromClass(this.getClass()), includePattern,
                 "**/excluded*.story");
-
     }
 
     /**

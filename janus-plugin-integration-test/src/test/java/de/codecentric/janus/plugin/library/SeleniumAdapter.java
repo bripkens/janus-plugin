@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import org.jbehave.core.annotations.AfterStories;
 import org.jbehave.core.annotations.BeforeScenario;
 import org.jbehave.core.annotations.BeforeStories;
-import org.jbehave.core.annotations.BeforeStory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,12 +15,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
 public class SeleniumAdapter {
+    private static final AtomicBoolean SINGLE_EXECUTION_CLEAN = new AtomicBoolean();
+
     private WebDriver driver;
 
     public WebDriver getDriver() {
@@ -40,8 +42,11 @@ public class SeleniumAdapter {
 
     @BeforeScenario
     public void cleanJenkinsConfiguration() throws Exception {
-        deleteConfigurationFiles();
-        reloadConfiguration();
+        if (!Config.isSingleExecutionTargetSet() ||
+                SINGLE_EXECUTION_CLEAN.compareAndSet(false, true)) {
+            deleteConfigurationFiles();
+            reloadConfiguration();
+        }
     }
 
     private void deleteConfigurationFiles() throws Exception {
@@ -97,6 +102,18 @@ public class SeleniumAdapter {
         driver.get(Config.getJenkinsBaseUrl() + "view/All/newJob");
         waitUntilPageContains(By
                 .cssSelector("form[name=\"createItem\"] #name"));
+    }
+
+    public void goToNewRepositoryPage()  throws Exception {
+        driver.get(Config.getJenkinsBaseUrl() + "new-repository/");
+        waitUntilPageTitleStartsWith("Janus: New project");
+    }
+    
+    public void goToLastSuccessfulBuild(String job) throws Exception {
+        driver.get(Config.getJenkinsBaseUrl() + "job/" + job + "/lastBuild/");
+        // a timeout can indicate, that no build was executed (there is no
+        // last build).
+        waitUntilPageTitleStartsWith(job + " #");
     }
 
     public void waitUntilPageContains(final By by) throws
