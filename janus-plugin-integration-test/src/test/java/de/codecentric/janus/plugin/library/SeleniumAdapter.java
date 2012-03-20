@@ -93,53 +93,6 @@ public class SeleniumAdapter {
         driver.quit();
     }
 
-    public void goToConfigurationPage() throws Exception {
-        driver.get(Config.getJenkinsBaseUrl() + "configure");
-        waitUntilPageContains(By.className("janusConfig"));
-    }
-
-    public void goToBuildCreationPage() throws Exception {
-        driver.get(Config.getJenkinsBaseUrl() + "view/All/newJob");
-        waitUntilPageContains(By
-                .cssSelector("form[name=\"createItem\"] #name"));
-    }
-
-    public void goToNewRepositoryPage()  throws Exception {
-        driver.get(Config.getJenkinsBaseUrl() + "new-repository/");
-        waitUntilPageTitleStartsWith("Janus: New project");
-    }
-    
-    public void goToLastSuccessfulBuild(String job) throws Exception {
-        driver.get(Config.getJenkinsBaseUrl() + "job/" + job + "/lastBuild/");
-        // a timeout can indicate, that no build was executed (there is no
-        // last build).
-        waitUntilPageTitleStartsWith(job + " #");
-    }
-
-    public void waitUntilPageContains(final By by) throws
-            InterruptedException {
-        waitUntil(new ExpectedCondition<WebElement>() {
-            @Override
-            public WebElement apply(WebDriver d) {
-                return d.findElement(by);
-            }
-        });
-    }
-
-    public <T> void waitUntil(ExpectedCondition<T> condition) {
-        new WebDriverWait(driver, Config.getTimeoutInSeconds())
-                .until(condition);
-    }
-
-    public void waitUntilPageTitleStartsWith(final String prefix) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(@Nullable WebDriver driver) {
-                return driver.getTitle().startsWith(prefix);
-            }
-        });
-    }
-
     private static final class JenkinsConfigurationFilenameFilter
             implements FilenameFilter {
 

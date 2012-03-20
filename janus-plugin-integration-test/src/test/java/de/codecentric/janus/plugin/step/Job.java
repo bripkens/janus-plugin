@@ -1,25 +1,20 @@
 package de.codecentric.janus.plugin.step;
 
 import com.google.inject.Inject;
+import de.codecentric.janus.plugin.suite.AbstractStep;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
-import org.jbehave.core.annotations.Aliases;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-public class Job {
-
-    private WebDriver driver;
-    private SeleniumAdapter seleniumAdapter;
+public class Job extends AbstractStep {
 
     @Inject
     public Job(SeleniumAdapter selenium) {
-        driver = selenium.getDriver();
-        this.seleniumAdapter = selenium;
+        super(selenium);
     }
 
     /*
@@ -29,11 +24,13 @@ public class Job {
     */
     @Given("a build <name>")
     public void givenABuild(@Named("name") String name) throws Exception {
-        seleniumAdapter.goToBuildCreationPage();
-        driver.findElement(By.id("name")).sendKeys(name);
-        driver.findElement(By.cssSelector("input[value=\"hudson.model.FreeStyleProject\"]")).click();
-        driver.findElement(By.id("ok-button")).click();
-        seleniumAdapter.waitUntilPageTitleStartsWith(name + " Config");
+        goToBuildCreationPage();
+
+        getNameInputField().sendKeys(name);
+        getFreeStyleProjectCheckBox().click();
+        getSubmitButton().click();
+
+        waitUntilPageTitleStartsWith(name + " Config");
     }
 
     @Given("a build <creationBuild>")
@@ -52,5 +49,33 @@ public class Job {
     public void givenACommitBuild(@Named("commitBuild") String name)
             throws Exception {
         givenABuild(name);
+    }
+
+    /*
+    * ############################
+    * ### WEB ELEMENTS
+    * ############################
+    */
+    private WebElement getNameInputField() {
+        return findById(ID_SELECTORS.NAME_INPUT_FIELD);
+    }
+    
+    private WebElement getFreeStyleProjectCheckBox() {
+        return findByCSS(CSS_SELECTORS.FREE_STYLE_PROJECT_RADIO_BUTTON);
+    }
+
+    private WebElement getSubmitButton() {
+        return findById(ID_SELECTORS.SUBMIT_BUTTON);
+    }
+    
+    private static interface CSS_SELECTORS {
+        String FREE_STYLE_PROJECT_RADIO_BUTTON =
+                "input[value=\"hudson.model.FreeStyleProject\"]";
+    }
+
+    private static interface ID_SELECTORS {
+        String NAME_INPUT_FIELD = "name";
+
+        String SUBMIT_BUTTON = "ok-button";
     }
 }

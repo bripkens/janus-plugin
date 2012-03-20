@@ -1,10 +1,11 @@
 package de.codecentric.janus.plugin.step;
 
 import com.google.inject.Inject;
+import de.codecentric.janus.plugin.suite.AbstractStep;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
 import org.jbehave.core.annotations.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -14,14 +15,11 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-public class Configuration {
-    private WebDriver driver;
-    private SeleniumAdapter seleniumAdapter;
+public class Configuration extends AbstractStep {
 
     @Inject
     public Configuration(SeleniumAdapter selenium) {
-        driver = selenium.getDriver();
-        this.seleniumAdapter = selenium;
+        super(selenium);
     }
 
     /*
@@ -31,7 +29,7 @@ public class Configuration {
      */
     @Given("a clean Jenkins installation")
     public void givenACleanJenkinsInstallation() throws Exception {
-        seleniumAdapter.cleanJenkinsConfiguration();
+        cleanJenkinsConfiguration();
     }
 
     /*
@@ -47,27 +45,24 @@ public class Configuration {
                                              @Named("checkoutBuild") String checkoutBuild,
                                              @Named("commitBuild") String commitBuild)
             throws Exception {
-        seleniumAdapter.goToConfigurationPage();
+        goToConfigurationPage();
 
         // add a new entry to the list
-        driver.findElement(By
-                .cssSelector(".janusConfig + div .repeatable-add button"))
-                .click();
+        getAddVCSConfigButton().click();
 
         // wait until a new configuration entry is added the repeatable list
-        String repeatedChunkSelector = ".janusConfig + div .repeated-chunk";
-        seleniumAdapter.waitUntilPageContains(By
-                .cssSelector(repeatedChunkSelector));
+        waitUntilPageContains(By
+                .cssSelector(CSS_SELECTORS.REPEATED_CHUNK_SELECTOR));
 
         // set values
-        driver.findElement(By.cssSelector(repeatedChunkSelector + " input[name=\"_.name\"]")).sendKeys(name);
-        select(By.cssSelector(repeatedChunkSelector + " select[name=\"_.vcs\"]"), type);
-        select(By.cssSelector(repeatedChunkSelector + " select[name=\"_.generationBuildJob\"]"), creationBuild);
-        select(By.cssSelector(repeatedChunkSelector + " select[name=\"_.checkoutBuildJob\"]"), checkoutBuild);
-        select(By.cssSelector(repeatedChunkSelector + " select[name=\"_.commitBuildJob\"]"), commitBuild);
+        getNameInputField().sendKeys(name);
+        getVCSSelectBox().selectByValue(type);
+        getGenerationBuildSelectBox().selectByValue(creationBuild);
+        getCheckoutBuildSelectBox().selectByValue(checkoutBuild);
+        getCommitBuildSelectBox().selectByValue(commitBuild);
 
         // submit the form
-        driver.findElement(By.cssSelector("#bottom-sticker button")).click();
+        getSubmitButton().click();
     }
     
     private void select(By by, String selectValue) {
@@ -86,30 +81,77 @@ public class Configuration {
                                  @Named("creationBuild") String creationBuild,
                                  @Named("checkoutBuild") String checkoutBuild,
                                  @Named("commitBuild") String commitBuild) throws Exception {
-        seleniumAdapter.goToConfigurationPage();
+        goToConfigurationPage();
 
-        String repeatedChunkSelector = ".janusConfig + div .repeated-chunk";
-
-        By nameSelector = By.cssSelector(repeatedChunkSelector +
-                " input[name=\"_.name\"]");
-        assertThat(driver.findElement(nameSelector).getAttribute("value"),
+        assertThat(getNameInputField().getAttribute("value"),
                 is(equalTo(name)));
-        
-        assertSelected(By.cssSelector(repeatedChunkSelector +
-                " select[name=\"_.vcs\"]"), type);
-        assertSelected(By.cssSelector(repeatedChunkSelector +
-                " select[name=\"_.generationBuildJob\"]"), creationBuild);
-        assertSelected(By.cssSelector(repeatedChunkSelector +
-                " select[name=\"_.checkoutBuildJob\"]"), checkoutBuild);
-        assertSelected(By.cssSelector(repeatedChunkSelector +
-                " select[name=\"_.commitBuildJob\"]"), commitBuild);
 
-        
+        assertSelected(getVCSSelectBox(), type);
+        assertSelected(getGenerationBuildSelectBox(), creationBuild);
+        assertSelected(getCheckoutBuildSelectBox(), checkoutBuild);
+        assertSelected(getCommitBuildSelectBox(), commitBuild);
     }
-    
-    private void assertSelected(By by, String value) {
-        Select select = new Select(driver.findElement(by));
+
+    private void assertSelected(Select select, String value) {
         assertThat(select.getFirstSelectedOption().getAttribute("value"),
                 is(equalTo(value)));
+    }
+    
+    /*
+    * ############################
+    * ### WEB ELEMENTS
+    * ############################
+    */
+    private WebElement getAddVCSConfigButton() {
+        return findByCSS(CSS_SELECTORS.ADD_VCS_CONFIG_BUTTON);
+    }
+    
+    private WebElement getNameInputField() {
+        return findByCSS(CSS_SELECTORS.NAME_INPUT_FIELD);
+    }
+    
+    private Select getVCSSelectBox() {
+        return findSelectByCSS(CSS_SELECTORS.VCS_SELECT_BOX);
+    }
+
+    private Select getGenerationBuildSelectBox() {
+        return findSelectByCSS(CSS_SELECTORS.GENERATION_BUILD_SELECT_BOX);
+    }
+
+    private Select getCheckoutBuildSelectBox() {
+        return findSelectByCSS(CSS_SELECTORS.CHECKOUT_BUILD_SELECT_BOX);
+    }
+
+    private Select getCommitBuildSelectBox() {
+        return findSelectByCSS(CSS_SELECTORS.COMMIT_BUILD_SELECT_BOX);
+    }
+
+    private WebElement getSubmitButton() {
+        return findByCSS(CSS_SELECTORS.SUBMIT_BUTTON);
+    }
+
+    
+    private static interface CSS_SELECTORS {
+        String ADD_VCS_CONFIG_BUTTON = ".janusConfig + div .repeatable-add " +
+                "button";
+        
+        String REPEATED_CHUNK_SELECTOR = ".janusConfig + div .repeated-chunk";
+
+        String NAME_INPUT_FIELD = REPEATED_CHUNK_SELECTOR + 
+                " input[name=\"_.name\"]";
+
+        String VCS_SELECT_BOX = REPEATED_CHUNK_SELECTOR + 
+                " select[name=\"_.vcs\"]";
+        
+        String GENERATION_BUILD_SELECT_BOX = REPEATED_CHUNK_SELECTOR +
+                " select[name=\"_.generationBuildJob\"]";
+
+        String CHECKOUT_BUILD_SELECT_BOX = REPEATED_CHUNK_SELECTOR +
+                " select[name=\"_.checkoutBuildJob\"]";
+
+        String COMMIT_BUILD_SELECT_BOX = REPEATED_CHUNK_SELECTOR +
+                " select[name=\"_.commitBuildJob\"]";
+        
+        String SUBMIT_BUTTON = "#bottom-sticker button";
     }
 }
