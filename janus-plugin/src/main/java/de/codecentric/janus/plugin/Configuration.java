@@ -31,7 +31,7 @@ public final class Configuration extends Descriptor<NewProjectAction> {
         return "Janus configuration";
     }
 
-    @Override
+    /*@Override
     public boolean configure(StaplerRequest req, JSONObject formData)
             throws FormException {
         scaffoldDirectory = formData.getString("scaffoldDirectory");
@@ -43,7 +43,7 @@ public final class Configuration extends Descriptor<NewProjectAction> {
         save();
 
         return super.configure(req, formData);
-    }
+    }*/
 
     public ListBoxModel doFillBuildJobItems() {
         ListBoxModel m = new ListBoxModel();

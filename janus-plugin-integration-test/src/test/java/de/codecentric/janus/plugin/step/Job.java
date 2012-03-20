@@ -57,23 +57,23 @@ public class Job extends AbstractStep {
     * ############################
     */
     private WebElement getNameInputField() {
-        return findById(ID_SELECTORS.NAME_INPUT_FIELD);
+        return findById(ID_SELECTOR.NAME_INPUT_FIELD);
     }
     
     private WebElement getFreeStyleProjectCheckBox() {
-        return findByCSS(CSS_SELECTORS.FREE_STYLE_PROJECT_RADIO_BUTTON);
+        return findByCSS(CSS_SELECTOR.FREE_STYLE_PROJECT_RADIO_BUTTON);
     }
 
     private WebElement getSubmitButton() {
-        return findById(ID_SELECTORS.SUBMIT_BUTTON);
+        return findById(ID_SELECTOR.SUBMIT_BUTTON);
     }
     
-    private static interface CSS_SELECTORS {
+    private static interface CSS_SELECTOR {
         String FREE_STYLE_PROJECT_RADIO_BUTTON =
                 "input[value=\"hudson.model.FreeStyleProject\"]";
     }
 
-    private static interface ID_SELECTORS {
+    private static interface ID_SELECTOR {
         String NAME_INPUT_FIELD = "name";
 
         String SUBMIT_BUTTON = "ok-button";

@@ -4,8 +4,6 @@ import com.google.inject.Inject;
 import de.codecentric.janus.plugin.suite.AbstractStep;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
 import org.jbehave.core.annotations.*;
-import org.junit.internal.matchers.StringContains;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -76,22 +74,22 @@ public class CreateRepository extends AbstractStep {
     * ############################
     */
     public WebElement getNameInputField() {
-        return findByCSS(CSS_SELECTORS.NAME_INPUT_FIELD);
+        return findByCSS(CSS_SELECTOR.NAME_INPUT_FIELD);
     }
 
     public Select getVCSSelectField() {
-        return findSelectByCSS(CSS_SELECTORS.VCS_SELECT_BOX);
+        return findSelectByCSS(CSS_SELECTOR.VCS_SELECT_BOX);
     }
 
     public WebElement getSubmitButton() {
-        return findByCSS(CSS_SELECTORS.SUBMIT_BUTTON);
+        return findByCSS(CSS_SELECTOR.SUBMIT_BUTTON);
     }
 
     public WebElement getBuildStatusIndicator() {
-        return findByCSS(CSS_SELECTORS.BUILD_STATUS_INDICATOR);
+        return findByCSS(CSS_SELECTOR.BUILD_STATUS_INDICATOR);
     }
 
-    private static interface CSS_SELECTORS {
+    private static interface CSS_SELECTOR {
         String BUILD_STATUS_INDICATOR = "#main-panel h1 img";
         
         String NAME_INPUT_FIELD = "#main-panel input[name=\"_.name\"]";
