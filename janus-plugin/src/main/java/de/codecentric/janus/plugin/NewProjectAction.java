@@ -7,6 +7,7 @@ import de.codecentric.janus.scaffold.Catalog;
 import de.codecentric.janus.scaffold.CatalogEntry;
 import de.codecentric.janus.scaffold.Scaffold;
 import de.codecentric.janus.scaffold.ScaffoldLoadingException;
+import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.RootAction;
 import net.sf.json.JSONException;
@@ -22,7 +23,7 @@ import java.util.Map;
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-//@Extension
+@Extension
 public class NewProjectAction implements RootAction, Describable<NewProjectAction> {
     public String getIconFileName() {
         return "new-package.png";

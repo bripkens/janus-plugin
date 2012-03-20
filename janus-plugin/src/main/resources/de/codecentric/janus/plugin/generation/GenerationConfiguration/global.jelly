@@ -1,0 +1,18 @@
+<j:jelly xmlns:j="jelly:core"
+         xmlns:f="/lib/form">
+
+    <f:section title="Janus Generation Configuration">
+        <f:entry title="Catalog file"
+                 description="Point to the scaffold catalog file, e.g., /home/jenkins/janus/catalog.json."
+                 field="catalogFile">
+            <f:textbox />
+        </f:entry>
+
+        <f:entry title="Scaffold directory"
+                 description="Point to the directory which contains scaffolds, e.g., /home/jenkins/janus/"
+                 field="scaffoldDirectory">
+            <f:textbox />
+        </f:entry>
+    </f:section>
+
+</j:jelly>
