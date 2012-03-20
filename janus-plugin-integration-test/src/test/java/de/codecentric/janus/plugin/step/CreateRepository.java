@@ -4,11 +4,12 @@ import com.google.inject.Inject;
 import de.codecentric.janus.plugin.suite.AbstractStep;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
 import org.jbehave.core.annotations.*;
+import org.junit.internal.matchers.StringContains;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 /**
@@ -38,6 +39,11 @@ public class CreateRepository extends AbstractStep {
         getSubmitButton().click();
     }
 
+    @When("the repository creation page is accessed")
+    public void whenTheRepositoryCreationPageIsAccessed() throws Exception {
+        goToNewRepositoryPage();
+    }
+
     /*
     * ############################
     * ### THEN
@@ -46,7 +52,7 @@ public class CreateRepository extends AbstractStep {
     @Then("the repository creation success page is shown")
     public void thenTheRepositoryCreationSuccessPageIsShown() {
         String exp = "Repository successfully created";
-        assertTrue(driver.getPageSource().contains(exp));
+        assertThat(driver.getPageSource(), containsString(exp));
     }
 
     @Then("the build <creationBuild> is successfully executed")
@@ -56,6 +62,12 @@ public class CreateRepository extends AbstractStep {
 
         assertThat(getBuildStatusIndicator().getAttribute("title"),
                 is(equalTo("Success")));
+    }
+
+    @Then("a message is shown, that no valid VCS configuration exists")
+    public void thenAMessageIsShownThatNoValidVCSConfigurationExists() {
+        String exp = "No Version Control System configured";
+        assertThat(driver.getPageSource(), containsString(exp));
     }
 
     /*

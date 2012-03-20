@@ -55,6 +55,12 @@ public class NewRepositoryAction implements RootAction, AccessControlled {
         return new ConfigurationView().getConfigurations();
     }
 
+    public boolean isAtLeastOneVCSConfigured() {
+        VCSConfiguration[] configurations;
+        configurations = new ConfigurationView().getConfigurations();
+        return configurations != null && configurations.length > 0;
+    }
+
     public void doSubmit(StaplerRequest req, StaplerResponse rsp)
             throws ServletException, IOException {
         checkPermission(PERMISSION);

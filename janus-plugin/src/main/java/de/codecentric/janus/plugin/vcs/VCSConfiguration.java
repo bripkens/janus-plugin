@@ -78,5 +78,4 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
                 .getInstance()
                 .getDescriptor(VCSConfiguration.class);
     }
-
 }

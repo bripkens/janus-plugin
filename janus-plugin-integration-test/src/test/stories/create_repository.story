@@ -15,7 +15,14 @@ Then the repository creation success page is shown
 And the build <creationBuild> is successfully executed
 
 Examples:
-
 | name          | repositoryName | type      | creationBuild | checkoutBuild   | commitBuild |
 | OurDefaultVCS | newRepo        | MERCURIAL | creationBuild | checkoutBuild   | commitBuild |
 
+
+
+
+Scenario: Add a repository when no VCS configuration exists
+
+Given a clean Jenkins installation
+When the repository creation page is accessed
+Then a message is shown, that no valid VCS configuration exists

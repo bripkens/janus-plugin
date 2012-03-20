@@ -6,6 +6,16 @@
         <l:main-panel>
             <h1>Janus: New Repository</h1>
 
+            <j:if test="${!it.atLeastOneVCSConfigured}">
+                <div class="error">
+                    No Version Control System configured.
+                    You can configure a VCS through the
+                    <a href="../configure">
+                        standard Jenkins
+                        configuration dialog</a>.
+                </div>
+            </j:if>
+
             <j:if test="${error}">
                 <div class="error">
                     Repository creation failed. Check out the Jenkins
