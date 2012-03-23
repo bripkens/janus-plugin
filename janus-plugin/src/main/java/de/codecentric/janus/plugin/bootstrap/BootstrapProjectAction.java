@@ -2,7 +2,6 @@ package de.codecentric.janus.plugin.bootstrap;
 
 import de.codecentric.janus.conf.Project;
 import de.codecentric.janus.plugin.JanusPlugin;
-import de.codecentric.janus.plugin.generation.GenerationConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
 import hudson.Extension;
@@ -18,10 +17,7 @@ import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import javax.servlet.ServletException;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -99,48 +95,16 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
      * Getter for view
      * ############################
      */
-    public VCSConfiguration[] getVCSConfigs() {
-        return  VCSConfiguration.get();
-    }
-
     public VCSConfiguration[] getValidVCSConfigs() {
-        List<VCSConfiguration> vcsConfigs = new ArrayList<VCSConfiguration>();
-
-        for(VCSConfiguration vcsConfig : getVCSConfigs()) {
-            if (vcsConfig.isValid()) {
-                vcsConfigs.add(vcsConfig);
-            }
-        }
-
-        return vcsConfigs.toArray(new VCSConfiguration[]{});
-    }
-
-    public GenerationConfiguration getGenerationConfig() {
-        return GenerationConfiguration.get();
+        return JanusPlugin.getValidVCSConfigs();
     }
 
     public Catalog getCatalog() {
-        return Catalog.from(new File(getGenerationConfig().getCatalogFile()));
+        return JanusPlugin.getCatalog();
     }
 
     public boolean isJenkinsConfigured() {
-        VCSConfiguration[] vcsConfigs = getValidVCSConfigs();
-        if (vcsConfigs.length == 0) {
-            LOGGER.info("Jenkins is not properly configured for project " +
-                    "bootstrap because no valid VCS config exists.");
-            return false;
-        }
-
-        GenerationConfiguration genConfig = GenerationConfiguration.get();
-        if (genConfig == null || !genConfig.isValid()) {
-            LOGGER.info("Jenkins is not properly configured for project " +
-                    "bootstrap because no source code generation " +
-                    "config exists (catalog file and scaffold directory " +
-                    "location.");
-            return false;
-        }
-
-        return true;
+        return JanusPlugin.isJenkinsConfiguredForProjectBootstrap();
     }
 
     /*
