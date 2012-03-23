@@ -1,4 +1,4 @@
-package de.codecentric.janus.plugin.vcs;
+package de.codecentric.janus.plugin;
 l=namespace(lib.LayoutTagLib)
 
 l.header()

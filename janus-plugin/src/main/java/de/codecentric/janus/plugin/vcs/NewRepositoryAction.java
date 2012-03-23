@@ -111,7 +111,6 @@ public class NewRepositoryAction implements RootAction, AccessControlled {
                 // rsp.forwardToPreviousPage() can't be used as this method
                 // loses the request attributes due to a HTTP redirect instead
                 // of forward
-
                 req.getRequestDispatcher("/" + URL + "/").forward(req, rsp);
             }
         } catch (InterruptedException e) {

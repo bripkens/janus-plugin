@@ -4,7 +4,6 @@ import hudson.model.Describable;
 import hudson.model.Hudson;
 import hudson.util.FormValidation;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 import java.io.File;
 
@@ -88,5 +87,9 @@ public class GenerationConfiguration implements Describable<GenerationConfigurat
 
     public void setScaffoldDirectory(String scaffoldDirectory) {
         this.scaffoldDirectory = scaffoldDirectory;
+    }
+
+    public static GenerationConfiguration get() {
+        return new ConfigurationView().getGenerationConfiguration();
     }
 }

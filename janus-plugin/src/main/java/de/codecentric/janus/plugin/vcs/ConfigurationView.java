@@ -64,45 +64,24 @@ public class ConfigurationView extends Descriptor<VCSConfiguration> {
         return m;
     }
 
+    public FormValidation doCheckName(@QueryParameter String value) {
+        return VCSConfiguration.doCheckName(value);
+    }
+
     public FormValidation doCheckVcs(@QueryParameter String value) {
-        if (value.trim().isEmpty()) {
-            return FormValidation.error("Please select one of the " +
-                    "Version Control Systems.");
-        }
-
-        try {
-            VersionControlSystem.valueOf(value);
-        } catch (IllegalArgumentException ex) {
-            return FormValidation.error("This Version Control " +
-                    "System is not supported.");
-        }
-
-        return FormValidation.ok();
+       return VCSConfiguration.doCheckVcs(value);
     }
 
-    public FormValidation doCheckBuildJob(@QueryParameter String value) {
-        if (value.trim().isEmpty()) {
-            return FormValidation.error("Please select one of the " +
-                    "build jobs.");
-        }
-
-        if (Hudson.getInstance().getJobNames().contains(value)) {
-            return FormValidation.ok();
-        } else {
-            return FormValidation.error("This build job doesn't exist.");
-        }
-    }
-    
     public FormValidation doCheckGenerationBuildJob(@QueryParameter String value) {
-        return doCheckBuildJob(value);
+        return VCSConfiguration.doCheckBuildJob(value);
     }
 
     public FormValidation doCheckCheckoutBuildJob(@QueryParameter String value) {
-        return doCheckBuildJob(value);
+        return VCSConfiguration.doCheckBuildJob(value);
     }
 
     public FormValidation doCheckCommitBuildJob(@QueryParameter String value) {
-        return doCheckBuildJob(value);
+        return VCSConfiguration.doCheckBuildJob(value);
     }
 
     public ListBoxModel doFillCommitBuildJobItems() {

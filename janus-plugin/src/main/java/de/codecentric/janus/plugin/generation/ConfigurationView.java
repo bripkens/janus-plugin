@@ -94,4 +94,8 @@ public class ConfigurationView extends Descriptor<GenerationConfiguration> {
 
         return null;
     }
+
+    public GenerationConfiguration getGenerationConfiguration() {
+        return generationConfiguration;
+    }
 }

@@ -17,4 +17,10 @@ public interface JanusPlugin {
             null,
             Permission.CREATE,
             PermissionScope.COMPUTER);
+
+    Permission BOOTSTRAP_PROJECT = new Permission(PERMISSIONS,
+            "BootstrapProject",
+            null,
+            Permission.CREATE,
+            PermissionScope.COMPUTER);
 }

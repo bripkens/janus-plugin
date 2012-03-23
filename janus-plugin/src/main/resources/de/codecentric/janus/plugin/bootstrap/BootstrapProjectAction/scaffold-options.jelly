@@ -1,0 +1,20 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="">
+        <j:out value="${scaffold.description}"/>
+    </f:entry>
+
+    <j:if test="${!scaffold.requiredContext.isEmpty()}">
+        <f:section
+                title="Mandatory configuration parameters">
+            <j:forEach var="requiredContext"
+                       items="${scaffold.requiredContext.entrySet()}"
+                       varStatus="loop">
+                <f:entry title="${requiredContext.key}"
+                         description="${requiredContext.value}">
+                    <f:textbox name="${requiredContext.key}" default='${request.getAttribute("param-" + requiredContext.key)}' />
+                </f:entry>
+            </j:forEach>
+        </f:section>
+    </j:if>
+</j:jelly>

@@ -1,0 +1,114 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:l="/lib/layout" xmlns:f="/lib/form">
+    <l:layout title="Janus: Bootstrap Project" norefresh="true" permission="${it.PERMISSION}">
+        <st:include page="../../sidepanel.jelly"/>
+        <l:main-panel>
+            <h1>Janus: Bootstrap Project</h1>
+
+            <j:if test="${error}">
+                <div class="error">
+                    Some error occured.
+                </div>
+            </j:if>
+
+            <j:set var="validConfiguration" value="${it.JenkinsConfigured}"/>
+            <j:if test="${!validConfiguration}">
+                <div class="error">
+                    Jenkins is not properly configured. Please add at
+                    least one VCS configuration and define the catalog
+                    file path and scaffold location.
+                    You can do so through the standard
+                    <a href="../configure">
+                        configuration dialog</a>.
+                </div>
+            </j:if>
+
+            <!--
+            Need to save request attributes in a temporary variable as they
+            are overwritten by some Jelly procedure.
+            -->
+            <j:set var="tempName" value="${name}"/>
+            <j:set var="tempPckg" value="${pckg}"/>
+            <j:set var="tempDescription" value="${description}"/>
+
+            <j:if test="${validConfiguration}">
+            <form action="submit" method="post">
+                <table>
+                    <f:section title="Project information">
+                        <f:entry title="Name"
+                                 field="name">
+                            <div id='janus-name'>
+                                <f:textbox default="${tempName}"/>
+                            </div>
+                        </f:entry>
+                        <f:entry title="Package"
+                                 field="pckg">
+                            <f:textbox default="${tempPckg}" />
+                        </f:entry>
+                        <f:entry title="Description"
+                                field="description">
+                            <f:textarea default="${tempDescription}" />
+                        </f:entry>
+                    </f:section>
+
+                    <f:section title="Environment configuration">
+                        <f:dropdownList name="vcs" title="Version Control System">
+                            <j:forEach var="vcsConfig"
+                                       items="${it.validVCSConfigs}"
+                                       varStatus="loop">
+                                <f:dropdownListBlock
+                                        title="${vcsConfig.vcs.name()} - ${vcsConfig.name}"
+                                        value="vcs-${vcsConfig.name}"
+                                        selected="${vcsConfig.name == selectedVCS}">
+                                </f:dropdownListBlock>
+                            </j:forEach>
+                        </f:dropdownList>
+                    </f:section>
+
+                    <f:section title="Project template">
+                        <f:dropdownList name="scaffold" title="Please select">
+                            <j:forEach var="scaffold"
+                                       items="${it.catalog.scaffolds}"
+                                       varStatus="loop">
+                                <f:dropdownListBlock title="${scaffold.name}"
+                                                     value="scaf-${scaffold.name}"
+                                                     selected="${scaffold.name == selectedScaffold}">
+                                    <st:include page="scaffold-options.jelly"/>
+                                </f:dropdownListBlock>
+                            </j:forEach>
+                        </f:dropdownList>
+                    </f:section>
+
+                    <f:entry title="">
+                        <f:submit value="Bootstrap project"/>
+                    </f:entry>
+                </table>
+            </form>
+
+            <script>
+                var action = <st:bind value="${it}"/>;
+
+                var getInput = function(wrapperId) {
+                    return document.getElementById(wrapperId)
+                        .getElementsByTagName('input')[0];
+                };
+
+                var nameInput = getInput('janus-name');
+                var nameValidationMethod = function() {
+                    value = nameInput.value;
+                    action.isValidName(value, function(rsp) {
+                        var msg = rsp.responseObject();
+                        console.log("Name is valid: " + msg);
+                    });
+                };
+                nameInput.addEventListener('change',
+                        nameValidationMethod,
+                        false);
+                nameValidationMethod();
+            </script>
+
+            </j:if>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>
