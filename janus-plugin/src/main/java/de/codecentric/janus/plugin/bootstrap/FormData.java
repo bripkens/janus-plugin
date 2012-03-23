@@ -62,10 +62,6 @@ class FormData {
         }
     }
 
-    boolean isValid() {
-        return false;
-    }
-
     void setFormDataAsAttributesOn(StaplerRequest req) {
         req.setAttribute("name", name);
         req.setAttribute("description", description);
@@ -76,5 +72,29 @@ class FormData {
         for(Map.Entry<String, String> entry : contextParameters.entrySet()) {
             req.setAttribute("param-" + entry.getKey(), entry.getValue());
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getPckg() {
+        return pckg;
+    }
+
+    public String getScaffoldName() {
+        return scaffoldName;
+    }
+
+    public String getVcsConfigName() {
+        return vcsConfigName;
+    }
+
+    public Map<String, String> getContextParameters() {
+        return contextParameters;
     }
 }

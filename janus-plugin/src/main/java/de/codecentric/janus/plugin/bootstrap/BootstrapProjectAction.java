@@ -65,7 +65,9 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
 
         FormData formData = FormData.parse(req.getSubmittedForm());
 
-        if (!formData.isValid()) {
+        if (isValid(formData)) {
+            req.getRequestDispatcher("/").forward(req, rsp);
+        } else {
             req.setAttribute("error", true);
             formData.setFormDataAsAttributesOn(req);
             // leading and training slash as Jenkins otherwise issues an
@@ -88,6 +90,12 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
     @JavaScriptMethod
     public boolean isValidDescription(String value) {
         return Project.isValidDescription(value);
+    }
+
+    boolean isValid(FormData formData) {
+        return isValidName(formData.getName()) &&
+                isValidPckg(formData.getPckg()) &&
+                isValidDescription(formData.getDescription());
     }
 
     /*

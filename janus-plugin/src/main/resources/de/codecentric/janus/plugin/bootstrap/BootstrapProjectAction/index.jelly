@@ -40,15 +40,28 @@
                                  field="name">
                             <div id='janus-name'>
                                 <f:textbox default="${tempName}"/>
+                                <div class="error" style="display: none">
+                                    Invalid name.
+                                </div>
                             </div>
                         </f:entry>
                         <f:entry title="Package"
                                  field="pckg">
-                            <f:textbox default="${tempPckg}" />
+                            <div id='janus-pckg'>
+                                <f:textbox default="${tempPckg}" />
+                                <div class="error" style="display: none">
+                                    Invalid package.
+                                </div>
+                            </div>
                         </f:entry>
                         <f:entry title="Description"
                                 field="description">
-                            <f:textarea default="${tempDescription}" />
+                            <div id='janus-description'>
+                                <f:textarea default="${tempDescription}" />
+                                <div class="error" style="display: none">
+                                    Invalid description.
+                                </div>
+                            </div>
                         </f:entry>
                     </f:section>
 
@@ -88,25 +101,8 @@
 
             <script>
                 var action = <st:bind value="${it}"/>;
-
-                var getInput = function(wrapperId) {
-                    return document.getElementById(wrapperId)
-                        .getElementsByTagName('input')[0];
-                };
-
-                var nameInput = getInput('janus-name');
-                var nameValidationMethod = function() {
-                    value = nameInput.value;
-                    action.isValidName(value, function(rsp) {
-                        var msg = rsp.responseObject();
-                        console.log("Name is valid: " + msg);
-                    });
-                };
-                nameInput.addEventListener('change',
-                        nameValidationMethod,
-                        false);
-                nameValidationMethod();
             </script>
+            <script src="/plugin/janus-plugin/js/projectBootstrap.js"></script>
 
             </j:if>
         </l:main-panel>
