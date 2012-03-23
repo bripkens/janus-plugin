@@ -12,7 +12,13 @@
                        varStatus="loop">
                 <f:entry title="${requiredContext.key}"
                          description="${requiredContext.value}">
-                    <f:textbox name="${requiredContext.key}" default='${request.getAttribute("param-" + requiredContext.key)}' />
+                    <div class='required'>
+                        <f:textbox name="${requiredContext.key}"
+                                   default='${request.getAttribute("param-" + requiredContext.key)}'/>
+                        <div class="error" style='display: none'>
+                            Please provide a value for this configuration parameter.
+                        </div>
+                    </div>
                 </f:entry>
             </j:forEach>
         </f:section>

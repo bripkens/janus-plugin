@@ -34,4 +34,24 @@
         var field = fields[i];
         addValidation(field.name, field.type);
     }
+
+    var requiredInputValidation = function(event) {
+        var input = event.target;
+        var errorMessage = YAHOO.util.Dom.getNextSibling(input);
+        var value = YAHOO.lang.trim(input.value);
+        if (value.length == 0) {
+            errorMessage.show();
+        } else {
+            errorMessage.hide();
+        }
+    };
+
+    var requiredInputs = YAHOO.util.Dom.getElementsByClassName('required');
+    for(var i = 0; i < requiredInputs.length; i++) {
+        var requiredInput = requiredInputs[i].getElementsByTagName('input')[0];
+        requiredInput.addEventListener('change',
+                requiredInputValidation,
+                false);
+        requiredInputValidation({target: requiredInput});
+    }
 })();
