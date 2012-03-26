@@ -1,7 +1,6 @@
 package de.codecentric.janus.plugin.suite;
 
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
-import de.codecentric.janus.plugin.suite.Config;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -65,6 +64,11 @@ public abstract class AbstractStep {
         // a timeout can indicate, that no build was executed (there is no
         // last build).
         waitUntilPageTitleStartsWith(job + " #");
+    }
+
+    public void goToProjectBootstrapPage() throws Exception {
+        driver.get(Config.getJenkinsBaseUrl() + "bootstrap-project/");
+        waitUntilPageTitleStartsWith("Janus: Bootstrap Project");
     }
 
     /*

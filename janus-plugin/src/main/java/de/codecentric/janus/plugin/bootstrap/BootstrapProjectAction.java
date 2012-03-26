@@ -93,9 +93,15 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
     }
 
     boolean isValid(FormData formData) {
-        return isValidName(formData.getName()) &&
-                isValidPckg(formData.getPckg()) &&
-                isValidDescription(formData.getDescription());
+        if (!isValidName(formData.getName()) ||
+                !isValidPckg(formData.getPckg()) ||
+                !isValidDescription(formData.getDescription())) {
+            return false;
+        }
+
+
+
+        return true;
     }
 
     /*
