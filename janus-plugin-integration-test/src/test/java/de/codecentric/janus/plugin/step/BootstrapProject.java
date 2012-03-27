@@ -97,8 +97,6 @@ public class BootstrapProject extends AbstractStep {
 
     @Then("the test project scaffolds are visible and can be selected")
     public void thenTheTestProjectScaffoldsAreVisible() throws Exception {
-        Thread.sleep(20000);
-
         List<WebElement> options = getScaffoldSelectField().getOptions();
 
         for (WebElement option : options) {
@@ -133,6 +131,15 @@ public class BootstrapProject extends AbstractStep {
     private void testScaffoldWith(WebElement option, String expDescription, Map<String,
             String> expRequiredContext) {
         testScaffoldWith(option, expDescription);
+
+        for(Map.Entry<String, String> entry : expRequiredContext.entrySet()) {
+            String selector = "input[name=\"" + entry.getKey() + "\"]";
+            WebElement input = findByCSS(selector);
+            assertThat(input.isDisplayed(), is(true));
+            
+            WebElement errorMsg = findByCSS(selector + " + div.error");
+            assertThat(errorMsg.isDisplayed(), is(true));
+        }
     }
 
     /*

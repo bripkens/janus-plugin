@@ -37,9 +37,7 @@ And a configured scaffold directory <scaffoldDir> and catalog <catalog>
 When the project bootstrap page is accessed
 
 Then the version control system <name> with type <type> can be selected
-And the test project scaffolds are visible
-And the mandatory configuration parameters change
-And the project scaffold description is visible
+And the test project scaffolds are visible and can be selected
 
 Examples:
 | name          | type      | creationBuild | checkoutBuild   | commitBuild | scaffoldDir                    | catalog                           |
