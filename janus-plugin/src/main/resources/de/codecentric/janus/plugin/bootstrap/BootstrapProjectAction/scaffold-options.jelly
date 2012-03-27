@@ -1,7 +1,9 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:entry title="">
-        <j:out value="${scaffold.description}"/>
+        <div class='scaffoldDescription'>
+            <j:out value="${scaffold.description}"/>
+        </div>
     </f:entry>
 
     <j:if test="${!scaffold.requiredContext.isEmpty()}">

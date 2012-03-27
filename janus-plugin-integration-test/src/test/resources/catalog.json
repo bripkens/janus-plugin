@@ -1,0 +1,15 @@
+{
+  "scaffolds": [{
+    "name": "Java EE 6 RESTful web service",
+    "description": "Web based project with RESTeasy web service.",
+    "filename": "jee6-web-service.zip"
+  }, {
+    "name": "Spring Desktop Application",
+    "description": "Java Swing desktop application with Spring for DI.",
+    "filename": "swing-desktop-app.zip",
+    "requiredContext": {
+      "showSplash": "true/false. Whether to show the welcome screen when the application starts.",
+      "lookAndFeel": "Either 'CrossPlatformLookAndFeel' or 'SystemLookAndFeel'."
+    }
+  }]
+}

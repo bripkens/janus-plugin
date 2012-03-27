@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
@@ -25,6 +27,10 @@ public abstract class AbstractStep {
     public WebElement findByCSS(String cssSelector) {
         return driver.findElement(By.cssSelector(cssSelector));
     }
+    
+    public List<WebElement> findAllByCSS(String cssSelector) {
+        return driver.findElements(By.cssSelector(cssSelector));
+    }
 
     public WebElement findById(String id) {
         return driver.findElement(By.id(id));
@@ -32,6 +38,16 @@ public abstract class AbstractStep {
 
     public Select findSelectByCSS(String cssSelector) {
         return new Select(findByCSS(cssSelector));
+    }
+    
+    public List<Select> findAllSelectsByCSS(String cssSelector) {
+        List<Select> result = new ArrayList<Select>();
+
+        for (WebElement element: findAllByCSS(cssSelector)) {
+            result.add(new Select(element));
+        }
+
+        return result;
     }
 
     public void cleanJenkinsConfiguration() throws Exception {
@@ -96,6 +112,26 @@ public abstract class AbstractStep {
             @Override
             public Boolean apply(@Nullable WebDriver driver) {
                 return driver.getTitle().startsWith(prefix);
+            }
+        });
+    }
+    
+    public void waitUntilPageContainsText(final String cssSelector,
+                                          final String text) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(@Nullable WebDriver driver) {
+                List<WebElement> elements = driver
+                        .findElements(By.cssSelector(cssSelector));
+                
+                for(WebElement element : elements) {
+                    if (element.isDisplayed() &&
+                            element.getText().contains(text)) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         });
     }

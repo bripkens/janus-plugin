@@ -3,11 +3,14 @@ package de.codecentric.janus.plugin.step;
 import com.google.inject.Inject;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
 import de.codecentric.janus.plugin.suite.AbstractStep;
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Named;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
+import org.jbehave.core.annotations.*;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -40,14 +43,18 @@ public class BootstrapProject extends AbstractStep {
             throws Exception {
         goToConfigurationPage();
 
-        generationConfiguration.getCatalogFileInputField().sendKeys(catalog);
-        generationConfiguration.getScaffoldDirInputField().sendKeys(scaffoldDir);
+        String absoluteCatalogPath = prefixCWD(catalog);
+        String absoluteScaffoldsPath = prefixCWD(scaffoldDir);
+        generationConfiguration.getCatalogFileInputField()
+                .sendKeys(absoluteCatalogPath);
+        generationConfiguration.getScaffoldDirInputField()
+                .sendKeys(absoluteScaffoldsPath);
         configuration.getSubmitButton().click();
     }
 
     public String prefixCWD(String path) {
         if (path.startsWith("./")) {
-            return System.getProperty("user.dir") + path.substring(2);
+            return System.getProperty("user.dir") + path.substring(1);
         }
 
         return path;
@@ -77,7 +84,55 @@ public class BootstrapProject extends AbstractStep {
     @Then("the version control system <name> with type <type> can be selected")
     public void thenVCSIsSelectable(@Named("name") String name,
                                     @Named("type") String type) {
+        List<WebElement> options = getVCSSelectField().getOptions();
 
+        assertThat(options.size(), is(1));
+        WebElement option = options.get(0);
+        String value = option.getAttribute("value");
+        String text = option.getText();
+        assertThat(value, containsString(name));
+        assertThat(text, containsString(type));
+        assertThat(text, containsString(name));
+    }
+
+    @Then("the test project scaffolds are visible and can be selected")
+    public void thenTheTestProjectScaffoldsAreVisible() throws Exception {
+        Thread.sleep(20000);
+
+        List<WebElement> options = getScaffoldSelectField().getOptions();
+
+        for (WebElement option : options) {
+            String text = option.getText();
+            if (text.equalsIgnoreCase(TEST_DATA.WEB_NAME)) {
+                testWebScaffold(option);
+            } else if (text.equalsIgnoreCase(TEST_DATA.DESKTOP_NAME)) {
+                testDesktopScaffold(option);
+            } else {
+                fail("Unknown select option found.");
+            }
+        }
+    }
+    
+    private void testWebScaffold(WebElement option) {
+        option.click();
+        testScaffoldWith(option, TEST_DATA.WEB_DESCRIPTION);
+    }
+
+    private void testDesktopScaffold(WebElement option) {
+        testScaffoldWith(option, TEST_DATA.DESKTOP_DESCRIPTION,
+                TEST_DATA.DESKTOP_REQUIRED_CONTEXT);
+    }
+
+    private void testScaffoldWith(WebElement option, String expDescription) {
+        option.click();
+
+        waitUntilPageContainsText(CSS_SELECTOR.SCAFFOLD_DESCRIPTION_DIV,
+                expDescription);
+    }
+
+    private void testScaffoldWith(WebElement option, String expDescription, Map<String,
+            String> expRequiredContext) {
+        testScaffoldWith(option, expDescription);
     }
 
     /*
@@ -86,16 +141,34 @@ public class BootstrapProject extends AbstractStep {
     * ############################
     */
     public Select getVCSSelectField() {
-        return findSelectByCSS(CSS_SELECTOR.VCS_SELECT_BOX);
+        return findAllSelectsByCSS(CSS_SELECTOR.VCS_SELECT_BOX).get(0);
     }
 
     public Select getScaffoldSelectField() {
-        return findSelectByCSS(CSS_SELECTOR.SCAFFOLD_SELECT_BOX);
+        return findAllSelectsByCSS(CSS_SELECTOR.SCAFFOLD_SELECT_BOX).get(1);
+    }
+
+    public WebElement getScaffoldDescriptionDIV() {
+        return findByCSS(CSS_SELECTOR.SCAFFOLD_DESCRIPTION_DIV);
     }
 
     private static interface CSS_SELECTOR {
-        String VCS_SELECT_BOX = "select:nth-of-type(1)";
+        String VCS_SELECT_BOX = "select";
 
-        String SCAFFOLD_SELECT_BOX = "select:nth-of-type(2)";
+        String SCAFFOLD_SELECT_BOX = "select";
+
+        String SCAFFOLD_DESCRIPTION_DIV = ".scaffoldDescription";
+    }
+    
+    public static interface TEST_DATA {
+        String WEB_NAME = "Java EE 6 RESTful web service";
+        String WEB_DESCRIPTION = "Web based project with RESTeasy web service.";
+        
+        String DESKTOP_NAME = "Spring Desktop Application";
+        String DESKTOP_DESCRIPTION = "Java Swing desktop application with Spring for DI.";
+        Map<String, String> DESKTOP_REQUIRED_CONTEXT = new HashMap<String, String>() {{
+            put("showSplash", "true/false. Whether to show the welcome screen when the application starts.");
+            put("lookAndFeel", "Either 'CrossPlatformLookAndFeel' or 'SystemLookAndFeel'.");
+        }};
     }
 }
