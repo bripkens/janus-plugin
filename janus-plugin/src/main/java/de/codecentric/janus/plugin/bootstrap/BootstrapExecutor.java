@@ -28,13 +28,15 @@ class BootstrapExecutor {
 
     BootstrapExecutor(Project project, VCSConfiguration vcsConfiguration,
                       CatalogEntry catalogEntry, Map<String, String> context) {
+
         data = new StepExecutionData(project,
                 vcsConfiguration,
                 catalogEntry,
                 context);
+
         atomicBoolean = new AtomicBoolean();
 
-        steps = new AbstractBootstrapStep[]{
+        steps = new AbstractBootstrapStep[] {
                 new RepositoryCreationStep(data),
                 new RepositoryCheckoutStep(data),
                 new RepositoryCommitStep(data)
