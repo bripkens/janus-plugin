@@ -1,0 +1,71 @@
+package de.codecentric.janus.plugin.bootstrap.step;
+
+import de.codecentric.janus.conf.Project;
+import de.codecentric.janus.plugin.vcs.VCSConfiguration;
+import de.codecentric.janus.scaffold.CatalogEntry;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+
+/**
+ * @author Ben Ripkens <bripkens.dev@gmail.com>
+ */
+public class StepExecutionData {
+    private static final Logger LOGGER = Logger
+            .getLogger(StepExecutionData.class.getName());
+
+    private final Project project;
+    private final VCSConfiguration vcsConfiguration;
+    private final CatalogEntry catalogEntry;
+    private final Map<String, String> context;
+
+    private final List<String> log;
+
+    public StepExecutionData(Project project, VCSConfiguration vcsConfiguration,
+                      CatalogEntry catalogEntry,
+                      Map<String, String> context) {
+        this.project = project;
+        this.vcsConfiguration = vcsConfiguration;
+        this.catalogEntry = catalogEntry;
+        this.context = Collections.unmodifiableMap(context);
+
+        log = new LinkedList<String>();
+    }
+
+    public List<String> getLog() {
+        return Collections.unmodifiableList(log);
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public VCSConfiguration getVcsConfiguration() {
+        return vcsConfiguration;
+    }
+
+    public CatalogEntry getCatalogEntry() {
+        return catalogEntry;
+    }
+
+    public Map<String, String> getContext() {
+        return context;
+    }
+
+    public void log(String msg) {
+        String wrappedMsg = "Janus: " + msg + " [" + this.toString() + "]";
+        LOGGER.info(wrappedMsg);
+        log.add(msg);
+    }
+
+    @Override
+    public String toString() {
+        return "StepExecutionData{" +
+                "project=" + project +
+                ", vcsConfiguration=" + vcsConfiguration +
+                ", catalogEntry=" + catalogEntry +
+                ", context=" + context +
+                '}';
+    }
+}

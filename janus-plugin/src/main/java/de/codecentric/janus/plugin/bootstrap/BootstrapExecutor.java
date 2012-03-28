@@ -1,13 +1,16 @@
 package de.codecentric.janus.plugin.bootstrap;
 
 import de.codecentric.janus.conf.Project;
+import de.codecentric.janus.plugin.JanusPlugin;
+import de.codecentric.janus.plugin.bootstrap.step.*;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.CatalogEntry;
+import hudson.model.Build;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -18,24 +21,24 @@ class BootstrapExecutor {
     private static final Logger LOGGER = Logger
             .getLogger(BootstrapExecutor.class.getName());
 
+    private final StepExecutionData data;
     private final AtomicBoolean atomicBoolean;
 
-    private final Project project;
-    private final VCSConfiguration vcsConfiguration;
-    private final CatalogEntry catalogEntry;
-    private final Map<String, String> context;
-
-    private List<String> log;
+    private final AbstractBootstrapStep[] steps;
 
     BootstrapExecutor(Project project, VCSConfiguration vcsConfiguration,
                       CatalogEntry catalogEntry, Map<String, String> context) {
-        this.project = project;
-        this.vcsConfiguration = vcsConfiguration;
-        this.catalogEntry = catalogEntry;
-        this.context = context;
-
+        data = new StepExecutionData(project,
+                vcsConfiguration,
+                catalogEntry,
+                context);
         atomicBoolean = new AtomicBoolean();
-        log = new LinkedList<String>();
+
+        steps = new AbstractBootstrapStep[]{
+                new RepositoryCreationStep(data),
+                new RepositoryCheckoutStep(data),
+                new RepositoryCommitStep(data)
+        };
     }
 
     List<String> execute() {
@@ -44,38 +47,28 @@ class BootstrapExecutor {
                     "be used once. Please create a new instance.");
         }
 
-        log("Starting project bootstrap for project '" +
-                project.getName() + "'.");
-        
-        createRepository();
-        checkoutRepository();
-        generateSources();
-        commitChanges();
+        data.log("Initiating project bootstrap for: " +
+                data.getProject().getName() + ".");
 
-        log("Finished project bootstrap for project '" +
-                project.getName() + "'.");
+        boolean allSuccessful = true;
+        try {
+            for (int i = 0; i < steps.length && allSuccessful; i++) {
+                allSuccessful = steps[i].execute();
+            }
+        } catch (JanusPluginBootstrapException ex) {
+            String msg = "Unexpected project bootstrap failure: " +
+                    ex.getMessage();
+            data.log(msg);
+            LOGGER.log(Level.WARNING, msg, ex);
+            allSuccessful = false;
+        }
 
-        return log;
-    }
+        if (allSuccessful) {
+            data.log("Hooray, successfully finished project bootstrap!");
+        } else {
+            data.log("Stopping bootstrap because of previous errors.");
+        }
 
-    private void createRepository() {
-
-    }
-
-    private void checkoutRepository() {
-
-    }
-
-    private void generateSources() {
-
-    }
-
-    private void commitChanges() {
-
-    }
-
-    private void log(String msg) {
-        LOGGER.info(msg);
-        log.add(msg);
+        return data.getLog();
     }
 }

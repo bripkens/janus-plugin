@@ -19,6 +19,7 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -68,6 +69,21 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         FormData formData = FormData.parse(req.getSubmittedForm());
         ParsedFormData parsedFormData = isValid(formData);
         if (parsedFormData.getStatus() == ParsedFormData.Status.OK) {
+            Project project = new Project();
+            project.setName(parsedFormData.getName());
+            project.setDescription(parsedFormData.getDescription());
+            project.setPckg(parsedFormData.getPckg());
+
+            BootstrapExecutor executor;
+            executor = new BootstrapExecutor(project,
+                    parsedFormData.getVcsConfiguration(),
+                    parsedFormData.getScaffold(), parsedFormData.getContext());
+            List<String> log = executor.execute();
+            
+            for (String logEntry : log) {
+                System.out.println(logEntry);
+            }
+
             req.getRequestDispatcher("/").forward(req, rsp);
         } else {
             req.setAttribute("error", true);

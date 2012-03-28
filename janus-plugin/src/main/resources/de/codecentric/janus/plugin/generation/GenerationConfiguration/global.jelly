@@ -9,8 +9,14 @@
         </f:entry>
 
         <f:entry title="Scaffold directory"
-                 description="Point to the directory which contains scaffolds, e.g., /home/jenkins/janus/"
+                 description="Point to the directory which contains scaffolds, e.g., /home/jenkins/janus/scaffolds"
                  field="scaffoldDirectory">
+            <f:textbox />
+        </f:entry>
+
+        <f:entry title="Temporary directory"
+                 description="Path to an (existing) directory which can be used as a workspace by Janus. For instance, /home/jenkins/janus/tmp"
+                 field="tempDirectory">
             <f:textbox />
         </f:entry>
     </f:section>

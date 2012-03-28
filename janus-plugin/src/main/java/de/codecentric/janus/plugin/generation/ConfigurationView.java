@@ -40,43 +40,16 @@ public class ConfigurationView extends Descriptor<GenerationConfiguration> {
     }
 
     public FormValidation doCheckCatalogFile(@QueryParameter String catalogFile) {
-        if (catalogFile.trim().isEmpty()) {
-            return FormValidation.warning("Please enter a catalog file " +
-                    "location.");
-        }
-
-        File file = new File(catalogFile);
-
-        if (!file.exists()) {
-            return FormValidation.error("The file doesn't exist.");
-        } else if (!file.canRead()) {
-            return FormValidation.error("The file can't be read " +
-                    "(insufficient access rights).");
-        } else if (!file.isFile()) {
-            return FormValidation.error("The path doesn't denote a file.");
-        }
-
-        return FormValidation.ok();
+        return GenerationConfiguration.doCheckCatalogFile(catalogFile);
     }
 
     public FormValidation doCheckScaffoldDirectory(@QueryParameter String scaffoldDirectory) {
-        if (scaffoldDirectory.trim().isEmpty()) {
-            return FormValidation.warning("Please enter a scaffold directory " +
-                    "location.");
-        }
+        return GenerationConfiguration
+                .doCheckScaffoldDirectory(scaffoldDirectory);
+    }
 
-        File file = new File(scaffoldDirectory);
-
-        if (!file.exists()) {
-            return FormValidation.error("The directory doesn't exist.");
-        } else if (!file.canRead()) {
-            return FormValidation.error("The directory can't be read " +
-                    "(insufficient access rights).");
-        } else if (!file.isDirectory()) {
-            return FormValidation.error("The path doesn't denote a directory.");
-        }
-
-        return FormValidation.ok();
+    public FormValidation doCheckTempDirectory(@QueryParameter String tempDirectory) {
+        return GenerationConfiguration.doCheckTempDirectory(tempDirectory);
     }
     
     public String getCatalogFile() {
@@ -90,6 +63,14 @@ public class ConfigurationView extends Descriptor<GenerationConfiguration> {
     public String getScaffoldDirectory() {
         if (generationConfiguration != null) {
             return generationConfiguration.getScaffoldDirectory();
+        }
+
+        return null;
+    }
+
+    public String getTempDirectory() {
+        if (generationConfiguration != null) {
+            return generationConfiguration.getTempDirectory();
         }
 
         return null;

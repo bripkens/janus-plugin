@@ -2,7 +2,6 @@ package de.codecentric.janus.plugin.vcs;
 
 import de.codecentric.janus.plugin.JanusPlugin;
 import de.codecentric.janus.plugin.JanusPluginException;
-import de.codecentric.janus.plugin.JanusPluginGenerationException;
 import hudson.Extension;
 import hudson.model.*;
 import hudson.security.ACL;
@@ -11,7 +10,6 @@ import hudson.security.Permission;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.acegisecurity.AccessDeniedException;
-import org.acegisecurity.Authentication;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -116,11 +114,11 @@ public class NewRepositoryAction implements RootAction, AccessControlled {
         } catch (InterruptedException e) {
             LOGGER.log(Level.SEVERE, "Got interrupted while waiting " +
                     "on repository build to finish.", e);
-            throw new JanusPluginGenerationException(e);
+            throw new JanusPluginException(e);
         } catch (ExecutionException e) {
             LOGGER.log(Level.SEVERE, "Error occurred while creating" +
                     "repository.", e);
-            throw new JanusPluginGenerationException(e);
+            throw new JanusPluginException(e);
         }
     }
     

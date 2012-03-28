@@ -146,4 +146,11 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
 
         return configs;
     }
+
+    @Override
+    public String toString() {
+        return "VCSConfiguration{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }
