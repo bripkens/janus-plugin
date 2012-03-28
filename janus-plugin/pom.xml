@@ -38,6 +38,12 @@
             <version>${janus.base.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>de.codecentric.janus</groupId>
+            <artifactId>generation</artifactId>
+            <version>${janus.base.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

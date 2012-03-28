@@ -1,16 +1,11 @@
 package de.codecentric.janus.plugin.generation;
 
-import de.codecentric.janus.VersionControlSystem;
-import de.codecentric.janus.plugin.vcs.VCSConfiguration;
-import de.codecentric.janus.scaffold.Catalog;
 import hudson.Extension;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
-
-import java.io.File;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
@@ -62,7 +57,7 @@ public class ConfigurationView extends Descriptor<GenerationConfiguration> {
 
     public String getScaffoldDirectory() {
         if (generationConfiguration != null) {
-            return generationConfiguration.getScaffoldDirectory();
+            return generationConfiguration.getScaffoldDir();
         }
 
         return null;
@@ -70,7 +65,7 @@ public class ConfigurationView extends Descriptor<GenerationConfiguration> {
 
     public String getTempDirectory() {
         if (generationConfiguration != null) {
-            return generationConfiguration.getTempDirectory();
+            return generationConfiguration.getTempDir();
         }
 
         return null;

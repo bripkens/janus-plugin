@@ -35,7 +35,8 @@ public class GenerationConfiguration implements Describable<GenerationConfigurat
     }
 
     public static FormValidation doCheckCatalogFile(String catalogFile) {
-        if (catalogFile.trim().isEmpty()) {
+        catalogFile = catalogFile.trim();
+        if (catalogFile.isEmpty()) {
             return FormValidation.warning("Please enter a catalog file " +
                     "location.");
         }
@@ -75,7 +76,8 @@ public class GenerationConfiguration implements Describable<GenerationConfigurat
     }
     
     private static FormValidation doCheckDirectory(String dir) {
-        if (dir.trim().isEmpty()) {
+        dir = dir.trim();
+        if (dir.isEmpty()) {
             return FormValidation.warning("Please enter a scaffold directory " +
                     "location.");
         }
@@ -102,7 +104,7 @@ public class GenerationConfiguration implements Describable<GenerationConfigurat
         this.catalogFile = catalogFile;
     }
 
-    public String getScaffoldDirectory() {
+    public String getScaffoldDir() {
         return scaffoldDirectory;
     }
 
@@ -114,7 +116,7 @@ public class GenerationConfiguration implements Describable<GenerationConfigurat
         return new ConfigurationView().getGenerationConfiguration();
     }
 
-    public String getTempDirectory() {
+    public String getTempDir() {
         return tempDirectory;
     }
 

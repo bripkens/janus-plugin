@@ -39,6 +39,7 @@ class BootstrapExecutor {
         steps = new AbstractBootstrapStep[] {
                 new RepositoryCreationStep(data),
                 new RepositoryCheckoutStep(data),
+                new SourceCodeGenerationStep(data),
                 new RepositoryCommitStep(data)
         };
     }

@@ -12,11 +12,11 @@ import java.util.concurrent.Future;
  */
 public abstract class AbstractBootstrapStep {
     protected final StepExecutionData data;
-    protected final GenerationConfiguration generationConfiguration;
+    protected final GenerationConfiguration generationConfig;
 
     public AbstractBootstrapStep(StepExecutionData data) {
         this.data = data;
-        generationConfiguration = GenerationConfiguration.get();
+        generationConfig = GenerationConfiguration.get();
     }
 
     public abstract boolean execute();

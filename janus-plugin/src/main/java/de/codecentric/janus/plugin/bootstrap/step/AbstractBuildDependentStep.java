@@ -31,7 +31,7 @@ public abstract class AbstractBuildDependentStep extends AbstractBootstrapStep {
         scheduledBuild = executeJob(buildJob,
                 new HashMap<String, String>() {{
                     put("name", data.getProject().getName());
-                    put("tmpDir", generationConfiguration.getTempDirectory());
+                    put("tmpDir", generationConfig.getTempDir());
                 }});
 
 
