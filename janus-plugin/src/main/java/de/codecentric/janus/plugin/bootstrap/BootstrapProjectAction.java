@@ -4,6 +4,7 @@ import de.codecentric.janus.conf.Project;
 import de.codecentric.janus.plugin.JanusPlugin;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
+import de.codecentric.janus.scaffold.CatalogEntry;
 import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
@@ -18,6 +19,7 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -92,14 +94,59 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         return Project.isValidDescription(value);
     }
 
-    boolean isValid(FormData formData) {
+    private boolean isValid(FormData formData) {
         if (!isValidName(formData.getName()) ||
                 !isValidPckg(formData.getPckg()) ||
                 !isValidDescription(formData.getDescription())) {
             return false;
         }
+        
+        VCSConfiguration config;
+        try {
+            config = getVCSConfig(formData);
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
 
+        CatalogEntry scaffold;
+        try {
+            scaffold = getScaffold(formData);
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
 
+        return isRequiredContextFilledIn(scaffold, formData);
+    }
+
+    private VCSConfiguration getVCSConfig(FormData formData) {
+        for(VCSConfiguration config : getValidVCSConfigs()) {
+            if (config.getName().equals(formData.getVcsConfigName())) {
+                return config;
+            }
+        }
+
+        throw new IllegalArgumentException("The VCS config doesn't exist");
+    }
+    
+    private CatalogEntry getScaffold(FormData formData) {
+        for (CatalogEntry entry : getCatalog().getScaffolds()) {
+            if (entry.getName().equals(formData.getScaffoldName())) {
+                return entry;
+            }
+        }
+
+        throw new IllegalArgumentException("The scaffold doesn't exist");
+    }
+    
+    private boolean isRequiredContextFilledIn(CatalogEntry scaffold,
+                                              FormData formData) {
+        Map<String, String> contextParams = formData.getContextParameters();
+
+        for (String param : scaffold.getRequiredContext().keySet()) {
+            if (!contextParams.containsKey(param)) {
+                return false;
+            }
+        }
 
         return true;
     }
