@@ -3,6 +3,7 @@ package de.codecentric.janus.plugin;
 import de.codecentric.janus.plugin.generation.GenerationConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
+import hudson.model.*;
 import hudson.security.Permission;
 import hudson.security.PermissionGroup;
 import hudson.security.PermissionScope;
@@ -10,6 +11,8 @@ import hudson.security.PermissionScope;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 /**
@@ -82,5 +85,44 @@ public class JanusPlugin {
         }
 
         return true;
+    }
+    
+    public static Future<Build> scheduleBuild(String jobName,
+                                              Map<String, String> parameters) {
+        Project job = getJob(jobName);
+
+        Cause buildCause = new Cause.UserCause();
+
+        List<ParameterValue> hudsonBuildParameters;
+        hudsonBuildParameters = toHudsonJobParameters(parameters);
+        ParametersAction action = new ParametersAction(hudsonBuildParameters);
+
+        return job.scheduleBuild2(0, buildCause, action);
+    }
+
+    public static Project getJob(String jobName) {
+        for(Project p : Hudson.getInstance().getProjects()) {
+            if (p.getName().equals(jobName)) {
+                return p;
+            }
+        }
+
+        throw new IllegalArgumentException("Build job '" + jobName + "' " +
+                "doesn't exist");
+    }
+
+    public static List<ParameterValue> toHudsonJobParameters(
+            Map<String, String> parameters) {
+
+        List<ParameterValue> hudsonParameters;
+        hudsonParameters = new ArrayList<ParameterValue>(parameters.size());
+
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            ParameterValue parameter = new StringParameterValue(entry.getKey(),
+                    entry.getValue());
+            hudsonParameters.add(parameter);
+        }
+
+        return hudsonParameters;
     }
 }
