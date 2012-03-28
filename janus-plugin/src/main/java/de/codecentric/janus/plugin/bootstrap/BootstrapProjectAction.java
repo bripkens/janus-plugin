@@ -66,8 +66,8 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         checkPermission(PERMISSION);
 
         FormData formData = FormData.parse(req.getSubmittedForm());
-
-        if (isValid(formData)) {
+        ParsedFormData parsedFormData = isValid(formData);
+        if (parsedFormData.getStatus() == ParsedFormData.Status.OK) {
             req.getRequestDispatcher("/").forward(req, rsp);
         } else {
             req.setAttribute("error", true);
@@ -94,28 +94,41 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         return Project.isValidDescription(value);
     }
 
-    private boolean isValid(FormData formData) {
+    private ParsedFormData isValid(FormData formData) {
+        ParsedFormData result;
+        result = new ParsedFormData(ParsedFormData.Status.ERROR);
+
         if (!isValidName(formData.getName()) ||
                 !isValidPckg(formData.getPckg()) ||
                 !isValidDescription(formData.getDescription())) {
-            return false;
+            return result;
         }
+        result.setName(formData.getName());
+        result.setDescription(formData.getDescription());
+        result.setPckg(formData.getPckg());
         
         VCSConfiguration config;
         try {
             config = getVCSConfig(formData);
         } catch (IllegalArgumentException ex) {
-            return false;
+            return result;
         }
+        result.setVcsConfiguration(config);
 
         CatalogEntry scaffold;
         try {
             scaffold = getScaffold(formData);
         } catch (IllegalArgumentException ex) {
-            return false;
+            return result;
+        }
+        result.setScaffold(scaffold);
+
+        if (isRequiredContextFilledIn(scaffold, formData)) {
+            result.setContext(formData.getContextParameters());
+            result.setStatus(ParsedFormData.Status.OK);
         }
 
-        return isRequiredContextFilledIn(scaffold, formData);
+        return result;
     }
 
     private VCSConfiguration getVCSConfig(FormData formData) {
