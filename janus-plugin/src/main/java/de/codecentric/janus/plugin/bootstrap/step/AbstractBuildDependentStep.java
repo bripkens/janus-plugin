@@ -1,6 +1,7 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
 import de.codecentric.janus.plugin.bootstrap.JanusPluginBootstrapException;
+import de.codecentric.janus.plugin.bootstrap.LogEntry;
 import hudson.model.Build;
 import hudson.model.Result;
 
@@ -45,11 +46,12 @@ public abstract class AbstractBuildDependentStep extends AbstractBootstrapStep {
         }
 
         if (!executedBuild.getResult().isBetterOrEqualTo(Result.SUCCESS)) {
-            data.log(failMessage(executedBuild.getUrl()));
+            data.log(failMessage(executedBuild.getUrl()),
+                    LogEntry.Type.FAILURE);
             return false;
         }
 
-        data.log(successMessage());
+        data.log(successMessage(), LogEntry.Type.SUCCESS);
         return true;
     }
 }

@@ -1,0 +1,23 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:l="/lib/layout" xmlns:f="/lib/form">
+    <l:layout title="Janus: Bootstrap Results" norefresh="true" permission="${it.PERMISSION}">
+        <st:include page="../../sidepanel.jelly"/>
+        <l:main-panel>
+            <link rel="stylesheet" href="/plugin/janus-plugin/css/bootstrapLog.css" type="text/css" />
+
+            <h1>Janus: Bootstrap Results</h1>
+
+            <div class='messages'>
+                <j:forEach var="logEntry"
+                           items='${request.session.getAttribute("janus-flash").get("bootstrapLog")}'
+                           varStatus="loop">
+                    <div class="entry ${logEntry.type}">
+                        ${logEntry.msg}
+                    </div>
+                </j:forEach>
+            </div>
+
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

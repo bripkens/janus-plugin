@@ -1,5 +1,6 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
+import de.codecentric.janus.plugin.bootstrap.LogEntry;
 import de.codecentric.janus.scaffold.Scaffold;
 import de.codecentric.janus.generation.ScaffoldExecutor;
 
@@ -28,9 +29,10 @@ public class SourceCodeGenerationStep extends AbstractBootstrapStep {
 
         executor.apply(output);
 
-        data.log("Successfully generated sources in target directory.");
+        data.log("Successfully generated sources in target directory.",
+                LogEntry.Type.SUCCESS);
 
-        return false;
+        return true;
     }
 
     private Scaffold getScaffold() {

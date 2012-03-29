@@ -1,0 +1,23 @@
+.messages {
+    background: #eee;
+    border: 1px solid #888;
+}
+
+.messages > div {
+    padding: 3px 7px;
+    border-top: 1px solid #888;
+    font-family: 'inconsolata','monaco',monospace,serif;
+    font-size: 12px;
+}
+
+.messages > div:first-child {
+    border-top: 0;
+}
+
+.messages > div.FAILURE {
+    color: darkred;
+}
+
+.messages > div.SUCCESS {
+    color: green;
+}

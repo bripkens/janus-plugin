@@ -144,7 +144,7 @@ public class NewRepositoryAction implements RootAction, AccessControlled {
     }
 
     public Action getDynamic(String name) {
-        if (name.equals("success")) {
+        if (name.equals(RepositoryCreationSuccessAction.URL)) {
             return new RepositoryCreationSuccessAction();
         }
 

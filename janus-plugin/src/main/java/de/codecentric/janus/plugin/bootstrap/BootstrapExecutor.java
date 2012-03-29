@@ -44,7 +44,7 @@ class BootstrapExecutor {
         };
     }
 
-    List<String> execute() {
+    List<LogEntry> execute() {
         if (!atomicBoolean.compareAndSet(false, true)) {
             throw new IllegalStateException("A bootstrap executor may only " +
                     "be used once. Please create a new instance.");
@@ -61,17 +61,20 @@ class BootstrapExecutor {
         } catch (JanusPluginBootstrapException ex) {
             String msg = "Unexpected project bootstrap failure: " +
                     ex.getMessage();
-            data.log(msg);
+            data.log(msg, LogEntry.Type.FAILURE);
             LOGGER.log(Level.WARNING, msg, ex);
             allSuccessful = false;
         }
 
         if (allSuccessful) {
-            data.log("Hooray, successfully finished project bootstrap!");
+            data.log("Hooray, successfully finished project bootstrap!",
+                    LogEntry.Type.SUCCESS);
+            data.setSuccess(true);
         } else {
-            data.log("Stopping bootstrap because of previous errors.");
+            data.log("Stopping bootstrap because of previous errors.",
+                    LogEntry.Type.FAILURE);
         }
 
-        return data.getLog();
+        return data.getLog().getLogEntries();
     }
 }

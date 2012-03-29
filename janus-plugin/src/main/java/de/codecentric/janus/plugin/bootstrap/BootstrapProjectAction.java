@@ -1,11 +1,15 @@
 package de.codecentric.janus.plugin.bootstrap;
 
 import de.codecentric.janus.conf.Project;
+import de.codecentric.janus.plugin.Flash;
+import de.codecentric.janus.plugin.FlashKeys;
 import de.codecentric.janus.plugin.JanusPlugin;
+import de.codecentric.janus.plugin.vcs.RepositoryCreationSuccessAction;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
 import de.codecentric.janus.scaffold.CatalogEntry;
 import hudson.Extension;
+import hudson.model.Action;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
 import hudson.security.ACL;
@@ -78,13 +82,12 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
             executor = new BootstrapExecutor(project,
                     parsedFormData.getVcsConfiguration(),
                     parsedFormData.getScaffold(), parsedFormData.getContext());
-            List<String> log = executor.execute();
-            
-            for (String logEntry : log) {
-                System.out.println(logEntry);
-            }
+            List<LogEntry> log = executor.execute();
 
-            req.getRequestDispatcher("/").forward(req, rsp);
+            Flash flash = Flash.getForRequest(req);
+            flash.put(FlashKeys.BOOTSTRAP_LOG, log);
+
+            rsp.sendRedirect("/" + URL + "/" + BootstrapResultAction.URL);
         } else {
             req.setAttribute("error", true);
             formData.setFormDataAsAttributesOn(req);
@@ -214,5 +217,18 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
 
     public boolean hasPermission(Permission p) {
         return getACL().hasPermission(p);
+    }
+
+    /*
+     * ############################
+     * Sub view navigation
+     * ############################
+     */
+    public Action getDynamic(String name) {
+        if (name.equals(BootstrapResultAction.URL)) {
+            return new BootstrapResultAction();
+        }
+
+        return null;
     }
 }

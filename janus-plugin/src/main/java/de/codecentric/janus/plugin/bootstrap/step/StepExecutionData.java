@@ -1,6 +1,8 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
 import de.codecentric.janus.conf.Project;
+import de.codecentric.janus.plugin.bootstrap.Log;
+import de.codecentric.janus.plugin.bootstrap.LogEntry;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.CatalogEntry;
 
@@ -20,7 +22,7 @@ public class StepExecutionData {
     private final CatalogEntry catalogEntry;
     private final Map<String, String> context;
 
-    private final List<String> log;
+    private final Log log;
 
     public StepExecutionData(Project project, VCSConfiguration vcsConfiguration,
                       CatalogEntry catalogEntry,
@@ -30,11 +32,11 @@ public class StepExecutionData {
         this.catalogEntry = catalogEntry;
         this.context = Collections.unmodifiableMap(context);
 
-        log = new LinkedList<String>();
+        log = new Log();
     }
 
-    public List<String> getLog() {
-        return Collections.unmodifiableList(log);
+    public Log getLog() {
+        return log;
     }
 
     public Project getProject() {
@@ -56,9 +58,19 @@ public class StepExecutionData {
     public void log(String msg) {
         String wrappedMsg = "Janus: " + msg + " [" + this.toString() + "]";
         LOGGER.info(wrappedMsg);
-        log.add(msg);
+        log.log(msg);
     }
 
+    public void log(String msg, LogEntry.Type type) {
+        String wrappedMsg = "Janus: " + msg + " [" + this.toString() + "]";
+        LOGGER.info(wrappedMsg);
+        log.log(msg, type);
+    }
+
+    public void setSuccess(boolean success) {
+        log.setSuccessful(success);
+    }
+    
     @Override
     public String toString() {
         return "StepExecutionData{" +
