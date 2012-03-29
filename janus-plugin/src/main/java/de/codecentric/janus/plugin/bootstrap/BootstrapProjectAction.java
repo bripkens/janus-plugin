@@ -82,7 +82,7 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
             executor = new BootstrapExecutor(project,
                     parsedFormData.getVcsConfiguration(),
                     parsedFormData.getScaffold(), parsedFormData.getContext());
-            List<LogEntry> log = executor.execute();
+            Log log = executor.execute();
 
             Flash flash = Flash.getForRequest(req);
             flash.put(FlashKeys.BOOTSTRAP_LOG, log);

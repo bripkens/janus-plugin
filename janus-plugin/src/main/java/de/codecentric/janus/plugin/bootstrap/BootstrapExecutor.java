@@ -44,7 +44,7 @@ class BootstrapExecutor {
         };
     }
 
-    List<LogEntry> execute() {
+    Log execute() {
         if (!atomicBoolean.compareAndSet(false, true)) {
             throw new IllegalStateException("A bootstrap executor may only " +
                     "be used once. Please create a new instance.");
@@ -75,6 +75,6 @@ class BootstrapExecutor {
                     LogEntry.Type.FAILURE);
         }
 
-        return data.getLog().getLogEntries();
+        return data.getLog();
     }
 }

@@ -21,3 +21,18 @@
 .messages > div.SUCCESS {
     color: green;
 }
+
+#main-panel > .status {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 20px 0;
+    padding-left: 50px;
+}
+
+#main-panel > .status.failure {
+    color: darkred;
+}
+
+#main-panel > .status.success {
+    color: green;
+}

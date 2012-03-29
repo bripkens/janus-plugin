@@ -8,15 +8,40 @@
 
             <h1>Janus: Bootstrap Results</h1>
 
+            <j:set var="log" value='${request.session.getAttribute("janus-flash").get("bootstrapLog")}'/>
+            <div class='status ${log.successful ? "success" : "failure"}'>
+                <j:if test="${log.successful}">
+                    Successfully bootstrapped project!
+                </j:if>
+                <j:if test="${!log.successful}">
+                    Project bootstrap failed!
+                </j:if>
+            </div>
+
+            <p>
+                The following log shows the outcome of the bootstrap
+                process and various information that can be used for
+                debugging. Green text marks the end of finished
+                steps, e.g., repository creation or source code
+                generation. Red text on the other hand highlights
+                problems.
+            </p>
+
             <div class='messages'>
                 <j:forEach var="logEntry"
-                           items='${request.session.getAttribute("janus-flash").get("bootstrapLog")}'
+                           items='${log.logEntries}'
                            varStatus="loop">
                     <div class="entry ${logEntry.type}">
                         ${logEntry.msg}
                     </div>
                 </j:forEach>
             </div>
+
+            <p>
+                Found an error that you can't make sense of? Check out the
+                server log as it may contain additional information
+                (especially stack traces).
+            </p>
 
         </l:main-panel>
     </l:layout>
