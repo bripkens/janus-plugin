@@ -29,6 +29,6 @@ The application is licese
  - initial project structure.
  - basic configuration dialog.
 
-# LICENSE
+# License
 
 Copyright (C) 2012 codecentric AG, Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).

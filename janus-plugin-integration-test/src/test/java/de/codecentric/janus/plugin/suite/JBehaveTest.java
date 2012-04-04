@@ -21,6 +21,7 @@ import org.jbehave.core.model.ExamplesTableFactory;
 import org.jbehave.core.parsers.RegexStoryParser;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.InjectableStepsFactory;
+import org.jbehave.core.steps.ParameterControls;
 import org.jbehave.core.steps.ParameterConverters;
 import org.jbehave.core.steps.ParameterConverters.DateConverter;
 import org.jbehave.core.steps.ParameterConverters.ExamplesTableConverter;
@@ -42,7 +43,7 @@ public class JBehaveTest extends JUnitStories {
                 .doIgnoreFailureInStories(true)
                 .doIgnoreFailureInView(false)
                 .useThreads(1)
-                .useStoryTimeoutInSecs(60);
+                .useStoryTimeoutInSecs(60 * 5);
     }
 
     private Injector createInjector() {
@@ -73,6 +74,7 @@ public class JBehaveTest extends JUnitStories {
                                                 .codeLocationFromClass(embeddableClass))
                                 .withDefaultFormats()
                                 .withFormats(CONSOLE, TXT, HTML, XML))
+                .useParameterControls(new ParameterControls().useDelimiterNamedParameters(true))
                 .useParameterConverters(parameterConverters);
     }
 

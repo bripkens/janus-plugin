@@ -37,18 +37,22 @@ public class BootstrapProject extends AbstractStep {
     * ### GIVEN
     * ############################
     */
-    @Given("a configured scaffold directory <scaffoldDir> and catalog <catalog>")
+    @Given("a configured scaffold directory <scaffoldDir> and catalog <catalog> and working directory <tmpDir>")
     public void givenAConfiguredScaffoldDirectoryAndCatalog(@Named("scaffoldDir") String scaffoldDir,
-                                                            @Named("catalog") String catalog)
+                                                            @Named("catalog") String catalog,
+                                                            @Named("tmpDir") String tmpDir)
             throws Exception {
         goToConfigurationPage();
 
         String absoluteCatalogPath = prefixCWD(catalog);
         String absoluteScaffoldsPath = prefixCWD(scaffoldDir);
+        String absoluteTmpDirPath = prefixCWD(tmpDir);
         generationConfiguration.getCatalogFileInputField()
                 .sendKeys(absoluteCatalogPath);
         generationConfiguration.getScaffoldDirInputField()
                 .sendKeys(absoluteScaffoldsPath);
+        generationConfiguration.getTmpDirInputField()
+                .sendKeys(absoluteTmpDirPath);
         configuration.getSubmitButton().click();
     }
 
@@ -81,7 +85,7 @@ public class BootstrapProject extends AbstractStep {
                 containsString("Jenkins is not properly configured"));
     }
     
-    @Then("the version control system <name> with type <type> can be selected")
+    @Then("the version control system $name with type $type can be selected")
     public void thenVCSIsSelectable(@Named("name") String name,
                                     @Named("type") String type) {
         List<WebElement> options = getVCSSelectField().getOptions();

@@ -22,7 +22,7 @@ public class Job extends AbstractStep {
     * ### GIVEN
     * ############################
     */
-    @Given("a build <name>")
+    @Given("a build $name")
     public void givenABuild(@Named("name") String name) throws Exception {
         goToBuildCreationPage();
 
@@ -31,24 +31,6 @@ public class Job extends AbstractStep {
         getSubmitButton().click();
 
         waitUntilPageTitleStartsWith(name + " Config");
-    }
-
-    @Given("a build <creationBuild>")
-    public void givenACreationBuild(@Named("creationBuild") String name)
-            throws Exception {
-        givenABuild(name);
-    }
-
-    @Given("a build <checkoutBuild>")
-    public void givenACheckoutBuild(@Named("checkoutBuild") String name)
-            throws Exception {
-        givenABuild(name);
-    }
-
-    @Given("a build <commitBuild>")
-    public void givenACommitBuild(@Named("commitBuild") String name)
-            throws Exception {
-        givenABuild(name);
     }
 
     /*

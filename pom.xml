@@ -31,7 +31,7 @@
         <janus.base.version>0.2-SNAPSHOT</janus.base.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.6</java.version>
-        <jbehave.core.version>3.5.4</jbehave.core.version>
+        <jbehave.core.version>3.6</jbehave.core.version>
         <jbehave.site.version>3.1.1</jbehave.site.version>
         <selenium.version>2.20.0</selenium.version>
     </properties>

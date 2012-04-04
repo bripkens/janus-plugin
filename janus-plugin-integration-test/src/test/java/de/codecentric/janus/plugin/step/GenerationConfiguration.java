@@ -44,6 +44,7 @@ public class GenerationConfiguration extends AbstractStep {
 
         getCatalogFileInputField().sendKeys(getTestCatalogFile());
         getScaffoldDirInputField().sendKeys(getTestScaffoldDir());
+        getTmpDirInputField().sendKeys(getTestTmpDir());
 
         configuration.getSubmitButton().click();
     }
@@ -54,6 +55,10 @@ public class GenerationConfiguration extends AbstractStep {
     
     private String getTestCatalogFile() {
         return System.getProperty("user.dir") + File.separator + "pom.xml";
+    }
+    
+    private String getTestTmpDir() {
+        return System.getProperty("user.dir") + File.separator + "target";
     }
     
     /*
@@ -71,6 +76,9 @@ public class GenerationConfiguration extends AbstractStep {
 
         assertThat(getScaffoldDirInputField().getAttribute("value"),
                 is(equalTo(getTestScaffoldDir())));
+
+        assertThat(getTmpDirInputField().getAttribute("value"),
+                is(equalTo(getTestTmpDir())));
     }
 
     
@@ -88,8 +96,13 @@ public class GenerationConfiguration extends AbstractStep {
         return findByCSS(CSS_SELECTOR.SCAFFOLD_DIR_INPUT_FIELD);
     }
 
+    public WebElement getTmpDirInputField() {
+        return findByCSS(CSS_SELECTOR.TMP_DIR_INPUT_FIELD);
+    }
+
     public static interface CSS_SELECTOR {
         String CATALOG_FILE_INPUT_FIELD = "input[name=\"_.catalogFile\"]";
         String SCAFFOLD_DIR_INPUT_FIELD = "input[name=\"_.scaffoldDirectory\"]";
+        String TMP_DIR_INPUT_FIELD = "input[name=\"_.tempDirectory\"]";
     }
 }

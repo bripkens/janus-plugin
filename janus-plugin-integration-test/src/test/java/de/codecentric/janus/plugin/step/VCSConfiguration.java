@@ -37,8 +37,8 @@ public class VCSConfiguration extends AbstractStep {
      * ### WHEN
      * ############################
      */
-    @When("a VCS configuration <name> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>")
-    @Given("a VCS configuration <name> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>")
+    @When("a VCS configuration $name is added with $type> and builds $creationBuild>, $checkoutBuild> and $commitBuild>")
+    @Given("a VCS configuration $name is added with $type> and builds $creationBuild>, $checkoutBuild> and $commitBuild>")
     public void whenAVCSConfigurationIsAdded(@Named("name") String name,
                                              @Named("type") String type,
                                              @Named("creationBuild") String creationBuild,
@@ -75,7 +75,7 @@ public class VCSConfiguration extends AbstractStep {
      * ### THEN
      * ############################
      */
-    @Then("a <type> installation <name> can be found with builds <creationBuild>, <checkoutBuild> and <commitBuild>")
+    @Then("a $type installation $name can be found with builds $creationBuild, $checkoutBuild and $commitBuild")
     public void thenAnCanBeFound(@Named("type") String type,
                                  @Named("name") String name,
                                  @Named("creationBuild") String creationBuild,
