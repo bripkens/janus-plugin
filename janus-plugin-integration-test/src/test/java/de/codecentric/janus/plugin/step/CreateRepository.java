@@ -53,15 +53,6 @@ public class CreateRepository extends AbstractStep {
         assertThat(driver.getPageSource(), containsString(exp));
     }
 
-    @Then("the build <creationBuild> is successfully executed")
-    public void thenTheBuildIsSuccessfullyExecuted(
-            @Named("creationBuild") String build) throws Exception {
-        goToLastSuccessfulBuild(build);
-
-        assertThat(getBuildStatusIndicator().getAttribute("title"),
-                is(equalTo("Success")));
-    }
-
     @Then("a message is shown, that no valid VCS configuration exists")
     public void thenAMessageIsShownThatNoValidVCSConfigurationExists() {
         String exp = "No Version Control System configured";
@@ -85,13 +76,7 @@ public class CreateRepository extends AbstractStep {
         return findByCSS(CSS_SELECTOR.SUBMIT_BUTTON);
     }
 
-    public WebElement getBuildStatusIndicator() {
-        return findByCSS(CSS_SELECTOR.BUILD_STATUS_INDICATOR);
-    }
-
     private static interface CSS_SELECTOR {
-        String BUILD_STATUS_INDICATOR = "#main-panel h1 img";
-        
         String NAME_INPUT_FIELD = "#main-panel input[name=\"_.name\"]";
         
         String VCS_SELECT_BOX = "#main-panel select";

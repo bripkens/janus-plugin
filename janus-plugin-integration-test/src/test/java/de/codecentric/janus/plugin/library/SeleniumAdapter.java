@@ -45,8 +45,10 @@ public class SeleniumAdapter {
     }
 
     public void cleanJenkinsConfiguration() throws Exception {
-            deleteConfigurationFiles();
-            reloadConfiguration();
+        // TODO delete scaffold dir and recreate it
+
+        deleteConfigurationFiles();
+        reloadConfiguration();
     }
 
     private void deleteConfigurationFiles() throws Exception {

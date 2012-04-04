@@ -3,6 +3,7 @@ package de.codecentric.janus.plugin.step;
 import com.google.inject.Inject;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
 import de.codecentric.janus.plugin.suite.AbstractStep;
+import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Pending;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
@@ -39,6 +40,7 @@ public class GenerationConfiguration extends AbstractStep {
      * ############################
      */
     @When("the Janus generation is configured")
+    @Given("the Janus generation is configured")
     public void whenTheJanusGenerationIsConfigured() throws Exception {
         goToConfigurationPage();
 
@@ -49,18 +51,6 @@ public class GenerationConfiguration extends AbstractStep {
         configuration.getSubmitButton().click();
     }
 
-    private String getTestScaffoldDir() {
-        return System.getProperty("user.dir");
-    }
-    
-    private String getTestCatalogFile() {
-        return System.getProperty("user.dir") + File.separator + "pom.xml";
-    }
-    
-    private String getTestTmpDir() {
-        return System.getProperty("user.dir") + File.separator + "target";
-    }
-    
     /*
      * ############################
      * ### THEN

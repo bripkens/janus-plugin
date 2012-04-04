@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,11 @@ public abstract class AbstractStep {
         this.seleniumAdapter = selenium;
     }
 
+    /*
+     * ############################
+     * ### SELECTORS
+     * ############################
+     */
     public WebElement findByCSS(String cssSelector) {
         return driver.findElement(By.cssSelector(cssSelector));
     }
@@ -50,15 +56,55 @@ public abstract class AbstractStep {
         return result;
     }
 
-    public void cleanJenkinsConfiguration() throws Exception {
-        seleniumAdapter.cleanJenkinsConfiguration();
-    }
 
     /*
     * ############################
-    * ### NAVIGATION
+    * ### MISC
     * ############################
     */
+    public void cleanJenkinsConfiguration() throws Exception {
+        File tmpDir = new File(getTestTmpDir());
+        tmpDir.delete();
+        tmpDir.mkdirs();
+
+        seleniumAdapter.cleanJenkinsConfiguration();
+    }
+    
+    public String join(String separator, String... parts) {
+        if (parts.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for(String part : parts) {
+            builder.append(separator).append(part);
+        }
+        return builder.toString();
+    }
+    
+    public String joinPaths(String... parts) {
+        return join(File.separator, parts);
+    }
+
+    public String getTestScaffoldDir() {
+        return joinPaths(System.getProperty("user.dir"),
+                "src", "test", "resources", "scaffolds");
+    }
+
+    public String getTestCatalogFile() {
+        return joinPaths(System.getProperty("user.dir"),
+                "src", "test", "resources", "catalog.json");
+    }
+
+    public String getTestTmpDir() {
+        return joinPaths(System.getProperty("user.dir"), "target", "applied-scaffolds");
+    }
+    
+    /*
+     * ############################
+     * ### NAVIGATION
+     * ############################
+     */
     public void goToConfigurationPage() throws Exception {
         driver.get(Config.getJenkinsBaseUrl() + "configure");
         waitUntilPageContains(By.className("janusConfig"));

@@ -3,11 +3,13 @@ package de.codecentric.janus.plugin.step;
 import com.google.inject.Inject;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
 import de.codecentric.janus.plugin.suite.AbstractStep;
+import org.apache.commons.io.IOUtils;
 import org.jbehave.core.annotations.*;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +74,21 @@ public class BootstrapProject extends AbstractStep {
     @When("the project bootstrap page is accessed")
     public void whenTheProjectBootstrapPageIsAccessed() throws Exception {
         goToProjectBootstrapPage();
+    }
+
+    @When("a project $projectName with package $package and VCS $vcsName is bootstrapped")
+    public void projectIsBootStrapped(@Named("name") String projectName,
+                                      @Named("package") String pckg,
+                                      @Named("vcsName") String vcsName)
+            throws Exception {
+        goToProjectBootstrapPage();
+
+        getNameInputField().sendKeys(projectName);
+        getPckgInputField().sendKeys(pckg);
+        getVCSSelectField().selectByValue("vcs-" + vcsName);
+        getScaffoldSelectField().selectByValue("scaf-" + TEST_DATA.WEB_NAME);
+
+        getSubmitButton().click();
     }
 
     /*
@@ -146,11 +163,51 @@ public class BootstrapProject extends AbstractStep {
         }
     }
 
+    @Then("the bootstrap success message is shown")
+    public void thenTheBootstrapSuccessMessageIsShown() {
+        String exp = "Successfully bootstrapped project!";
+        assertThat(driver.getPageSource(), containsString(exp));
+    }
+
+    @Then("no failure log message is shown")
+    public void thenNoFailureLogMessageIsShown() {
+        assertTrue(findAllByCSS(CSS_SELECTOR.FAILURE_MESSAGES).isEmpty());
+    }
+
+    @Then("the target directory contains the scaffold named $projectName")
+    public void thenTheTargetDirectoryContains(@Named("projectName") String projectName) {
+        File path = new File(getTestTmpDir() + File.separator + projectName);
+        assertTrue(path.exists());
+        assertTrue(path.isDirectory());
+    }
+
+    @Then("the pom.xml file contains the artifactId $projectName and groupId $groupId")
+    public void thenThePomContains(@Named("projectName") String projectName,
+                                   @Named("groupId") String groupId)
+            throws Exception {
+        String path;
+        path = getTestTmpDir() + File.separator + projectName + File.separator +
+                "pom.xml";
+
+        String pom = IOUtils.toString(new FileInputStream(new File(path)));
+
+        assertThat(pom, containsString(projectName));
+        assertThat(pom, containsString(groupId));
+    }
+
     /*
     * ############################
     * ### WEB ELEMENTS
     * ############################
     */
+    public WebElement getNameInputField() {
+        return findByCSS(CSS_SELECTOR.NAME_INPUT_FIELD);
+    }
+
+    public WebElement getPckgInputField() {
+        return findByCSS(CSS_SELECTOR.PACKAGE_INPUT_FIELD);
+    }
+
     public Select getVCSSelectField() {
         return findAllSelectsByCSS(CSS_SELECTOR.VCS_SELECT_BOX).get(0);
     }
@@ -163,12 +220,24 @@ public class BootstrapProject extends AbstractStep {
         return findByCSS(CSS_SELECTOR.SCAFFOLD_DESCRIPTION_DIV);
     }
 
+    public WebElement getSubmitButton() {
+        return findByCSS(CSS_SELECTOR.SUBMIT_BUTTON);
+    }
+
     private static interface CSS_SELECTOR {
+        String NAME_INPUT_FIELD = "input[name=\"_.name\"]";
+
+        String PACKAGE_INPUT_FIELD = "input[name=\"_.pckg\"]";
+        
         String VCS_SELECT_BOX = "select";
 
         String SCAFFOLD_SELECT_BOX = "select";
 
         String SCAFFOLD_DESCRIPTION_DIV = ".scaffoldDescription";
+        
+        String SUBMIT_BUTTON = "#main-panel button";
+        
+        String FAILURE_MESSAGES = ".FAILURE";
     }
     
     public static interface TEST_DATA {

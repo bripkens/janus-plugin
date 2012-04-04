@@ -1,17 +1,22 @@
-Scenario: Project bootstrap available scaffolds
+Scenario: Project bootstrap
 
 Given a clean Jenkins installation
 And a build <creationBuild>
 And a build <checkoutBuild>
 And a build <commitBuild>
 And a VCS configuration <vcsName> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>
-And a configured scaffold directory <scaffoldDir> and catalog <catalog> and working directory <tmpDir>
+And the Janus generation is configured
 
-When the project bootstrap page is accessed
+When a project <projectName> with package <package> and VCS <vcsName> is bootstrapped
 
-Then the version control system <vcsName> with type <type> can be selected
-And the test project scaffolds are visible and can be selected
+Then the bootstrap success message is shown
+And no failure log message is shown
+And the build <creationBuild> is successfully executed
+And the build <checkoutBuild> is successfully executed
+And the build <commitBuild> is successfully executed
+And the target directory contains the scaffold named <projectName>
+And the pom.xml file contains the artifactId <projectName> and groupId <package>
 
 Examples:
-| vcsName          | type      | creationBuild | checkoutBuild   | commitBuild | scaffoldDir                    | catalog                           | tmpDir   |
-| OurDetaultVCS | MERCURIAL | creationBuild | checkoutBuild   | commitBuild | ./src/test/resources/scaffolds | ./src/test/resources/catalog.json | ./target |
+| projectName | package                  | vcsName          | type      | creationBuild | checkoutBuild   | commitBuild |
+| Worblehat   | de.codecentric.worblehat | OurDetaultVCS    | MERCURIAL | creationBuild | checkoutBuild   | commitBuild |

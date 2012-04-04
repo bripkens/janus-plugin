@@ -40,5 +40,5 @@ Then the version control system <vcsName> with type <type> can be selected
 And the test project scaffolds are visible and can be selected
 
 Examples:
-| vcsName       | type      | creationBuild | checkoutBuild   | commitBuild | scaffoldDir                    | catalog                           | tmpDir   |
-| OurDetaultVCS | MERCURIAL | creationBuild | checkoutBuild   | commitBuild | ./src/test/resources/scaffolds | ./src/test/resources/catalog.json | ./target |
+| vcsName       | type      | creationBuild | checkoutBuild   | commitBuild | scaffoldDir                    | catalog                           | tmpDir                     |
+| OurDetaultVCS | MERCURIAL | creationBuild | checkoutBuild   | commitBuild | ./src/test/resources/scaffolds | ./src/test/resources/catalog.json | ./target/applied-scaffolds |

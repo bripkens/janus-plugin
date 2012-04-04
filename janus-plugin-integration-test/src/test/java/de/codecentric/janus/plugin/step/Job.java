@@ -5,7 +5,12 @@ import de.codecentric.janus.plugin.suite.AbstractStep;
 import de.codecentric.janus.plugin.library.SeleniumAdapter;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
+import org.jbehave.core.annotations.Then;
 import org.openqa.selenium.WebElement;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
@@ -35,6 +40,21 @@ public class Job extends AbstractStep {
 
     /*
     * ############################
+    * ### GIVEN
+    * ############################
+    */
+    @Then("the build $build is successfully executed")
+    public void thenTheBuildIsSuccessfullyExecuted(
+            @Named("build") String build) throws Exception {
+        System.out.println("Checking build job: " + build);
+        goToLastSuccessfulBuild(build);
+
+        assertThat(getBuildStatusIndicator().getAttribute("title"),
+                is(equalTo("Success")));
+    }
+
+    /*
+    * ############################
     * ### WEB ELEMENTS
     * ############################
     */
@@ -50,9 +70,15 @@ public class Job extends AbstractStep {
         return findById(ID_SELECTOR.SUBMIT_BUTTON);
     }
     
+    public WebElement getBuildStatusIndicator() {
+        return findByCSS(CSS_SELECTOR.BUILD_STATUS_INDICATOR);
+    }
+
     private static interface CSS_SELECTOR {
         String FREE_STYLE_PROJECT_RADIO_BUTTON =
                 "input[value=\"hudson.model.FreeStyleProject\"]";
+
+        String BUILD_STATUS_INDICATOR = "#main-panel h1 img";
     }
 
     private static interface ID_SELECTOR {
