@@ -1,0 +1,41 @@
+<j:jelly xmlns:j="jelly:core"
+         xmlns:f="/lib/form">
+
+    <f:section title="Janus Jenkins System Configuration">
+        <f:entry title="Jenkins Systems"
+                 description="List of Jenkins systems which can be configured using the Janus application.">
+            <a class="janusCIConfig"></a>
+            <f:repeatable var="inst" field="configurations">
+                <table width="100%">
+                    <f:entry title="Name"
+                             field="name">
+                        <f:textbox />
+                    </f:entry>
+
+                    <f:entry title="URL"
+                             field="url">
+                        <f:textbox />
+                    </f:entry>
+
+                    <f:entry title="Username"
+                             field="username">
+                        <f:textbox />
+                    </f:entry>
+
+                    <f:entry title="API token"
+                             field="apiToken">
+                        <f:textbox />
+                    </f:entry>
+
+                    <f:entry title="">
+                        <div align="right">
+                            <f:repeatableDeleteButton/>
+                        </div>
+                    </f:entry>
+                </table>
+            </f:repeatable>
+        </f:entry>
+
+    </f:section>
+
+</j:jelly>
