@@ -3,30 +3,48 @@ package de.codecentric.janus.plugin.ci;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
+import hudson.util.FormValidation;
+import org.apache.commons.validator.GenericValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
 public class CIConfiguration implements Describable<CIConfiguration> {
-    private String baseUrl, username, apiToken;
+    private static final UrlValidator URL_VALIDATOR = new UrlValidator(
+            new String[] {"http", "https"},
+            UrlValidator.ALLOW_LOCAL_URLS
+    );
+
+    private String name, url, username, apiToken;
 
     public CIConfiguration() {
     }
 
     @DataBoundConstructor
-    public CIConfiguration(String baseUrl, String username, String apiToken) {
-        this.baseUrl = baseUrl;
+    public CIConfiguration(String name, String url, String username, String apiToken) {
+        this.name = name;
+        this.url = url;
         this.username = username;
         this.apiToken = apiToken;
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getName() {
+        return name;
     }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getUsername() {
@@ -43,6 +61,58 @@ public class CIConfiguration implements Describable<CIConfiguration> {
 
     public void setApiToken(String apiToken) {
         this.apiToken = apiToken;
+    }
+
+    public boolean isValid() {
+        FormValidation.Kind ok = FormValidation.Kind.OK;
+
+        if (doCheckName(name).kind != ok) {
+            return false;
+        } else if (doCheckUrl(url).kind != ok) {
+            return false;
+        } else if (doCheckUsername(username).kind != ok) {
+            return false;
+        } else if (doCheckApiToken(apiToken).kind != ok) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static FormValidation doCheckName(@QueryParameter String value) {
+        if (GenericValidator.isBlankOrNull(value)) {
+            return FormValidation.error("Please provide a name so that the " +
+                    "CI system can be identified on the project bootstrap " +
+                    "page.");
+        }
+
+        return FormValidation.ok();
+    }
+
+    public static FormValidation doCheckUrl(@QueryParameter String value) {
+        if (URL_VALIDATOR.isValid(value)) {
+            return FormValidation.ok();
+        }
+
+        return FormValidation.error("The URL is not a valid URL.");
+    }
+
+    public static FormValidation doCheckUsername(@QueryParameter String value) {
+        if (GenericValidator.isBlankOrNull(value)) {
+            return FormValidation.error("Username must not be empty");
+        }
+
+        return FormValidation.ok();
+    }
+
+    public static FormValidation doCheckApiToken(@QueryParameter String value) {
+        if (GenericValidator.isBlankOrNull(value)) {
+            return FormValidation.error("Please provide a name so that the " +
+                    "CI system can be identified on the project bootstrap " +
+                    "page.");
+        }
+
+        return FormValidation.ok();
     }
 
     public static CIConfiguration[] get() {

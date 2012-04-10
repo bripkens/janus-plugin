@@ -4,7 +4,9 @@ import de.codecentric.janus.plugin.generation.GenerationConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import hudson.Extension;
 import hudson.model.Descriptor;
+import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
@@ -15,7 +17,7 @@ public class ConfigurationView extends Descriptor<CIConfiguration> {
 
     private static final String CONFIGURATION_FIELD_NAME = "configurations";
 
-    private CIConfiguration[] configurations;
+    private CIConfiguration[] configurations = new CIConfiguration[0];
 
     public ConfigurationView() {
         super(CIConfiguration.class);
@@ -37,6 +39,21 @@ public class ConfigurationView extends Descriptor<CIConfiguration> {
         return super.configure(req, formData);
     }
 
+    public FormValidation doCheckName(@QueryParameter String value) {
+        return CIConfiguration.doCheckName(value);
+    }
+
+    public FormValidation doCheckUrl(@QueryParameter String value) {
+        return CIConfiguration.doCheckUrl(value);
+    }
+
+    public FormValidation doCheckUsername(@QueryParameter String value) {
+        return CIConfiguration.doCheckUsername(value);
+    }
+
+    public FormValidation doCheckApiToken(@QueryParameter String value) {
+        return CIConfiguration.doCheckApiToken(value);
+    }
 
     public CIConfiguration[] getConfigurations() {
         return configurations;
