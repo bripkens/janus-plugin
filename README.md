@@ -9,6 +9,17 @@ The application is licese
 
 # Version History
 
+## 0.4
+
+ - configuration menu now supports configuration of continuous integration (CI)
+   systems (UC-2).
+ - VCS configuration was extended with a new option *checkout URL*, i.e., a
+   URL which can be used by a continuous integration system to check out
+   source code (UC-2).
+ - in the project bootstrap view a configured CI system can be selected
+   (currently only Jenkins CI) which will then be used as the target CI for
+   the build jobs (UC-10).
+
 ## 0.3
 
  - integration test harness using jBehave and Selenium 2.
