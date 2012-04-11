@@ -8,7 +8,7 @@
 
             <j:if test="${error}">
                 <div class="error">
-                    Some error occured.
+                    Please make sure to fill out the form.
                 </div>
             </j:if>
 
@@ -74,6 +74,17 @@
                                         title="${vcsConfig.vcs.name()} - ${vcsConfig.name}"
                                         value="vcs-${vcsConfig.name}"
                                         selected="${vcsConfig.name == selectedVCS}">
+                                </f:dropdownListBlock>
+                            </j:forEach>
+                        </f:dropdownList>
+                        <f:dropdownList name="ci" title="Continuous Integration System">
+                            <j:forEach var="ciConfig"
+                                       items="${it.validCIConfigs}"
+                                       varStatus="loop">
+                                <f:dropdownListBlock
+                                        title="Jenkins - ${ciConfig.name}"
+                                        value="ci-${ciConfig.name}"
+                                        selected="${ciConfig.name == selectedCI}">
                                 </f:dropdownListBlock>
                             </j:forEach>
                         </f:dropdownList>

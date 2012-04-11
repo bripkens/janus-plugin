@@ -3,6 +3,7 @@ package de.codecentric.janus.plugin.bootstrap;
 import de.codecentric.janus.conf.Project;
 import de.codecentric.janus.plugin.JanusPlugin;
 import de.codecentric.janus.plugin.bootstrap.step.*;
+import de.codecentric.janus.plugin.ci.CIConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.CatalogEntry;
 import hudson.model.Build;
@@ -27,10 +28,12 @@ class BootstrapExecutor {
     private final AbstractBootstrapStep[] steps;
 
     BootstrapExecutor(Project project, VCSConfiguration vcsConfiguration,
+                      CIConfiguration ciConfiguration,
                       CatalogEntry catalogEntry, Map<String, String> context) {
 
         data = new StepExecutionData(project,
                 vcsConfiguration,
+                ciConfiguration,
                 catalogEntry,
                 context);
 
@@ -40,7 +43,8 @@ class BootstrapExecutor {
                 new RepositoryCreationStep(data),
                 new RepositoryCheckoutStep(data),
                 new SourceCodeGenerationStep(data),
-                new RepositoryCommitStep(data)
+                new RepositoryCommitStep(data),
+                new JenkinsJobCreationStep(data)
         };
     }
 

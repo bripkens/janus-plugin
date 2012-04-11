@@ -68,6 +68,10 @@ public class ConfigurationView extends Descriptor<VCSConfiguration> {
         return VCSConfiguration.doCheckName(value);
     }
 
+    public FormValidation doCheckCheckoutUrl(@QueryParameter String value) {
+        return VCSConfiguration.doCheckCheckoutUrl(value);
+    }
+
     public FormValidation doCheckVcs(@QueryParameter String value) {
        return VCSConfiguration.doCheckVcs(value);
     }

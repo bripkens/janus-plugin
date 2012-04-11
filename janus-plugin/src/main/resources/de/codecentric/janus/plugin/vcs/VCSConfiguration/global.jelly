@@ -11,9 +11,16 @@
                              field="name">
                         <f:textbox />
                     </f:entry>
+
                     <f:entry title="VCS type"
                              field="vcs">
                         <f:select/>
+                    </f:entry>
+
+                    <f:entry title="Checkout URL"
+                             description="Define the URL which can be used by the continuous integration system to check out the source code."
+                             field="checkoutUrl">
+                        <f:textbox/>
                     </f:entry>
 
                     <f:entry title="Generation build"

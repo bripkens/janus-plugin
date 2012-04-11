@@ -34,25 +34,4 @@ public class SourceCodeGenerationStep extends AbstractBootstrapStep {
 
         return true;
     }
-
-    private Scaffold getScaffold() {
-        String scaffoldDir;
-        scaffoldDir = ensureFileSeparator(generationConfig.getScaffoldDir());
-        String scaffoldFileName = data.getCatalogEntry().getFilename();
-        return Scaffold.from(new File(scaffoldDir + scaffoldFileName));
-    }
-    
-    private File getOutputDir() {
-        String tmpDir = ensureFileSeparator(generationConfig.getTempDir());
-        String outputDir = tmpDir + data.getProject().getName();
-        return new File(outputDir);
-    }
-    
-    private String ensureFileSeparator(String path) {
-        if (path.endsWith(File.separator)) {
-            return path;
-        } else {
-            return path + File.separator;
-        }
-    }
 }

@@ -3,6 +3,7 @@ package de.codecentric.janus.plugin.bootstrap.step;
 import de.codecentric.janus.conf.Project;
 import de.codecentric.janus.plugin.bootstrap.Log;
 import de.codecentric.janus.plugin.bootstrap.LogEntry;
+import de.codecentric.janus.plugin.ci.CIConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.CatalogEntry;
 
@@ -19,16 +20,19 @@ public class StepExecutionData {
 
     private final Project project;
     private final VCSConfiguration vcsConfiguration;
+    private final CIConfiguration ciConfiguration;
     private final CatalogEntry catalogEntry;
     private final Map<String, String> context;
 
     private final Log log;
 
     public StepExecutionData(Project project, VCSConfiguration vcsConfiguration,
-                      CatalogEntry catalogEntry,
-                      Map<String, String> context) {
+                             CIConfiguration ciConfiguration,
+                             CatalogEntry catalogEntry,
+                             Map<String, String> context) {
         this.project = project;
         this.vcsConfiguration = vcsConfiguration;
+        this.ciConfiguration = ciConfiguration;
         this.catalogEntry = catalogEntry;
         this.context = Collections.unmodifiableMap(context);
 
@@ -45,6 +49,10 @@ public class StepExecutionData {
 
     public VCSConfiguration getVcsConfiguration() {
         return vcsConfiguration;
+    }
+
+    public CIConfiguration getCiConfiguration() {
+        return ciConfiguration;
     }
 
     public CatalogEntry getCatalogEntry() {
@@ -70,12 +78,13 @@ public class StepExecutionData {
     public void setSuccess(boolean success) {
         log.setSuccessful(success);
     }
-    
+
     @Override
     public String toString() {
         return "StepExecutionData{" +
                 "project=" + project +
                 ", vcsConfiguration=" + vcsConfiguration +
+                ", ciConfiguration=" + ciConfiguration +
                 ", catalogEntry=" + catalogEntry +
                 ", context=" + context +
                 '}';

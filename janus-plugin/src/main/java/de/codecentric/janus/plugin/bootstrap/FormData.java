@@ -11,7 +11,8 @@ import java.util.Map;
 * @author Ben Ripkens <bripkens.dev@gmail.com>
 */
 class FormData {
-    private String name, description, pckg, scaffoldName, vcsConfigName;
+    private String name, description, pckg, scaffoldName, vcsConfigName,
+            ciConfigName;
     private Map<String, String> contextParameters;
 
     FormData() {
@@ -41,6 +42,8 @@ class FormData {
                     result.vcsConfigName = data.substring(4);
                 } else if (data.startsWith("scaf-")) {
                     result.scaffoldName = data.substring(5);
+                } else if (data.startsWith("ci-")) {
+                    result.ciConfigName = data.substring(3);
                 }
             }
         }
@@ -67,6 +70,7 @@ class FormData {
         req.setAttribute("description", description);
         req.setAttribute("pckg", pckg);
         req.setAttribute("selectedVCS", vcsConfigName);
+        req.setAttribute("selectedCI", ciConfigName);
         req.setAttribute("selectedScaffold", scaffoldName);
 
         for(Map.Entry<String, String> entry : contextParameters.entrySet()) {
@@ -92,6 +96,10 @@ class FormData {
 
     public String getVcsConfigName() {
         return vcsConfigName;
+    }
+
+    public String getCiConfigName() {
+        return ciConfigName;
     }
 
     public Map<String, String> getContextParameters() {

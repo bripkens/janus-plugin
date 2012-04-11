@@ -1,5 +1,6 @@
 package de.codecentric.janus.plugin.ci;
 
+import de.codecentric.janus.plugin.Validatable;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
@@ -12,7 +13,7 @@ import org.kohsuke.stapler.QueryParameter;
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-public class CIConfiguration implements Describable<CIConfiguration> {
+public class CIConfiguration implements Describable<CIConfiguration>, Validatable {
     private static final UrlValidator URL_VALIDATOR = new UrlValidator(
             new String[] {"http", "https"},
             UrlValidator.ALLOW_LOCAL_URLS
@@ -107,9 +108,7 @@ public class CIConfiguration implements Describable<CIConfiguration> {
 
     public static FormValidation doCheckApiToken(@QueryParameter String value) {
         if (GenericValidator.isBlankOrNull(value)) {
-            return FormValidation.error("Please provide a name so that the " +
-                    "CI system can be identified on the project bootstrap " +
-                    "page.");
+            return FormValidation.error("Please provide an API token.");
         }
 
         return FormValidation.ok();

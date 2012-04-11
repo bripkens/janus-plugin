@@ -4,6 +4,7 @@ import de.codecentric.janus.conf.Project;
 import de.codecentric.janus.plugin.Flash;
 import de.codecentric.janus.plugin.FlashKeys;
 import de.codecentric.janus.plugin.JanusPlugin;
+import de.codecentric.janus.plugin.ci.CIConfiguration;
 import de.codecentric.janus.plugin.vcs.RepositoryCreationSuccessAction;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
@@ -69,6 +70,7 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
     public void doSubmit(StaplerRequest req, StaplerResponse rsp)
             throws ServletException, IOException {
         checkPermission(PERMISSION);
+        System.out.println(req.getSubmittedForm());
 
         FormData formData = FormData.parse(req.getSubmittedForm());
         ParsedFormData parsedFormData = isValid(formData);
@@ -81,7 +83,9 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
             BootstrapExecutor executor;
             executor = new BootstrapExecutor(project,
                     parsedFormData.getVcsConfiguration(),
-                    parsedFormData.getScaffold(), parsedFormData.getContext());
+                    parsedFormData.getCiConfiguration(),
+                    parsedFormData.getScaffold(),
+                    parsedFormData.getContext());
             Log log = executor.execute();
 
             Flash flash = Flash.getForRequest(req);
@@ -126,13 +130,21 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         result.setDescription(formData.getDescription());
         result.setPckg(formData.getPckg());
         
-        VCSConfiguration config;
+        VCSConfiguration vcsConfig;
         try {
-            config = getVCSConfig(formData);
+            vcsConfig = getVCSConfig(formData);
         } catch (IllegalArgumentException ex) {
             return result;
         }
-        result.setVcsConfiguration(config);
+        result.setVcsConfiguration(vcsConfig);
+
+        CIConfiguration ciConfig;
+        try {
+            ciConfig = getCIConfig(formData);
+        } catch (IllegalArgumentException ex) {
+            return result;
+        }
+        result.setCiConfiguration(ciConfig);
 
         CatalogEntry scaffold;
         try {
@@ -158,6 +170,16 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         }
 
         throw new IllegalArgumentException("The VCS config doesn't exist");
+    }
+
+    private CIConfiguration getCIConfig(FormData formData) {
+        for (CIConfiguration config : getValidCIConfigs()) {
+            if (config.getName().equals(formData.getCiConfigName())) {
+                return config;
+            }
+        }
+
+        throw new IllegalArgumentException("The CI config doesn't exist");
     }
     
     private CatalogEntry getScaffold(FormData formData) {
@@ -190,6 +212,10 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
      */
     public VCSConfiguration[] getValidVCSConfigs() {
         return JanusPlugin.getValidVCSConfigs();
+    }
+
+    public CIConfiguration[] getValidCIConfigs() {
+        return JanusPlugin.getValidCIConfigs();
     }
 
     public Catalog getCatalog() {

@@ -1,19 +1,26 @@
 package de.codecentric.janus.plugin.vcs;
 
 import de.codecentric.janus.VersionControlSystem;
+import de.codecentric.janus.plugin.Validatable;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.util.FormValidation;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-public class VCSConfiguration implements Describable<VCSConfiguration> {
+public class VCSConfiguration implements Describable<VCSConfiguration>, Validatable {
+    private static final UrlValidator URL_VALIDATOR = new UrlValidator(
+            UrlValidator.ALLOW_LOCAL_URLS | UrlValidator.ALLOW_ALL_SCHEMES
+    );
+
     private String name,
+            checkoutUrl,
             checkoutBuildJob,
             commitBuildJob,
             generationBuildJob;
@@ -24,11 +31,13 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
 
     @DataBoundConstructor
     public VCSConfiguration(String name,
+                            String checkoutUrl,
                             String checkoutBuildJob,
                             String commitBuildJob,
                             String generationBuildJob,
                             VersionControlSystem vcs) {
         this.name = name;
+        this.checkoutUrl = checkoutUrl;
         this.checkoutBuildJob = checkoutBuildJob;
         this.commitBuildJob = commitBuildJob;
         this.generationBuildJob = generationBuildJob;
@@ -41,6 +50,14 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCheckoutUrl() {
+        return checkoutUrl;
+    }
+
+    public void setCheckoutUrl(String checkoutUrl) {
+        this.checkoutUrl = checkoutUrl;
     }
 
     public String getCheckoutBuildJob() {
@@ -82,6 +99,8 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
             return false;
         } else if (vcs == null) {
             return false;
+        } else if (doCheckCheckoutUrl(checkoutUrl).kind != ok) {
+            return false;
         } else if (doCheckBuildJob(generationBuildJob).kind != ok) {
             return false;
         } else if (doCheckBuildJob(checkoutBuildJob).kind != ok) {
@@ -99,6 +118,14 @@ public class VCSConfiguration implements Describable<VCSConfiguration> {
         }
 
         return FormValidation.ok();
+    }
+
+    public static FormValidation doCheckCheckoutUrl(@QueryParameter String value) {
+        if (URL_VALIDATOR.isValid(value)) {
+            return FormValidation.ok();
+        }
+
+        return FormValidation.error("Please provide a valid URL.");
     }
 
     public static FormValidation doCheckVcs(@QueryParameter String value) {

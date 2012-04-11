@@ -1,5 +1,6 @@
 package de.codecentric.janus.plugin.bootstrap;
 
+import de.codecentric.janus.plugin.ci.CIConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.CatalogEntry;
 
@@ -9,6 +10,7 @@ import java.util.Map;
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
 class ParsedFormData {
+
     enum Status {
         OK,ERROR
     }
@@ -18,6 +20,7 @@ class ParsedFormData {
     private String name, pckg, description;
     private CatalogEntry scaffold;
     private VCSConfiguration vcsConfiguration;
+    private CIConfiguration ciConfiguration;
     private Map<String, String> context;
 
     ParsedFormData() {
@@ -82,5 +85,13 @@ class ParsedFormData {
 
     void setContext(Map<String, String> context) {
         this.context = context;
+    }
+
+    CIConfiguration getCiConfiguration() {
+        return ciConfiguration;
+    }
+
+    void setCiConfiguration(CIConfiguration ciConfiguration) {
+        this.ciConfiguration = ciConfiguration;
     }
 }

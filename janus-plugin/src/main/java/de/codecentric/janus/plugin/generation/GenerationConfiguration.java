@@ -1,5 +1,6 @@
 package de.codecentric.janus.plugin.generation;
 
+import de.codecentric.janus.plugin.Validatable;
 import hudson.model.Describable;
 import hudson.model.Hudson;
 import hudson.util.FormValidation;
@@ -10,7 +11,7 @@ import java.io.File;
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-public class GenerationConfiguration implements Describable<GenerationConfiguration> {
+public class GenerationConfiguration implements Describable<GenerationConfiguration>, Validatable {
     private String catalogFile, scaffoldDirectory, tempDirectory;
 
     public GenerationConfiguration() {

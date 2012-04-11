@@ -1,5 +1,6 @@
 package de.codecentric.janus.plugin;
 
+import de.codecentric.janus.plugin.ci.CIConfiguration;
 import de.codecentric.janus.plugin.generation.GenerationConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
@@ -59,6 +60,22 @@ public class JanusPlugin {
         return vcsConfigs.toArray(new VCSConfiguration[]{});
     }
 
+    public static CIConfiguration[] getCIConfigs() {
+        return CIConfiguration.get();
+    }
+
+    public static CIConfiguration[] getValidCIConfigs() {
+        List<CIConfiguration> ciConfigs = new ArrayList<CIConfiguration>();
+
+        for(CIConfiguration ciConfig : getCIConfigs()) {
+            if (ciConfig.isValid()) {
+                ciConfigs.add(ciConfig);
+            }
+        }
+
+        return ciConfigs.toArray(new CIConfiguration[]{});
+    }
+
     public static GenerationConfiguration getGenerationConfig() {
         return GenerationConfiguration.get();
     }
@@ -82,6 +99,23 @@ public class JanusPlugin {
                     "config exists (catalog file and scaffold directory " +
                     "location.");
             return false;
+        }
+
+        CIConfiguration[] ciConfigs = getValidCIConfigs();
+        if (ciConfigs.length == 0) {
+            LOGGER.info("Jenkins is not properly configured for project " +
+                    "bootstrap because no valid CI config exists.");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean isValid(Validatable[] validatables) {
+        for (Validatable validatable : validatables) {
+            if (!validatable.isValid()) {
+                return false;
+            }
         }
 
         return true;
