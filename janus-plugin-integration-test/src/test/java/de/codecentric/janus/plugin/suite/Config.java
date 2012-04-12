@@ -63,4 +63,16 @@ public class Config {
     public static int getTimeoutInSeconds() {
         return getInt("timeout");
     }
+
+    public static String getDefaultUsername() {
+        return getString("auth.username");
+    }
+
+    public static String getDefaultPassword() {
+        return getString("auth.password");
+    }
+
+    public static String getDefaultApiToken() {
+        return getString("auth.apiToken");
+    }
 }

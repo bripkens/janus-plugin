@@ -45,27 +45,25 @@ public class SeleniumAdapter {
     }
 
     public void cleanJenkinsConfiguration() throws Exception {
-        // TODO delete scaffold dir and recreate it
-
         deleteConfigurationFiles();
         reloadConfiguration();
     }
 
     private void deleteConfigurationFiles() throws Exception {
         String cwd = System.getProperty("user.dir");
-        String jenkinsWorkspace;
-        jenkinsWorkspace = cwd.replace("janus-plugin-integration-test",
-                "janus-plugin" + File.separator + "work" + File.separator);
+        String jenkinsWorkspace = cwd.replace("janus-plugin-integration-test",
+                "janus-plugin" + File.separator + "work");
+        String workspaceTemplate = cwd + File.separator  + "src" +
+                File.separator + "test" +
+                File.separator + "resources" +
+                File.separator + "jenkins-workspace-template";
 
-        // delete all jobs
-        FileUtils.cleanDirectory(new File(jenkinsWorkspace + "jobs"));
+        // delete all configuration data
+        FileUtils.deleteDirectory(new File(jenkinsWorkspace));
 
-        // delete all configuration files
-        File[] configFile = new File(jenkinsWorkspace)
-                .listFiles(new JenkinsConfigurationFilenameFilter());
-        for (File file : configFile) {
-            FileUtils.forceDelete(file);
-        }
+        // copy config template
+        FileUtils.copyDirectory(new File(workspaceTemplate),
+                new File(jenkinsWorkspace));
     }
 
     private void reloadConfiguration() throws Exception {
@@ -93,17 +91,5 @@ public class SeleniumAdapter {
     @AfterStories
     public void afterStories() {
         driver.quit();
-    }
-
-    private static final class JenkinsConfigurationFilenameFilter
-            implements FilenameFilter {
-
-        private static final Pattern configPattern = Pattern
-                .compile("^(hudson\\.|de\\.codecentric\\.).*\\.xml$");
-
-        @Override
-        public boolean accept(File dir, String name) {
-            return configPattern.matcher(name).matches();
-        }
     }
 }

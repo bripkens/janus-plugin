@@ -1,0 +1,2 @@
+#Mon Feb 27 08:38:17 PST 2012
+getModuleRecords=\ {@link MavenArtifactRecord}s of every module build contributed to {@link \#parent}.\n

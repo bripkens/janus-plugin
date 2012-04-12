@@ -1,0 +1,9 @@
+#Fri Dec 02 17:11:49 PST 2011
+getNode()=\ Gets the globally unique changeset ID.\n
+isMerge()=\ Checks if this is a merge changeset.\n
+getAuthor()=\ Gets the user who made this change.\n
+getDeletedPaths()=\ Gets all the files that were deleted.\n
+getModifiedPaths()=\ Gets all the files that were modified.\n
+getMsg()=\ Commit message.\n
+getRev()=\ Gets repository revision number, which is local in the current repository.\n
+getAddedPaths()=\ Gets all the files that were added.\n

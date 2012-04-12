@@ -1,0 +1,2 @@
+hudson.plugins.mercurial.MercurialChangeSet
+hudson.plugins.mercurial.MercurialTagAction

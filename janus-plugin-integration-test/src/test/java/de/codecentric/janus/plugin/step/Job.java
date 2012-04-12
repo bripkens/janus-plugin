@@ -40,17 +40,25 @@ public class Job extends AbstractStep {
 
     /*
     * ############################
-    * ### GIVEN
+    * ### THEN
     * ############################
     */
     @Then("the build $build is successfully executed")
     public void thenTheBuildIsSuccessfullyExecuted(
             @Named("build") String build) throws Exception {
-        System.out.println("Checking build job: " + build);
         goToLastSuccessfulBuild(build);
 
         assertThat(getBuildStatusIndicator().getAttribute("title"),
                 is(equalTo("Success")));
+    }
+
+    @Then("the build $build is created")
+    public void thenTheBuildsIsCreated(@Named("build") String name)
+            throws Exception {
+        goToBuild(name);
+
+        // going to the build page is enough. In case the build doesn't exist,
+        // the goToBuild(...) will already fail.
     }
 
     /*

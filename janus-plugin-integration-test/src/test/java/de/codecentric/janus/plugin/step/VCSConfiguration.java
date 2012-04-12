@@ -57,6 +57,7 @@ public class VCSConfiguration extends AbstractStep {
         // set values
         getNameInputField().sendKeys(name);
         getVCSSelectBox().selectByValue(type);
+        getCheckoutURLInputField().sendKeys("http://localhost:8000");
         getGenerationBuildSelectBox().selectByValue(creationBuild);
         getCheckoutBuildSelectBox().selectByValue(checkoutBuild);
         getCommitBuildSelectBox().selectByValue(commitBuild);
@@ -65,11 +66,6 @@ public class VCSConfiguration extends AbstractStep {
         configuration.getSubmitButton().click();
     }
     
-    private void select(By by, String selectValue) {
-        Select select = new Select(driver.findElement(by));
-        select.selectByValue(selectValue);
-    }
-
     /*
      * ############################
      * ### THEN
@@ -114,6 +110,10 @@ public class VCSConfiguration extends AbstractStep {
         return findSelectByCSS(CSS_SELECTOR.VCS_SELECT_BOX);
     }
 
+    private WebElement getCheckoutURLInputField() {
+        return findByCSS(CSS_SELECTOR.CHECKOUT_URL_INPUT_FIELD);
+    }
+
     private Select getGenerationBuildSelectBox() {
         return findSelectByCSS(CSS_SELECTOR.GENERATION_BUILD_SELECT_BOX);
     }
@@ -137,6 +137,9 @@ public class VCSConfiguration extends AbstractStep {
 
         String VCS_SELECT_BOX = REPEATED_CHUNK_SELECTOR + 
                 " select[name=\"_.vcs\"]";
+
+        String CHECKOUT_URL_INPUT_FIELD = REPEATED_CHUNK_SELECTOR +
+                " input[name=\"_.checkoutUrl\"]";
         
         String GENERATION_BUILD_SELECT_BOX = REPEATED_CHUNK_SELECTOR +
                 " select[name=\"_.generationBuildJob\"]";

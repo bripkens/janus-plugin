@@ -121,6 +121,11 @@ public abstract class AbstractStep {
         waitUntilPageTitleStartsWith("Janus: New project");
     }
 
+    public void goToBuild(String name) throws Exception {
+        driver.get(Config.getJenkinsBaseUrl() + "job/" + name);
+        waitUntilPageTitleStartsWith(name);
+    }
+
     public void goToLastSuccessfulBuild(String job) throws Exception {
         driver.get(Config.getJenkinsBaseUrl() + "job/" + job + "/lastBuild/");
         // a timeout can indicate, that no build was executed (there is no
