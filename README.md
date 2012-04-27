@@ -5,8 +5,6 @@ This project provides a user interface for the
 interface leverages [Jenkins CI](http://jenkins-ci.org/) as a platform to
 achieve a seamless integration with existing company toolsets.
 
-The application is licese
-
 # Version History
 
 ## 0.4
