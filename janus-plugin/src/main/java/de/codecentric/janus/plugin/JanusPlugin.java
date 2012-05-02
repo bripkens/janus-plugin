@@ -2,6 +2,7 @@ package de.codecentric.janus.plugin;
 
 import de.codecentric.janus.plugin.ci.CIConfiguration;
 import de.codecentric.janus.plugin.generation.GenerationConfiguration;
+import de.codecentric.janus.plugin.jira.JiraConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
 import hudson.model.*;
@@ -11,6 +12,7 @@ import hudson.security.PermissionScope;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -49,7 +51,7 @@ public class JanusPlugin {
     }
 
     public static VCSConfiguration[] getValidVCSConfigs() {
-        List<VCSConfiguration> vcsConfigs = new ArrayList<VCSConfiguration>();
+        List<VCSConfiguration> vcsConfigs = new LinkedList<VCSConfiguration>();
 
         for(VCSConfiguration vcsConfig : getVCSConfigs()) {
             if (vcsConfig.isValid()) {
@@ -65,7 +67,7 @@ public class JanusPlugin {
     }
 
     public static CIConfiguration[] getValidCIConfigs() {
-        List<CIConfiguration> ciConfigs = new ArrayList<CIConfiguration>();
+        List<CIConfiguration> ciConfigs = new LinkedList<CIConfiguration>();
 
         for(CIConfiguration ciConfig : getCIConfigs()) {
             if (ciConfig.isValid()) {
@@ -78,6 +80,22 @@ public class JanusPlugin {
 
     public static GenerationConfiguration getGenerationConfig() {
         return GenerationConfiguration.get();
+    }
+
+    public static JiraConfiguration[] getJiraConfigurations() {
+        return JiraConfiguration.get();
+    }
+
+    public static JiraConfiguration[] getValidJiraConfigurations() {
+        List<JiraConfiguration> jiraConfigs = new LinkedList<JiraConfiguration>();
+
+        for (JiraConfiguration jiraConfig : getJiraConfigurations()) {
+            if (jiraConfig.isValid()) {
+                jiraConfigs.add(jiraConfig);
+            }
+        }
+
+        return jiraConfigs.toArray(new JiraConfiguration[]{});
     }
 
     public static Catalog getCatalog() {
@@ -105,6 +123,13 @@ public class JanusPlugin {
         if (ciConfigs.length == 0) {
             LOGGER.info("Jenkins is not properly configured for project " +
                     "bootstrap because no valid CI config exists.");
+            return false;
+        }
+
+        JiraConfiguration[] jiraConfigs = getValidJiraConfigurations();
+        if (jiraConfigs.length == 0) {
+            LOGGER.info("Jenkins is not properly configured for project " +
+                    "bootstrap because no valid JIRA config exists.");
             return false;
         }
 
