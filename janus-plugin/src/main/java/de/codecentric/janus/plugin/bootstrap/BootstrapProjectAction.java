@@ -1,7 +1,10 @@
 package de.codecentric.janus.plugin.bootstrap;
 
+import com.atlassian.confluence.rpc.soap.beans.RemoteUserInformation;
 import com.atlassian.jira.rpc.soap.beans.RemoteGroup;
 import com.atlassian.jira.rpc.soap.beans.RemotePermissionScheme;
+import com.atlassian.jira.rpc.soap.beans.RemoteUser;
+import de.codecentric.janus.atlassian.jira.JiraClient;
 import de.codecentric.janus.atlassian.jira.JiraSession;
 import de.codecentric.janus.atlassian.model.RemoteGroupSummary;
 import de.codecentric.janus.conf.Project;
@@ -126,12 +129,25 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
     public RemoteGroupSummary[] getExistingGroups(String jiraConfigName,
                                                   String query) {
         JiraSession session = getJiraSession(getJiraConfig(jiraConfigName));
+        JiraClient client = new JiraClient(session);
 
         RemoteGroupSummary[] groups;
-        groups = session.getJiraRestClient().searchGroups(query);
+        groups = client.searchGroups(query);
 
         session.close();
         return groups;
+    }
+
+    @JavaScriptMethod
+    public RemoteUser[] getExistingUsers(String jiraConfigName,
+                                                  String query) {
+        JiraSession session = getJiraSession(getJiraConfig(jiraConfigName));
+        JiraClient client = new JiraClient(session);
+
+        RemoteUser[] users = client.searchUser(query);
+
+        session.close();
+        return users;
     }
 
     private JiraConfiguration getJiraConfig(String name) {
@@ -265,9 +281,10 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
 
     public RemotePermissionScheme[] getPermissionSchemes(JiraConfiguration config) {
         JiraSession session = getJiraSession(config);
+        JiraClient client = new JiraClient(session);
 
         RemotePermissionScheme[] schemes;
-        schemes = session.getJiraSoapClient().getPermissionSchemes();
+        schemes = client.getPermissionSchemes();
 
         session.close();
         return schemes;

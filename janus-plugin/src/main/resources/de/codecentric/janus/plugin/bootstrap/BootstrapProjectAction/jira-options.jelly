@@ -1,7 +1,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
 
-    <div class='hidden janusConfigName'>${jiraConfig.name}</div>
+    <div class='janusConfigName'>${jiraConfig.name}</div>
 
     <f:section title="Configuration">
         <f:dropdownList name="permissionScheme" title="Permission Scheme">
@@ -21,6 +21,42 @@
             <div class='janus-jira-group'>
                 <f:textbox />
             </div>
+        </f:entry>
+    </f:section>
+
+    <f:section title="Existing users">
+        <f:entry title="Email"
+                 description="Autocomplete text box."
+                 field="group">
+            <div class='janus-jira-user-autocomplete'>
+                <input type='text'/>
+                <input type='button' value='Add'/>
+            </div>
+        </f:entry>
+    </f:section>
+
+    <f:section title="New user">
+        <f:entry title="Username">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Full name">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Email">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Password">
+            <f:password/>
+        </f:entry>
+        <f:entry>
+            <input type='button' value='Add'/>
+        </f:entry>
+    </f:section>
+
+    <f:section title="Added users">
+        <f:entry>
+            <ul class='addedUsers'>
+            </ul>
         </f:entry>
     </f:section>
 </j:jelly>

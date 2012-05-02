@@ -36,7 +36,3 @@
 #main-panel > .status.success {
     color: green;
 }
-
-.janusConfigName, .hidden {
-    display: none;
-}

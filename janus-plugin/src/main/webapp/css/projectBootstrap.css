@@ -1,0 +1,51 @@
+.janusConfigName {
+    display: none;
+}
+
+.addedUsers {
+    background: #eee;
+    border: 1px solid #888;
+    padding: 0;
+}
+
+.addedUsers li {
+    margin: 0;
+    padding: 3px 7px;
+    border-top: 1px solid #888;
+    list-style: none;
+    position: relative;
+}
+
+.addedUsers li:nth-child(odd) {
+    background: white;
+}
+
+.addedUsers li:first-child {
+    border-top: 0;
+}
+
+.addedUsers .email {
+    font-style: italic;
+    padding: 0 4px;
+    margin: 0 10px;
+}
+
+.addedUsers .remove {
+    position: absolute;
+    top: 1px;
+    right: 10px;
+    font-weight: bold;
+    display: block;
+    font-size: 1.3em;
+    color: #8D1F1B;
+    cursor: pointer;
+}
+
+.janus-info {
+    color: #3A87AD;
+    background-color: #D9EDF7;
+    border: 1px solid #BCE8F1;
+    padding: 8px 35px 8px 14px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
