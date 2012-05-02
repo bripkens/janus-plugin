@@ -1,0 +1,26 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+
+    <div class='hidden janusConfigName'>${jiraConfig.name}</div>
+
+    <f:section title="Configuration">
+        <f:dropdownList name="permissionScheme" title="Permission Scheme">
+            <j:forEach var="permissionScheme"
+                       items="${it.getPermissionSchemes(jiraConfig)}"
+                       varStatus="loop">
+                <f:dropdownListBlock title="${permissionScheme.name}"
+                                     value="permissionScheme-${permissionScheme.name}"
+                                     selected="${permissionScheme.name == selectedPermissionScheme}">
+                </f:dropdownListBlock>
+            </j:forEach>
+        </f:dropdownList>
+
+        <f:entry title="Group"
+                description="Autocomplete text box. A non-existing group will automatically be created for you."
+                field="group">
+            <div class='janus-jira-group'>
+                <f:textbox />
+            </div>
+        </f:entry>
+    </f:section>
+</j:jelly>

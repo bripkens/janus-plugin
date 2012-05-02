@@ -1,4 +1,6 @@
 (function() {
+    var $ = jQuery.noConflict();
+
     var getInput = function(wrapperId, type) {
         return document.getElementById(wrapperId)
             .getElementsByTagName(type)[0];
@@ -54,4 +56,31 @@
                 false);
         requiredInputValidation({target: requiredInput});
     }
+
+    /*
+     * Customized autocomplete
+     */
+     var setupAutocomplete = function(element) {
+        var jiraConfigName = jQuery(element).parents('table').first()
+            .prev('.janusConfigName')
+            .text();
+        jQuery(element).autocomplete({
+            source: function(query, callback) {
+                action.getExistingGroups(jiraConfigName, query.term, function (resp) {
+                    var responseObject = resp.responseObject();
+
+                    var result = [];
+                    for (var i = 0; i < responseObject.length; i++) {
+                        result.push(responseObject[i].name);
+                    }
+
+                    callback(result);
+                });
+            }
+        });
+     };
+
+     $('.janus-jira-group input').each(function() {
+        setupAutocomplete(this);
+     });
 })();

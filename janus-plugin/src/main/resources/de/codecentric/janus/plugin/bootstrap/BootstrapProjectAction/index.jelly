@@ -4,6 +4,7 @@
     <l:layout title="Janus: Bootstrap Project" norefresh="true" permission="${it.PERMISSION}">
         <st:include page="../../sidepanel.jelly"/>
         <l:main-panel>
+            <link rel="stylesheet" href="/plugin/janus-plugin/css/jquery-ui-1.8.20.custom.css" type="text/css" />
             <h1>Janus: Bootstrap Project</h1>
 
             <j:if test="${error}">
@@ -66,7 +67,7 @@
                     </f:section>
 
                     <f:section title="Environment configuration">
-                        <f:dropdownList name="vcs" title="Version Control System">
+                        <f:dropdownList name="vcs" title="Version Control">
                             <j:forEach var="vcsConfig"
                                        items="${it.validVCSConfigs}"
                                        varStatus="loop">
@@ -77,7 +78,7 @@
                                 </f:dropdownListBlock>
                             </j:forEach>
                         </f:dropdownList>
-                        <f:dropdownList name="ci" title="Continuous Integration System">
+                        <f:dropdownList name="ci" title="Continuous Integration">
                             <j:forEach var="ciConfig"
                                        items="${it.validCIConfigs}"
                                        varStatus="loop">
@@ -85,6 +86,18 @@
                                         title="Jenkins - ${ciConfig.name}"
                                         value="ci-${ciConfig.name}"
                                         selected="${ciConfig.name == selectedCI}">
+                                </f:dropdownListBlock>
+                            </j:forEach>
+                        </f:dropdownList>
+                        <f:dropdownList name="jira" title="JIRA and Confluence">
+                            <j:forEach var="jiraConfig"
+                                       items="${it.validJiraConfigs}"
+                                       varStatus="loop">
+                                <f:dropdownListBlock
+                                        title="${jiraConfig.name}"
+                                        value="jira-${jiraConfig.name}"
+                                        selected="${jiraConfig.name == selectedJira}">
+                                    <st:include page="jira-options.jelly"/>
                                 </f:dropdownListBlock>
                             </j:forEach>
                         </f:dropdownList>
@@ -113,8 +126,9 @@
             <script>
                 var action = <st:bind value="${it}"/>;
             </script>
+            <script src="/plugin/janus-plugin/js/jquery-1.7.2.min.js"></script>
+            <script src="/plugin/janus-plugin/js/jquery-ui-1.8.20.custom.min.js"></script>
             <script src="/plugin/janus-plugin/js/projectBootstrap.js"></script>
-
             </j:if>
         </l:main-panel>
     </l:layout>

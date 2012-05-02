@@ -1,10 +1,15 @@
 package de.codecentric.janus.plugin.bootstrap;
 
+import com.atlassian.jira.rpc.soap.beans.RemoteGroup;
+import com.atlassian.jira.rpc.soap.beans.RemotePermissionScheme;
+import de.codecentric.janus.atlassian.jira.JiraSession;
+import de.codecentric.janus.atlassian.model.RemoteGroupSummary;
 import de.codecentric.janus.conf.Project;
 import de.codecentric.janus.plugin.Flash;
 import de.codecentric.janus.plugin.FlashKeys;
 import de.codecentric.janus.plugin.JanusPlugin;
 import de.codecentric.janus.plugin.ci.CIConfiguration;
+import de.codecentric.janus.plugin.jira.JiraConfiguration;
 import de.codecentric.janus.plugin.vcs.RepositoryCreationSuccessAction;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.Catalog;
@@ -117,6 +122,28 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         return Project.isValidDescription(value);
     }
 
+    @JavaScriptMethod
+    public RemoteGroupSummary[] getExistingGroups(String jiraConfigName,
+                                                  String query) {
+        JiraSession session = getJiraSession(getJiraConfig(jiraConfigName));
+
+        RemoteGroupSummary[] groups;
+        groups = session.getJiraRestClient().searchGroups(query);
+
+        session.close();
+        return groups;
+    }
+
+    private JiraConfiguration getJiraConfig(String name) {
+        for (JiraConfiguration config : getValidJiraConfigs()) {
+            if (config.getName().equals(name)) {
+                return config;
+            }
+        }
+
+        throw new IllegalArgumentException("No such config was found.");
+    }
+
     private ParsedFormData isValid(FormData formData) {
         ParsedFormData result;
         result = new ParsedFormData(ParsedFormData.Status.ERROR);
@@ -205,6 +232,12 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         return true;
     }
 
+    private JiraSession getJiraSession(JiraConfiguration config) {
+        return new JiraSession(config.getJiraUrl(),
+                config.getUsername(),
+                config.getPassword());
+    }
+
     /*
      * ############################
      * Getter for view
@@ -218,12 +251,26 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         return JanusPlugin.getValidCIConfigs();
     }
 
+    public JiraConfiguration[] getValidJiraConfigs() {
+        return JanusPlugin.getValidJiraConfigurations();
+    }
+
     public Catalog getCatalog() {
         return JanusPlugin.getCatalog();
     }
 
     public boolean isJenkinsConfigured() {
         return JanusPlugin.isJenkinsConfiguredForProjectBootstrap();
+    }
+
+    public RemotePermissionScheme[] getPermissionSchemes(JiraConfiguration config) {
+        JiraSession session = getJiraSession(config);
+
+        RemotePermissionScheme[] schemes;
+        schemes = session.getJiraSoapClient().getPermissionSchemes();
+
+        session.close();
+        return schemes;
     }
 
     /*
