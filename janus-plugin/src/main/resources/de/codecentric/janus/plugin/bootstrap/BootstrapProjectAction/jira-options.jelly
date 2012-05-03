@@ -21,7 +21,7 @@
                  description="Autocomplete text box. A non-existing group will automatically be created for you."
                  field="group">
             <div class='janus-jira-group'>
-                <f:textbox />
+                <f:textbox  default="${tempGroup}" />
             </div>
         </f:entry>
     </f:section>

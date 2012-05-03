@@ -85,23 +85,23 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         FormData formData = FormData.parse(req.getSubmittedForm());
         ParsedFormData parsedFormData = isValid(formData);
         if (parsedFormData.getStatus() == ParsedFormData.Status.OK) {
-            Project project = new Project();
-            project.setName(parsedFormData.getName());
-            project.setDescription(parsedFormData.getDescription());
-            project.setPckg(parsedFormData.getPckg());
-
-            BootstrapExecutor executor;
-            executor = new BootstrapExecutor(project,
-                    parsedFormData.getVcsConfiguration(),
-                    parsedFormData.getCiConfiguration(),
-                    parsedFormData.getScaffold(),
-                    parsedFormData.getContext());
-            Log log = executor.execute();
-
-            Flash flash = Flash.getForRequest(req);
-            flash.put(FlashKeys.BOOTSTRAP_LOG, log);
-
-            rsp.sendRedirect("/" + URL + "/" + BootstrapResultAction.URL);
+//            Project project = new Project();
+//            project.setName(parsedFormData.getName());
+//            project.setDescription(parsedFormData.getDescription());
+//            project.setPckg(parsedFormData.getPckg());
+//
+//            BootstrapExecutor executor;
+//            executor = new BootstrapExecutor(project,
+//                    parsedFormData.getVcsConfiguration(),
+//                    parsedFormData.getCiConfiguration(),
+//                    parsedFormData.getScaffold(),
+//                    parsedFormData.getContext());
+//            Log log = executor.execute();
+//
+//            Flash flash = Flash.getForRequest(req);
+//            flash.put(FlashKeys.BOOTSTRAP_LOG, log);
+//
+//            rsp.sendRedirect("/" + URL + "/" + BootstrapResultAction.URL);
         } else {
             req.setAttribute("error", true);
             formData.setFormDataAsAttributesOn(req);

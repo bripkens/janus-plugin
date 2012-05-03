@@ -58,9 +58,14 @@
      * #######################################################################
      */
      var userListingTemplate = _.template('<li>' +
-        '<%=name%>' +
+        '<%=fullName%>' +
         '<span class=\'email\'><%=email%></span>' +
         '<span class=\'remove\'>x</span>' +
+        '<input type=\'hidden\' name=\'_.userFullName\' value=\'<%=fullName%>\'/>' +
+        '<input type=\'hidden\' name=\'_.userUsername\' value=\'<%=username%>\'/>' +
+        '<input type=\'hidden\' name=\'_.userEmail\' value=\'<%=email%>\'/>' +
+        '<input type=\'hidden\' name=\'_.userPassword\' value=\'<%=password%>\'/>' +
+        '<input type=\'hidden\' name=\'_.userNew\' value=\'<%=newUser%>\'/>' +
         '</li>');
 
     $('.addedUsers').each(function() {
@@ -77,7 +82,6 @@
         });
     });
 
-
     var addUserToListing = function (username, fullName, email, password, newUser) {
         var ul = $('.addedUsers:visible')[0],
             addedUsers = ul.addedUsers;
@@ -91,7 +95,7 @@
         var tmp = document.createElement('div');
 
         tmp.innerHTML = userListingTemplate({
-            name: fullName,
+            fullName: fullName,
             username: username,
             email: email,
             password: password,

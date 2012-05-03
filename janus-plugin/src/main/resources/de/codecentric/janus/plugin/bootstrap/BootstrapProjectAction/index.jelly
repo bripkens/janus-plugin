@@ -33,6 +33,7 @@
             <j:set var="tempName" value="${name}"/>
             <j:set var="tempPckg" value="${pckg}"/>
             <j:set var="tempDescription" value="${description}"/>
+            <j:set var="tempGroup" value="${group}"/>
 
             <j:if test="${validConfiguration}">
             <form action="submit" method="post">
