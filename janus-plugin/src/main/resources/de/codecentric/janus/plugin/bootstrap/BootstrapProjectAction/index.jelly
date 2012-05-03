@@ -11,7 +11,7 @@
             <j:if test="${error}">
                 <div class="error">
                     Please make sure to fill out the form.
-                </div>
+                </div>               dasd
             </j:if>
 
             <j:set var="validConfiguration" value="${it.JenkinsConfigured}"/>
@@ -133,6 +133,13 @@
                 window.jQuery = window.$.noConflict();
 
                 var action = <st:bind value="${it}"/>;
+
+                <j:if test="${!empty(addedUsers)}">
+                    var previousUsers =
+                </j:if>
+                <j:if test="${!empty(addedUsers)}">
+                    <j:out value="${addedUsers}"/>
+                </j:if>
             </script>
             <script src="/plugin/janus-plugin/js/projectBootstrap.js"></script>
             <script src="/plugin/janus-plugin/js/projectBootstrapJiraConfig.js"></script>

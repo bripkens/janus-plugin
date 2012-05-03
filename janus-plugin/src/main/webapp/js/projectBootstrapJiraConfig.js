@@ -109,8 +109,6 @@
         addedUsers[email] = li;
     };
 
-
-
     /*
      * #######################################################################
      * EXISTING USER ADDITION
@@ -258,4 +256,21 @@
 
         return false;
     });
+
+    /*
+     * #######################################################################
+     * EXISTING USER ADDITION
+     * #######################################################################
+     */
+    if (typeof previousUsers !== 'undefined') {
+        for (var i = 0; i < previousUsers.length; i++) {
+            var user = previousUsers[i];
+
+            addUserToListing(user.username,
+                user.fullName,
+                user.email,
+                user.password,
+                user.newUser);
+        }
+    }
 })(window.jQuery, window.underscore);

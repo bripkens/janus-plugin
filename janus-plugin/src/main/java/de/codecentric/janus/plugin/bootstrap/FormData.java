@@ -1,23 +1,31 @@
 package de.codecentric.janus.plugin.bootstrap;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.kohsuke.stapler.StaplerRequest;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 * @author Ben Ripkens <bripkens.dev@gmail.com>
 */
 class FormData {
+    private static final Logger LOGGER = Logger
+            .getLogger(FormData.class.getName());
+
     private String name, description, pckg, scaffoldName, vcsConfigName,
             ciConfigName, jiraGroupName, jiraConfigName, jiraPermissionScheme;
     private Map<String, String> contextParameters;
+    private List<UserFormData> users;
 
     FormData() {
         contextParameters = new HashMap<String, String>();
+        users = new LinkedList<UserFormData>();
     }
 
     static FormData parse(JSONObject form) {
@@ -72,7 +80,6 @@ class FormData {
     }
 
     private static void parseJiraParameters(JSONObject formData, FormData result) {
-        // {"":["vcs-Training","ci-Training","jira-Prototyping","scaf-Java EE 6 RESTful web service"],"description":"","jira":{"":["permissionScheme-Default Permission Scheme","","","","",""],"group":"jira-administrators"},"name":"","pckg":""}
         result.jiraGroupName = formData.getString("group");
 
         Iterator it = formData.getJSONArray("").iterator();
@@ -83,6 +90,47 @@ class FormData {
                         .substring(PREFIX.PERMISSION_SCHEME.length());
             }
         }
+
+        try {
+            // to differentiate between a single user and multiple ones,
+            // we can only try to convert it to an array
+            formData.getJSONArray("userUsername");
+            parseJiraUsers(formData, result);
+        } catch (JSONException ex) {
+            parseSingleJiraUser(formData, result);
+        }
+    }
+
+    private static void parseJiraUsers(JSONObject formData, FormData result) {
+        JSONArray usernames = formData.getJSONArray("userUsername"),
+                emails = formData.getJSONArray("userEmail"),
+                fullNames = formData.getJSONArray("userFullName"),
+                passwords = formData.getJSONArray("userPassword"),
+                isNew = formData.getJSONArray("userNew");
+
+        for (int i = 0; i < usernames.size(); i++) {
+            UserFormData user = new UserFormData();
+
+            user.setUsername(usernames.getString(i));
+            user.setFullName(fullNames.getString(i));
+            user.setPassword(passwords.getString(i));
+            user.setEmail(emails.getString(i));
+            user.setNewUser(isNew.getBoolean(i));
+
+            result.users.add(user);
+        }
+    }
+
+    private static void parseSingleJiraUser(JSONObject formData, FormData result) {
+        UserFormData user = new UserFormData();
+
+        user.setUsername(formData.getString("userEmail"));
+        user.setFullName(formData.getString("userFullName"));
+        user.setPassword(formData.getString("userPassword"));
+        user.setEmail(formData.getString("userEmail"));
+        user.setNewUser(formData.getBoolean("userNew"));
+
+        result.users.add(user);
     }
 
     void setFormDataAsAttributesOn(StaplerRequest req) {
@@ -96,8 +144,16 @@ class FormData {
         req.setAttribute("selectedJira", jiraConfigName);
         req.setAttribute("selectedPermissionScheme", jiraPermissionScheme);
 
-        for(Map.Entry<String, String> entry : contextParameters.entrySet()) {
+        for (Map.Entry<String, String> entry : contextParameters.entrySet()) {
             req.setAttribute("param-" + entry.getKey(), entry.getValue());
+        }
+
+        try {
+            req.setAttribute("addedUsers", new ObjectMapper().writeValueAsString(users));
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Failed to serialize added users.", e);
+            // Ignoring the exception to allow the user to retain most of its
+            // inputs.
         }
     }
 
@@ -139,6 +195,10 @@ class FormData {
 
     public String getJiraPermissionScheme() {
         return jiraPermissionScheme;
+    }
+
+    public List<UserFormData> getUsers() {
+        return users;
     }
 
     private interface PREFIX {
