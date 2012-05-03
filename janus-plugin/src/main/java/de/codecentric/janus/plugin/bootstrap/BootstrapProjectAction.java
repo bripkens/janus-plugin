@@ -26,6 +26,8 @@ import hudson.security.AccessControlled;
 import hudson.security.Permission;
 import jenkins.model.Jenkins;
 import org.acegisecurity.AccessDeniedException;
+import org.apache.commons.validator.GenericValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
@@ -149,6 +151,86 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         session.close();
         return users;
     }
+
+    @JavaScriptMethod
+    public String[] validateUserInput(String jiraConfigName,
+                                      String username, String fullName,
+                                      String email, String password) {
+        JiraSession session = getJiraSession(getJiraConfig(jiraConfigName));
+        JiraClient client = new JiraClient(session);
+
+        String[] result = new String[] {
+                validateNewUsername(client, username),
+                validateNewFullName(client, fullName),
+                validateNewEmail(client, email),
+                validateNewPassword(client, password)
+        };
+
+        session.close();
+
+        return result;
+    }
+
+    public String validateNewUsername(JiraClient client, String username) {
+        if (GenericValidator.isBlankOrNull(username)) {
+            return "Please enter a username.";
+        } else if (isUsernameRegistered(client, username)) {
+            return "This username is already used.";
+        }
+
+        return null;
+    }
+
+    private boolean isUsernameRegistered(JiraClient client, String username) {
+        for (RemoteUser user : client.searchUser(username)) {
+            if (user.getName().equalsIgnoreCase(username)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public String validateNewFullName(JiraClient client, String fullName) {
+        if (GenericValidator.isBlankOrNull(fullName)) {
+            return "Please enter a full name.";
+        }
+
+        return null;
+    }
+
+    public String validateNewEmail(JiraClient client, String email) {
+        if (GenericValidator.isBlankOrNull(email)) {
+            return "Please enter an email address.";
+        } else if (!EmailValidator.getInstance().isValid(email)) {
+            return "Please enter a valid email address.";
+        } else if (isEmailAddressRegistered(client, email)) {
+            return "Email address already registered.";
+        }
+
+        return null;
+    }
+
+    private boolean isEmailAddressRegistered(JiraClient client, String email) {
+        for (RemoteUser user : client.searchUser(email)) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public String validateNewPassword(JiraClient client, String password) {
+        if (GenericValidator.isBlankOrNull(password)) {
+            return "Please enter a password.";
+        } else if (password.length() < 5) {
+            return "Minimum password length is 5 characters.";
+        }
+
+        return null;
+    }
+
 
     private JiraConfiguration getJiraConfig(String name) {
         for (JiraConfiguration config : getValidJiraConfigs()) {

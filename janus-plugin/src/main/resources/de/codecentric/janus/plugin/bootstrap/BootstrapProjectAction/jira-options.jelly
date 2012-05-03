@@ -1,7 +1,9 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
 
-    <div class='janusConfigName'>${jiraConfig.name}</div>
+    <f:entry title="">
+        <div class='janusConfigName'>${jiraConfig.name}</div>
+    </f:entry>
 
     <f:section title="Configuration">
         <f:dropdownList name="permissionScheme" title="Permission Scheme">
@@ -16,8 +18,8 @@
         </f:dropdownList>
 
         <f:entry title="Group"
-                description="Autocomplete text box. A non-existing group will automatically be created for you."
-                field="group">
+                 description="Autocomplete text box. A non-existing group will automatically be created for you."
+                 field="group">
             <div class='janus-jira-group'>
                 <f:textbox />
             </div>
@@ -37,19 +39,27 @@
 
     <f:section title="New user">
         <f:entry title="Username">
-            <f:textbox/>
+            <div class='janus-jira-new-user-username'>
+                <f:textbox/>
+            </div>
         </f:entry>
         <f:entry title="Full name">
-            <f:textbox/>
+            <div class='janus-jira-new-user-fullName'>
+                <f:textbox/>
+            </div>
         </f:entry>
         <f:entry title="Email">
-            <f:textbox/>
+            <div class='janus-jira-new-user-email'>
+                <f:textbox/>
+            </div>
         </f:entry>
         <f:entry title="Password">
-            <f:password/>
+            <div class='janus-jira-new-user-password'>
+                <f:password/>
+            </div>
         </f:entry>
         <f:entry>
-            <input type='button' value='Add'/>
+            <input type='button' value='Add' class='addNewUser'/>
         </f:entry>
     </f:section>
 
