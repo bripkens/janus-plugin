@@ -19,7 +19,25 @@
         messageElement.style.display = 'none';
         element.parent().append(messageElement);
 
-        var updateGroupMessage = function () {
+        var errorElement = document.createElement('div');
+        errorElement.style.display = 'none';
+        errorElement.className = 'error';
+        element.parent().append(errorElement);
+
+        var validate = function () {
+            var val = element.val();
+            action.isValidGroupName(val, function (resp) {
+                var msg = resp.responseObject();
+                if (msg == null) {
+                    $(errorElement).fadeOut();
+                } else {
+                    $(errorElement).text(msg).fadeIn();
+                }
+            });
+        };
+        validate();
+
+        var updateGroupMessage = function (event, ui) {
             action.getExistingGroups(getJiraConfigName(element), element.val(), function (resp) {
                 var responseObject = resp.responseObject();
 
@@ -30,6 +48,10 @@
                 }
 
                 $(messageElement).slideDown();
+
+                if (ui === undefined) {
+                    validate();
+                }
             });
         };
 
@@ -50,6 +72,7 @@
         });
 
         element.change(updateGroupMessage);
+        element.change(validate);
     });
 
     /*
@@ -68,8 +91,24 @@
         '<input type=\'hidden\' name=\'_.userNew\' value=\'<%=newUser%>\'/>' +
         '</li>');
 
+    var validateEnoughUsers = function () {
+        var ul = $('.addedUsers:visible')[0],
+            errorDiv = $(ul).next();
+
+        if (ul.childNodes.length == 0) {
+            errorDiv.show();
+        } else {
+            errorDiv.hide();
+        }
+    };
+
     $('.addedUsers').each(function() {
         var addedUsers = this.addedUsers = {};
+
+        var div = document.createElement('div');
+            div.className = 'error';
+            $(div).text('Please add at least one user');
+            this.parentNode.appendChild(div);
 
         $(this).on('click', '.remove', function () {
             var element = $(this).parent();
@@ -78,6 +117,7 @@
 
             element.slideUp(function () {
                 element.remove();
+                validateEnoughUsers();
             });
         });
     });
@@ -107,7 +147,10 @@
         $(ul).append(li);
         $(li).slideDown().effect('highlight', 1000);
         addedUsers[email] = li;
+
+        validateEnoughUsers();
     };
+
 
     /*
      * #######################################################################

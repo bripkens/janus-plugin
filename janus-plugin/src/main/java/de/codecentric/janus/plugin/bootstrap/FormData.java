@@ -91,13 +91,15 @@ class FormData {
             }
         }
 
-        try {
-            // to differentiate between a single user and multiple ones,
-            // we can only try to convert it to an array
-            formData.getJSONArray("userUsername");
-            parseJiraUsers(formData, result);
-        } catch (JSONException ex) {
-            parseSingleJiraUser(formData, result);
+        if (formData.containsKey("userUsername")) {
+            try {
+                // to differentiate between a single user and multiple ones,
+                // we can only try to convert it to an array
+                formData.getJSONArray("userUsername");
+                parseJiraUsers(formData, result);
+            } catch (JSONException ex) {
+                parseSingleJiraUser(formData, result);
+            }
         }
     }
 

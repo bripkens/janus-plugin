@@ -102,6 +102,11 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         }
     }
 
+    /*
+     * ############################
+     * Form events
+     * ############################
+     */
     @JavaScriptMethod
     public boolean isValidName(String value) {
         return Project.isValidName(value);
@@ -115,6 +120,15 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
     @JavaScriptMethod
     public boolean isValidDescription(String value) {
         return Project.isValidDescription(value);
+    }
+
+    @JavaScriptMethod
+    public String isValidGroupName(String value) {
+        if (GenericValidator.isBlankOrNull(value) || value.length() < 3) {
+            return "Please use at least three character long group names.";
+        }
+
+        return null;
     }
 
     @JavaScriptMethod
@@ -271,6 +285,10 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
             return result;
         }
         result.setJiraConfiguration(jiraConfig);
+
+        if (isValidGroupName(formData.getJiraGroupName()) != null) {
+            return result;
+        }
         result.setJiraGroupName(formData.getJiraGroupName());
 
         if (!isValidJiraPermissionScheme(jiraConfig,
@@ -278,6 +296,10 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
             return result;
         }
         result.setJiraPermissionScheme(formData.getJiraPermissionScheme());
+
+        if (formData.getUsers().isEmpty()) {
+            return result;
+        }
         result.setJiraUsers(formData.getUsers());
 
         CatalogEntry scaffold;
