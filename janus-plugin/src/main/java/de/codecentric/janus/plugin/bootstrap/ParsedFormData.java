@@ -1,97 +1,131 @@
 package de.codecentric.janus.plugin.bootstrap;
 
+import de.codecentric.janus.conf.Project;
 import de.codecentric.janus.plugin.ci.CIConfiguration;
+import de.codecentric.janus.plugin.jira.JiraConfiguration;
 import de.codecentric.janus.plugin.vcs.VCSConfiguration;
 import de.codecentric.janus.scaffold.CatalogEntry;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
-class ParsedFormData {
+public class ParsedFormData {
 
     enum Status {
         OK,ERROR
     }
     
     private Status status;
-    
-    private String name, pckg, description;
+
+    private Project project;
+    private String jiraGroupName, jiraPermissionScheme;
     private CatalogEntry scaffold;
     private VCSConfiguration vcsConfiguration;
     private CIConfiguration ciConfiguration;
+    private JiraConfiguration jiraConfiguration;
     private Map<String, String> context;
+    private List<UserFormData> jiraUsers;
 
-    ParsedFormData() {
-    }
-
-    ParsedFormData(Status status) {
-        this();
+    public ParsedFormData(Status status) {
         this.status = status;
     }
 
-    Status getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    void setStatus(Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    String getName() {
-        return name;
+    public Project getProject() {
+        return project;
     }
 
-    void setName(String name) {
-        this.name = name;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    String getPckg() {
-        return pckg;
+    public String getJiraGroupName() {
+        return jiraGroupName;
     }
 
-    void setPckg(String pckg) {
-        this.pckg = pckg;
+    public void setJiraGroupName(String jiraGroupName) {
+        this.jiraGroupName = jiraGroupName;
     }
 
-    String getDescription() {
-        return description;
+    public String getJiraPermissionScheme() {
+        return jiraPermissionScheme;
     }
 
-    void setDescription(String description) {
-        this.description = description;
+    public void setJiraPermissionScheme(String jiraPermissionScheme) {
+        this.jiraPermissionScheme = jiraPermissionScheme;
     }
 
-    VCSConfiguration getVcsConfiguration() {
-        return vcsConfiguration;
-    }
-
-    void setVcsConfiguration(VCSConfiguration vcsConfiguration) {
-        this.vcsConfiguration = vcsConfiguration;
-    }
-
-    CatalogEntry getScaffold() {
+    public CatalogEntry getScaffold() {
         return scaffold;
     }
 
-    void setScaffold(CatalogEntry scaffold) {
+    public void setScaffold(CatalogEntry scaffold) {
         this.scaffold = scaffold;
     }
 
-    Map<String, String> getContext() {
-        return context;
+    public VCSConfiguration getVcsConfiguration() {
+        return vcsConfiguration;
     }
 
-    void setContext(Map<String, String> context) {
-        this.context = context;
+    public void setVcsConfiguration(VCSConfiguration vcsConfiguration) {
+        this.vcsConfiguration = vcsConfiguration;
     }
 
-    CIConfiguration getCiConfiguration() {
+    public CIConfiguration getCiConfiguration() {
         return ciConfiguration;
     }
 
-    void setCiConfiguration(CIConfiguration ciConfiguration) {
+    public void setCiConfiguration(CIConfiguration ciConfiguration) {
         this.ciConfiguration = ciConfiguration;
+    }
+
+    public JiraConfiguration getJiraConfiguration() {
+        return jiraConfiguration;
+    }
+
+    public void setJiraConfiguration(JiraConfiguration jiraConfiguration) {
+        this.jiraConfiguration = jiraConfiguration;
+    }
+
+    public Map<String, String> getContext() {
+        return context;
+    }
+
+    public void setContext(Map<String, String> context) {
+        this.context = context;
+    }
+
+    public List<UserFormData> getJiraUsers() {
+        return jiraUsers;
+    }
+
+    public void setJiraUsers(List<UserFormData> jiraUsers) {
+        this.jiraUsers = jiraUsers;
+    }
+
+    @Override
+    public String toString() {
+        return "ParsedFormData{" +
+                "status=" + status +
+                ", project=" + project +
+                ", jiraGroupName='" + jiraGroupName + '\'' +
+                ", jiraPermissionScheme='" + jiraPermissionScheme + '\'' +
+                ", scaffold=" + scaffold +
+                ", vcsConfiguration=" + vcsConfiguration +
+                ", ciConfiguration=" + ciConfiguration +
+                ", jiraConfiguration=" + jiraConfiguration +
+                ", context=" + context +
+                ", jiraUsers=" + jiraUsers +
+                '}';
     }
 }

@@ -19,32 +19,24 @@ import java.util.logging.Logger;
  */
 class BootstrapExecutor {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(BootstrapExecutor.class.getName());
-
-    private final StepExecutionData data;
+    private final BootstrapLogger logger;
+    private final ParsedFormData data;
     private final AtomicBoolean atomicBoolean;
 
     private final AbstractBootstrapStep[] steps;
 
-    BootstrapExecutor(Project project, VCSConfiguration vcsConfiguration,
-                      CIConfiguration ciConfiguration,
-                      CatalogEntry catalogEntry, Map<String, String> context) {
-
-        data = new StepExecutionData(project,
-                vcsConfiguration,
-                ciConfiguration,
-                catalogEntry,
-                context);
-
+    BootstrapExecutor(ParsedFormData data) {
+        this.data = data;
+        this.logger = new BootstrapLogger(data.toString());
         atomicBoolean = new AtomicBoolean();
 
         steps = new AbstractBootstrapStep[] {
-                new RepositoryCreationStep(data),
-                new RepositoryCheckoutStep(data),
-                new SourceCodeGenerationStep(data),
-                new RepositoryCommitStep(data),
-                new JenkinsJobCreationStep(data)
+                new RepositoryCreationStep(data, logger),
+                new RepositoryCheckoutStep(data, logger),
+                new SourceCodeGenerationStep(data, logger),
+                new RepositoryCommitStep(data, logger),
+                new JenkinsJobCreationStep(data, logger),
+                new JiraConfigurationStep(data, logger)
         };
     }
 
@@ -54,7 +46,7 @@ class BootstrapExecutor {
                     "be used once. Please create a new instance.");
         }
 
-        data.log("Initiating project bootstrap for: " +
+        logger.log("Initiating project bootstrap for: " +
                 data.getProject().getName() + ".");
 
         boolean allSuccessful = true;
@@ -65,20 +57,19 @@ class BootstrapExecutor {
         } catch (JanusPluginBootstrapException ex) {
             String msg = "Unexpected project bootstrap failure: " +
                     ex.getMessage();
-            data.log(msg, LogEntry.Type.FAILURE);
-            LOGGER.log(Level.WARNING, msg, ex);
+            logger.log(msg, LogEntry.Type.FAILURE);
             allSuccessful = false;
         }
 
         if (allSuccessful) {
-            data.log("Hooray, successfully finished project bootstrap!",
+            logger.log("Hooray, successfully finished project bootstrap!",
                     LogEntry.Type.SUCCESS);
-            data.setSuccess(true);
+            logger.setSuccess(true);
         } else {
-            data.log("Stopping bootstrap because of previous errors.",
+            logger.log("Stopping bootstrap because of previous errors.",
                     LogEntry.Type.FAILURE);
         }
 
-        return data.getLog();
+        return logger.getLog();
     }
 }

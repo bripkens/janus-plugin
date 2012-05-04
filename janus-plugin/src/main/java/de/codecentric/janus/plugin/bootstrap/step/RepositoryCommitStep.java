@@ -1,12 +1,16 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
+import de.codecentric.janus.plugin.bootstrap.BootstrapLogger;
+import de.codecentric.janus.plugin.bootstrap.ParsedFormData;
+
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
 public class RepositoryCommitStep extends AbstractBuildDependentStep {
 
-    public RepositoryCommitStep(StepExecutionData data) {
-        super(data);
+    public RepositoryCommitStep(ParsedFormData data,
+                                BootstrapLogger logger) {
+        super(data, logger);
     }
 
     @Override

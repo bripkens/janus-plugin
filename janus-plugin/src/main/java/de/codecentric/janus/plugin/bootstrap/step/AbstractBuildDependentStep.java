@@ -1,7 +1,9 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
+import de.codecentric.janus.plugin.bootstrap.BootstrapLogger;
 import de.codecentric.janus.plugin.bootstrap.JanusPluginBootstrapException;
 import de.codecentric.janus.plugin.bootstrap.LogEntry;
+import de.codecentric.janus.plugin.bootstrap.ParsedFormData;
 import hudson.model.Build;
 import hudson.model.Result;
 
@@ -14,8 +16,9 @@ import java.util.concurrent.Future;
  */
 public abstract class AbstractBuildDependentStep extends AbstractBootstrapStep {
 
-    public AbstractBuildDependentStep(StepExecutionData data) {
-        super(data);
+    public AbstractBuildDependentStep(ParsedFormData data,
+                                      BootstrapLogger logger) {
+        super(data, logger);
     }
 
     protected abstract String beforeMessage();
@@ -24,7 +27,7 @@ public abstract class AbstractBuildDependentStep extends AbstractBootstrapStep {
     protected abstract String getBuildJobName();
     
     public boolean execute() {
-        data.log(beforeMessage());
+        logger.log(beforeMessage());
 
         String buildJob = getBuildJobName();
 
@@ -46,12 +49,12 @@ public abstract class AbstractBuildDependentStep extends AbstractBootstrapStep {
         }
 
         if (!executedBuild.getResult().isBetterOrEqualTo(Result.SUCCESS)) {
-            data.log(failMessage(executedBuild.getUrl()),
+            logger.log(failMessage(executedBuild.getUrl()),
                     LogEntry.Type.FAILURE);
             return false;
         }
 
-        data.log(successMessage(), LogEntry.Type.SUCCESS);
+        logger.log(successMessage(), LogEntry.Type.SUCCESS);
         return true;
     }
 }

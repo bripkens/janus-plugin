@@ -84,17 +84,8 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         FormData formData = FormData.parse(req.getSubmittedForm());
         ParsedFormData parsedFormData = isValid(formData);
         if (parsedFormData.getStatus() == ParsedFormData.Status.OK) {
-            Project project = new Project();
-            project.setName(parsedFormData.getName());
-            project.setDescription(parsedFormData.getDescription());
-            project.setPckg(parsedFormData.getPckg());
-
             BootstrapExecutor executor;
-            executor = new BootstrapExecutor(project,
-                    parsedFormData.getVcsConfiguration(),
-                    parsedFormData.getCiConfiguration(),
-                    parsedFormData.getScaffold(),
-                    parsedFormData.getContext());
+            executor = new BootstrapExecutor(parsedFormData);
             Log log = executor.execute();
 
             Flash flash = Flash.getForRequest(req);
@@ -250,9 +241,12 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
                 !isValidDescription(formData.getDescription())) {
             return result;
         }
-        result.setName(formData.getName());
-        result.setDescription(formData.getDescription());
-        result.setPckg(formData.getPckg());
+
+        Project project = new Project();
+        project.setName(formData.getName());
+        project.setDescription(formData.getDescription());
+        project.setPckg(formData.getPckg());
+        result.setProject(project);
         
         VCSConfiguration vcsConfig;
         try {
@@ -269,6 +263,22 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
             return result;
         }
         result.setCiConfiguration(ciConfig);
+
+        JiraConfiguration jiraConfig;
+        try {
+            jiraConfig = getJiraConfig(formData);
+        } catch (IllegalArgumentException ex) {
+            return result;
+        }
+        result.setJiraConfiguration(jiraConfig);
+        result.setJiraGroupName(formData.getJiraGroupName());
+
+        if (!isValidJiraPermissionScheme(jiraConfig,
+                formData.getJiraPermissionScheme())) {
+            return result;
+        }
+        result.setJiraPermissionScheme(formData.getJiraPermissionScheme());
+        result.setJiraUsers(formData.getUsers());
 
         CatalogEntry scaffold;
         try {
@@ -305,6 +315,29 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
 
         throw new IllegalArgumentException("The CI config doesn't exist");
     }
+
+    private JiraConfiguration getJiraConfig(FormData formData) {
+        for (JiraConfiguration config : getValidJiraConfigs()) {
+            if (config.getName().equals(formData.getJiraConfigName())) {
+                return config;
+            }
+        }
+
+        throw new IllegalArgumentException("The JIRA config doesn't exist");
+    }
+
+    private boolean isValidJiraPermissionScheme(JiraConfiguration config,
+                                            String pm) {
+        boolean found = false;
+        for (RemotePermissionScheme scheme : getPermissionSchemes(config)) {
+            if (scheme.getName().equals(pm)) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
+
     
     private CatalogEntry getScaffold(FormData formData) {
         for (CatalogEntry entry : getCatalog().getScaffolds()) {

@@ -15,6 +15,7 @@
 
     <properties>
         <janus.base.version>0.4-SNAPSHOT</janus.base.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>

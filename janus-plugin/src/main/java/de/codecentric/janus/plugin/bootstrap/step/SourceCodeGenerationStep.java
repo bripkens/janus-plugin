@@ -1,6 +1,8 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
+import de.codecentric.janus.plugin.bootstrap.BootstrapLogger;
 import de.codecentric.janus.plugin.bootstrap.LogEntry;
+import de.codecentric.janus.plugin.bootstrap.ParsedFormData;
 import de.codecentric.janus.scaffold.Scaffold;
 import de.codecentric.janus.generation.ScaffoldExecutor;
 
@@ -11,13 +13,14 @@ import java.io.File;
  */
 public class SourceCodeGenerationStep extends AbstractBootstrapStep {
 
-    public SourceCodeGenerationStep(StepExecutionData data) {
-        super(data);
+    public SourceCodeGenerationStep(ParsedFormData data,
+                                    BootstrapLogger logger) {
+        super(data, logger);
     }
 
     @Override
     public boolean execute() {
-        data.log("Generating source code according to scaffold.");
+        logger.log("Generating source code according to scaffold.");
 
         Scaffold scaffold = getScaffold();
         File output = getOutputDir();
@@ -29,7 +32,7 @@ public class SourceCodeGenerationStep extends AbstractBootstrapStep {
 
         executor.apply(output);
 
-        data.log("Successfully generated sources in target directory.",
+        logger.log("Successfully generated sources in target directory.",
                 LogEntry.Type.SUCCESS);
 
         return true;

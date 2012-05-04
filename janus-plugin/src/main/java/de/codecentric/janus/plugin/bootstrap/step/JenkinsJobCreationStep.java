@@ -4,7 +4,9 @@ import de.codecentric.janus.ci.jenkins.JenkinsConfigGenerator;
 import de.codecentric.janus.ci.jenkins.JenkinsProjectCreator;
 import de.codecentric.janus.ci.jenkins.conf.ServiceConfig;
 import de.codecentric.janus.conf.vcs.VCSConfig;
+import de.codecentric.janus.plugin.bootstrap.BootstrapLogger;
 import de.codecentric.janus.plugin.bootstrap.LogEntry;
+import de.codecentric.janus.plugin.bootstrap.ParsedFormData;
 import de.codecentric.janus.scaffold.BuildJob;
 import de.codecentric.janus.scaffold.Scaffold;
 
@@ -17,8 +19,9 @@ public class JenkinsJobCreationStep extends AbstractBootstrapStep {
     private ServiceConfig serviceConfig;
     private Scaffold scaffold;
 
-    public JenkinsJobCreationStep(StepExecutionData data) {
-        super(data);
+    public JenkinsJobCreationStep(ParsedFormData data,
+                                  BootstrapLogger logger) {
+        super(data, logger);
 
         vcsConfig = data.getVcsConfiguration().getVcs().newConfig();
         vcsConfig.setUrl(data.getVcsConfiguration().getCheckoutUrl());
@@ -33,11 +36,11 @@ public class JenkinsJobCreationStep extends AbstractBootstrapStep {
 
     @Override
     public boolean execute() {
-        data.log("Generating Jenkins build jobs according to scaffolds");
+        logger.log("Generating Jenkins build jobs according to scaffolds");
 
         getCreator().create();
 
-        data.log("Successfully added build jobs to Jenkins.",
+        logger.log("Successfully added build jobs to Jenkins.",
                 LogEntry.Type.SUCCESS);
         return true;
     }

@@ -1,6 +1,8 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
 import de.codecentric.janus.plugin.JanusPlugin;
+import de.codecentric.janus.plugin.bootstrap.BootstrapLogger;
+import de.codecentric.janus.plugin.bootstrap.ParsedFormData;
 import de.codecentric.janus.plugin.generation.GenerationConfiguration;
 import de.codecentric.janus.scaffold.Scaffold;
 import hudson.model.Build;
@@ -13,18 +15,20 @@ import java.util.concurrent.Future;
  * @author Ben Ripkens <bripkens.dev@gmail.com>
  */
 public abstract class AbstractBootstrapStep {
-    protected final StepExecutionData data;
+    protected final ParsedFormData data;
+    protected final BootstrapLogger logger;
     protected final GenerationConfiguration generationConfig;
 
-    public AbstractBootstrapStep(StepExecutionData data) {
+    public AbstractBootstrapStep(ParsedFormData data, BootstrapLogger logger) {
         this.data = data;
+        this.logger = logger;
         generationConfig = GenerationConfiguration.get();
     }
 
     public abstract boolean execute();
 
     protected Future<Build> executeJob(String name, Map<String, String> params) {
-        data.log("Scheduling build job '" + name + "' with parameters " +
+        logger.log("Scheduling build job '" + name + "' with parameters " +
                 params);
         return JanusPlugin.scheduleBuild(name, params);
     }
@@ -32,7 +36,7 @@ public abstract class AbstractBootstrapStep {
     protected Scaffold getScaffold() {
         String scaffoldDir;
         scaffoldDir = ensureFileSeparator(generationConfig.getScaffoldDir());
-        String scaffoldFileName = data.getCatalogEntry().getFilename();
+        String scaffoldFileName = data.getScaffold().getFilename();
         return Scaffold.from(new File(scaffoldDir + scaffoldFileName));
     }
 

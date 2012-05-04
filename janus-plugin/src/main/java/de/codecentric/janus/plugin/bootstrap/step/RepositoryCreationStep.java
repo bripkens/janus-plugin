@@ -1,6 +1,8 @@
 package de.codecentric.janus.plugin.bootstrap.step;
 
+import de.codecentric.janus.plugin.bootstrap.BootstrapLogger;
 import de.codecentric.janus.plugin.bootstrap.JanusPluginBootstrapException;
+import de.codecentric.janus.plugin.bootstrap.ParsedFormData;
 import hudson.model.Build;
 import hudson.model.Result;
 
@@ -13,8 +15,9 @@ import java.util.concurrent.Future;
  */
 public class RepositoryCreationStep extends AbstractBuildDependentStep {
 
-    public RepositoryCreationStep(StepExecutionData data) {
-        super(data);
+    public RepositoryCreationStep(ParsedFormData data,
+                                  BootstrapLogger logger) {
+        super(data, logger);
     }
 
     @Override
