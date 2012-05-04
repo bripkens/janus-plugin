@@ -18,7 +18,7 @@
         </f:dropdownList>
 
         <f:entry title="Group"
-                 description="Autocomplete text box. A non-existing group will automatically be created for you."
+                 description="Start typing to search for existing groups. You can either select an existing or non-existing group."
                  field="group">
             <div class='janus-jira-group'>
                 <f:textbox  default="${tempGroup}" />
@@ -28,7 +28,7 @@
 
     <f:section title="Existing users">
         <f:entry title="Email"
-                 description="Autocomplete text box."
+                 description="Free text search for already registered users. In order to add a user, you need type in the email address. For searching, you also use his full name."
                  field="group">
             <div class='janus-jira-user-autocomplete'>
                 <input type='text'/>
@@ -64,7 +64,7 @@
     </f:section>
 
     <f:section title="Added users">
-        <f:entry>
+        <f:entry description='Please make sure to add at least one user. The first user will be configured as the project leader in JIRA.'>
             <ul class='addedUsers'>
             </ul>
         </f:entry>
