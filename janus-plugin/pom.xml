@@ -10,11 +10,11 @@
 
     <groupId>de.codecentric.janus</groupId>
     <artifactId>janus-plugin</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <properties>
-        <janus.base.version>0.4-SNAPSHOT</janus.base.version>
+        <janus.base.version>0.5-SNAPSHOT</janus.base.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
