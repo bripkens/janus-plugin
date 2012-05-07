@@ -7,6 +7,12 @@ achieve a seamless integration with existing company toolsets.
 
 # Version History
 
+## 0.5
+
+ - configuration menu support for JIRA and Confluence (UC-3).
+ - project bootstrap extended with support for automatic JIRA and Confluence
+   configuration (UC-11).
+
 ## 0.4
 
  - configuration menu now supports configuration of continuous integration (CI)
