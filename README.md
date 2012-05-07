@@ -16,7 +16,9 @@ listed in this section. Janus was tested in the following environment:
  - JIRA 5
  - Confluence 4.2
 
-Please make sure that the Mercurial plug-in is installed in Jenkins.
+Please make sure that the Mercurial plug-in is installed in Jenkins. To compile
+Janus and its dependencies you will need [Gradle](http://www.gradle.org/) and
+[Maven](http://maven.apache.org/) as well as JDK >= 1.6.
 
 ## Compilation
 
