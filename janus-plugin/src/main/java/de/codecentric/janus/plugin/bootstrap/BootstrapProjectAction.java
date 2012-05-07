@@ -3,7 +3,9 @@ package de.codecentric.janus.plugin.bootstrap;
 import com.atlassian.confluence.rpc.soap.beans.RemoteUserInformation;
 import com.atlassian.jira.rpc.soap.beans.RemoteGroup;
 import com.atlassian.jira.rpc.soap.beans.RemotePermissionScheme;
+import com.atlassian.jira.rpc.soap.beans.RemoteProject;
 import com.atlassian.jira.rpc.soap.beans.RemoteUser;
+import de.codecentric.janus.atlassian.AtlassianException;
 import de.codecentric.janus.atlassian.jira.JiraClient;
 import de.codecentric.janus.atlassian.jira.JiraSession;
 import de.codecentric.janus.atlassian.model.RemoteGroupSummary;
@@ -37,6 +39,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * @author Ben Ripkens <bripkens.dev@gmail.com>
@@ -44,6 +47,7 @@ import java.util.logging.Logger;
 @Extension
 public class BootstrapProjectAction implements RootAction, AccessControlled {
     public static final String URL = "bootstrap-project";
+    private static final Pattern KEY_PATTERN = Pattern.compile("^[A-Z]+$");
 
     private static final Logger LOGGER = Logger
             .getLogger(BootstrapProjectAction.class.getName());
@@ -175,6 +179,31 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
         return result;
     }
 
+    @JavaScriptMethod
+    public String isValidJIRAProjectKey(String jiraConfigName, String key) {
+        if (GenericValidator.isBlankOrNull(key)) {
+            return "Please provide a key";
+        } else if (!KEY_PATTERN.matcher(key).matches()) {
+            return "The project key is not in the required format (^[A-Z]+$).";
+        }
+
+        try {
+            JiraSession session = getJiraSession(getJiraConfig(jiraConfigName));
+            JiraClient client = new JiraClient(session);
+
+            client.getProject(key);
+
+            session.close();
+            return "Project key already used.";
+        } catch (AtlassianException ex) {
+            if (ex.getMessage().contains("No project could be found")) {
+                return null;
+            }
+
+            throw ex;
+        }
+    }
+
     public String validateNewUsername(JiraClient client, String username) {
         if (GenericValidator.isBlankOrNull(username)) {
             return "Please enter a username.";
@@ -296,6 +325,12 @@ public class BootstrapProjectAction implements RootAction, AccessControlled {
             return result;
         }
         result.setJiraPermissionScheme(formData.getJiraPermissionScheme());
+
+        if (isValidJIRAProjectKey(formData.getJiraConfigName(),
+                formData.getJiraProjectKey()) != null) {
+            return result;
+        }
+        result.setJiraProjectKey(formData.getJiraProjectKey());
 
         if (formData.getUsers().isEmpty()) {
             return result;

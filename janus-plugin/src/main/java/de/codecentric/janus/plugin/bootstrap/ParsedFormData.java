@@ -21,7 +21,7 @@ public class ParsedFormData {
     private Status status;
 
     private Project project;
-    private String jiraGroupName, jiraPermissionScheme;
+    private String jiraGroupName, jiraPermissionScheme, jiraProjectKey;
     private CatalogEntry scaffold;
     private VCSConfiguration vcsConfiguration;
     private CIConfiguration ciConfiguration;
@@ -113,6 +113,14 @@ public class ParsedFormData {
         this.jiraUsers = jiraUsers;
     }
 
+    public String getJiraProjectKey() {
+        return jiraProjectKey;
+    }
+
+    public void setJiraProjectKey(String jiraProjectKey) {
+        this.jiraProjectKey = jiraProjectKey;
+    }
+
     @Override
     public String toString() {
         return "ParsedFormData{" +
@@ -120,6 +128,7 @@ public class ParsedFormData {
                 ", project=" + project +
                 ", jiraGroupName='" + jiraGroupName + '\'' +
                 ", jiraPermissionScheme='" + jiraPermissionScheme + '\'' +
+                ", jiraProjectKey='" + jiraProjectKey + '\'' +
                 ", scaffold=" + scaffold +
                 ", vcsConfiguration=" + vcsConfiguration +
                 ", ciConfiguration=" + ciConfiguration +

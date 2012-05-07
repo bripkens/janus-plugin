@@ -53,8 +53,7 @@ public class JiraConfigurationStep extends AbstractBootstrapStep {
         super(data, logger);
         jiraUsers = new LinkedList<RemoteUser>();
 
-        projectKey = stripAllNonUppercaseLetters(data.getProject().getName())
-                .toUpperCase();
+        projectKey = data.getJiraProjectKey();
     }
 
     @Override
@@ -150,10 +149,6 @@ public class JiraConfigurationStep extends AbstractBootstrapStep {
         project.setLead(jiraUsers.get(0).getName());
 
         jiraProject = jiraClient.createProject(project);
-    }
-
-    private String stripAllNonUppercaseLetters(String str) {
-        return LETTER_PATTERN.matcher(str).replaceAll("");
     }
 
     private void addGroupToDeveloperRole() {

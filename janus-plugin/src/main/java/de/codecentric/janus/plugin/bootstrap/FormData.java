@@ -19,7 +19,8 @@ class FormData {
             .getLogger(FormData.class.getName());
 
     private String name, description, pckg, scaffoldName, vcsConfigName,
-            ciConfigName, jiraGroupName, jiraConfigName, jiraPermissionScheme;
+            ciConfigName, jiraGroupName, jiraConfigName, jiraPermissionScheme,
+            jiraProjectKey;
     private Map<String, String> contextParameters;
     private List<UserFormData> users;
 
@@ -81,6 +82,7 @@ class FormData {
 
     private static void parseJiraParameters(JSONObject formData, FormData result) {
         result.jiraGroupName = formData.getString("group");
+        result.jiraProjectKey = formData.getString("projectKey");
 
         Iterator it = formData.getJSONArray("").iterator();
         while (it.hasNext()) {
@@ -145,6 +147,7 @@ class FormData {
         req.setAttribute("selectedScaffold", scaffoldName);
         req.setAttribute("selectedJira", jiraConfigName);
         req.setAttribute("selectedPermissionScheme", jiraPermissionScheme);
+        req.setAttribute("projectKey", jiraProjectKey);
 
         for (Map.Entry<String, String> entry : contextParameters.entrySet()) {
             req.setAttribute("param-" + entry.getKey(), entry.getValue());
@@ -201,6 +204,10 @@ class FormData {
 
     public List<UserFormData> getUsers() {
         return users;
+    }
+
+    public String getJiraProjectKey() {
+        return jiraProjectKey;
     }
 
     private interface PREFIX {

@@ -9,6 +9,30 @@
 
     /*
      * #######################################################################
+     * PROJECT KEY
+     * #######################################################################
+     */
+    $('.janus-jira-project-key input').each(function () {
+        var element = $(this),
+            errorElement = element.next();
+
+        var validate = function () {
+            action.isValidJIRAProjectKey(getJiraConfigName(element), element.val(), function (resp) {
+                var msg = resp.responseObject();
+                if (msg == null) {
+                    errorElement.fadeOut();
+                } else {
+                    errorElement.text(msg).fadeIn();
+                }
+            });
+        };
+        validate();
+
+        element.change(validate);
+    });
+
+    /*
+     * #######################################################################
      * GROUP SELECTION
      * #######################################################################
      */
@@ -107,7 +131,7 @@
 
         var div = document.createElement('div');
             div.className = 'error';
-            $(div).text('Please add at least one user');
+            $(div).text('Please add at least one user.');
             this.parentNode.appendChild(div);
 
         $(this).on('click', '.remove', function () {
@@ -316,4 +340,22 @@
                 user.newUser);
         }
     }
+
+    /*
+     * #######################################################################
+     * Auto generation of project keys
+     * #######################################################################
+     */
+    var generateProjectKey = function (projectName) {
+        return projectName.replace(/[^a-z]*/ig, '')
+                          .replace(/[aeiou]*/ig, '')
+                          .toUpperCase();
+    };
+
+    $('#janus-name input').change(function() {
+        var projectKeyInput = $('.janus-jira-project-key input:visible');
+        if (projectKeyInput.val() === '') {
+            projectKeyInput.val(generateProjectKey(this.value)).change();
+        }
+    });
 })(window.jQuery, window.underscore);

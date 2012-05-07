@@ -6,6 +6,17 @@
     </f:entry>
 
     <f:section title="Configuration">
+        <f:entry title="Project Key"
+                 description="The project key will be used for JIRA project identification."
+                 field="projectKey">
+            <div class='janus-jira-project-key'>
+                <f:textbox  default="${tempProjectKey}" />
+                <div class="error" style="display: none">
+                    Project keys must only consist of uppercase characters A-Z.
+                </div>
+            </div>
+        </f:entry>
+
         <f:dropdownList name="permissionScheme" title="Permission Scheme">
             <j:forEach var="permissionScheme"
                        items="${it.getPermissionSchemes(jiraConfig)}"
