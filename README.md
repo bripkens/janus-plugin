@@ -5,6 +5,48 @@ This project provides a user interface for the
 interface leverages [Jenkins CI](http://jenkins-ci.org/) as a platform to
 achieve a seamless integration with existing company toolsets.
 
+# Deployment
+
+## Prerequisites
+
+The plug-in may be able to work properly with lower versions than the ones
+listed in this section. Janus was tested in the following environment:
+
+ - Jenkins 1.452
+ - JIRA 5
+ - Confluence 4.2
+
+Please make sure that the Mercurial plug-in is installed in Jenkins.
+
+## Compilation
+
+    # First, dependencies need to be installed locally.
+    wget -O janus.tar.gz https://github.com/bripkens/janus/tarball/master
+    tar xfz janus.tar.gz
+    cd bripkens-janus-*
+    gradle check install
+    cd ..
+    rm -rf janus.tar.gz bripkens-janus-*
+
+    # Now the actual plug-in can be compiled.
+    wget -O janus-plugin.tar.gz https://github.com/bripkens/janus-plugin/tarball/master
+    tar xfz janus-plugin.tar.gz
+    cd bripkens-janus-plugin-*
+
+    # Make sure to skip the tests to avoid integration test execution
+    mvn package -DskipTests
+
+## Installation
+
+Go to your Jenkins installation plug-in administration page. This page is
+accessible through `Manage Jenkins -> Manage Plugins -> Advanced`. The right
+location can typically be verified by inspecting the URL - the URL should end
+with `pluginManager/advanced`.
+
+On this page, upload the plug-in manually by selecting the result of the
+previous compilation step. The plug-in file is located at
+`janus-plugin/target/janus-plugin.hpi`.
+
 # Version History
 
 ## 0.5
