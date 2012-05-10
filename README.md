@@ -19,6 +19,10 @@ listed in this section. Janus was tested in the following environment:
 Please make sure that the Mercurial plug-in is installed in Jenkins. To compile
 Janus and its dependencies you will need [Gradle](http://www.gradle.org/) and
 [Maven](http://maven.apache.org/) as well as JDK >= 1.6.
+[JIRA](http://confluence.atlassian.com/display/JIRA042/JIRA+XML-RPC+Overview)
+and [Confluence](http://confluence.atlassian.com/display/DOC/Enabling+the+Remote+API)
+SOAP and REST web services need to be activated in the applications'
+administration menus.
 
 ## Compilation
 
@@ -48,6 +52,16 @@ with `pluginManager/advanced`.
 On this page, upload the plug-in manually by selecting the result of the
 previous compilation step. The plug-in file is located at
 `janus-plugin/target/janus-plugin.hpi`.
+
+## Configuration
+Once the plug-in is installed, you need to configure Janus before you can use
+it. In Jenkins' standard configuration menu (`Manage Jenkins ->
+Configure System`), you can configure all Janus parts. In this menu and next
+to each configuration option, you will find additional information which
+further guides you through the configuration process. After configuration,
+you can select the `Bootstrap Project` option from Jenkins' main menu to use
+Janus.
+
 
 # Version History
 
