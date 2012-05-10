@@ -124,6 +124,7 @@
         '<%=fullName%>' +
         '<span class=\'email\'><%=email%></span>' +
         '<span class=\'remove\'>x</span>' +
+        '<% if (newUser === true) { %><span class=\'new-user\'>New User</span><% } %>' +
         '<input type=\'hidden\' name=\'_.userFullName\' value=\'<%=fullName%>\'/>' +
         '<input type=\'hidden\' name=\'_.userUsername\' value=\'<%=username%>\'/>' +
         '<input type=\'hidden\' name=\'_.userEmail\' value=\'<%=email%>\'/>' +

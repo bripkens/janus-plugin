@@ -48,9 +48,12 @@ public class JiraConfigurationStep extends AbstractBootstrapStep {
 
     private static final Pattern LETTER_PATTERN = Pattern.compile("(?i)[^a-z]*");
     private static final SpacePermission[] DEFAULT_SPACE_PERMISSIONS = new SpacePermission[] {
+            SpacePermission.VIEW,
+            SpacePermission.CREATE_PAGE,
+            SpacePermission.EXPORT_PAGE,
+            SpacePermission.CREATE_NEWS,
             SpacePermission.COMMENT,
-            SpacePermission.CREATE_ATTACHMENT,
-            SpacePermission.CREATE_NEWS
+            SpacePermission.CREATE_ATTACHMENT
     };
 
     private final String projectKey;
@@ -77,8 +80,6 @@ public class JiraConfigurationStep extends AbstractBootstrapStep {
         logger.log("Configuring Jira and Confluence");
 
         try {
-            //printDebug();
-
             establishConnections();
 
             addUsers();
@@ -90,6 +91,7 @@ public class JiraConfigurationStep extends AbstractBootstrapStep {
             addSpaceToConfluence();
             removeAnonymousAccessRights();
             addGroupToSpace();
+            authorizeProjectLeader();
         } catch (AtlassianException ex) {
             logger.log("Jira and Confluence configuration failed.",
                     Type.FAILURE);
@@ -202,6 +204,16 @@ public class JiraConfigurationStep extends AbstractBootstrapStep {
                 key = confluenceSpace.getKey();
         for (SpacePermission permission : DEFAULT_SPACE_PERMISSIONS) {
             confluenceClient.addPermissionToSpace(permission, groupName, key);
+        }
+    }
+
+    private void authorizeProjectLeader() {
+        String leader = jiraUsers.get(0).getName(),
+            spaceKey = confluenceSpace.getKey();
+        logger.log("Authorizing project leader '" + leader + "'.");
+
+        for (SpacePermission permission : SpacePermission.values()) {
+            confluenceClient.addPermissionToSpace(permission, leader, spaceKey);
         }
     }
 
