@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Janus-plugin : A Janus plugin for Jenkins" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Janus-plugin</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/bripkens/janus-plugin">View on GitHub</a>
+
+          <h1 id="project_title">Janus-plugin</h1>
+          <h2 id="project_tagline">A Janus plugin for Jenkins</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/bripkens/janus-plugin/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/bripkens/janus-plugin/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>A Simple Jenkins Based Janus Interface</h1>
+
+<p>This project provides a user interface for the
+<a href="https://github.com/bripkens/janus">Janus application</a>. The user
+interface leverages <a href="http://jenkins-ci.org/">Jenkins CI</a> as a platform to
+achieve a seamless integration with existing company toolsets.</p>
+
+<h1>Deployment</h1>
+
+<h2>Prerequisites</h2>
+
+<p>The plug-in may be able to work properly with lower versions than the ones
+listed in this section. Janus was tested in the following environment:</p>
+
+<ul>
+<li>Jenkins 1.452</li>
+<li>JIRA 5</li>
+<li>Confluence 4.2</li>
+</ul><p>Please make sure that the Mercurial plug-in is installed in Jenkins. To compile
+Janus and its dependencies you will need <a href="http://www.gradle.org/">Gradle</a> and
+<a href="http://maven.apache.org/">Maven</a> as well as JDK &gt;= 1.6.
+<a href="http://confluence.atlassian.com/display/JIRA042/JIRA+XML-RPC+Overview">JIRA</a>
+and <a href="http://confluence.atlassian.com/display/DOC/Enabling+the+Remote+API">Confluence</a>
+SOAP and REST web services need to be activated in the applications'
+administration menus.</p>
+
+<h2>Compilation</h2>
+
+<pre><code># First, dependencies need to be installed locally.
+wget -O janus.tar.gz https://github.com/bripkens/janus/tarball/master
+tar xfz janus.tar.gz
+cd bripkens-janus-*
+gradle check install
+cd ..
+rm -rf janus.tar.gz bripkens-janus-*
+
+# Now the actual plug-in can be compiled.
+wget -O janus-plugin.tar.gz https://github.com/bripkens/janus-plugin/tarball/master
+tar xfz janus-plugin.tar.gz
+cd bripkens-janus-plugin-*
+
+# Make sure to skip the tests to avoid integration test execution
+mvn package -DskipTests
+</code></pre>
+
+<h2>Installation</h2>
+
+<p>Go to your Jenkins installation plug-in administration page. This page is
+accessible through <code>Manage Jenkins -&gt; Manage Plugins -&gt; Advanced</code>. The right
+location can typically be verified by inspecting the URL - the URL should end
+with <code>pluginManager/advanced</code>.</p>
+
+<p>On this page, upload the plug-in manually by selecting the result of the
+previous compilation step. The plug-in file is located at
+<code>janus-plugin/target/janus-plugin.hpi</code>.</p>
+
+<h2>Configuration</h2>
+
+<p>Once the plug-in is installed, you need to configure Janus before you can use
+it. In Jenkins' standard configuration menu (<code>Manage Jenkins -&gt;
+Configure System</code>), you can configure all Janus parts. In this menu and next
+to each configuration option, you will find additional information which
+further guides you through the configuration process. After configuration,
+you can select the <code>Bootstrap Project</code> option from Jenkins' main menu to use
+Janus.</p>
+
+<h1>Version History</h1>
+
+<h2>0.5</h2>
+
+<ul>
+<li>configuration menu support for JIRA and Confluence (UC-3).</li>
+<li>project bootstrap extended with support for automatic JIRA and Confluence
+configuration (UC-11).</li>
+</ul><h2>0.4</h2>
+
+<ul>
+<li>configuration menu now supports configuration of continuous integration (CI)
+systems (UC-2).</li>
+<li>VCS configuration was extended with a new option <em>checkout URL</em>, i.e., a
+URL which can be used by a continuous integration system to check out
+source code (UC-2).</li>
+<li>in the project bootstrap view a configured CI system can be selected
+(currently only Jenkins CI) which will then be used as the target CI for
+the build jobs (UC-10).</li>
+</ul><h2>0.3</h2>
+
+<ul>
+<li>integration test harness using jBehave and Selenium 2.</li>
+<li>additional configuration options to locate the scaffold catalog, the general
+scaffold directory as well as a working directory (UC-5).</li>
+<li>new view to bootstrap projects. It initiallity supports repository creation
+and application of project scaffolds. The bootstrap results are shown in
+form of a log (UC-9).</li>
+</ul><h2>0.2</h2>
+
+<ul>
+<li>configuration dialog overhauled with proper validation and addition of
+multiple version control systems (UC-1).</li>
+<li>view to create new repositories (UC-7).</li>
+</ul><h2>0.1</h2>
+
+<ul>
+<li>initial project structure.</li>
+<li>basic configuration dialog.</li>
+</ul><h1>License</h1>
+
+<p>Copyright (C) 2012 codecentric AG, Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Janus-plugin maintained by <a href="https://github.com/bripkens">bripkens</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
