@@ -5,6 +5,13 @@ This project provides a user interface for the
 interface leverages [Jenkins CI](http://jenkins-ci.org/) as a platform to
 achieve a seamless integration with existing company toolsets.
 
+# Integration Test Configuration
+
+JIRA and Confluence need to be running for the integration tests. Both should
+share the user database and accessible over locahost. JIRA should be running
+under localhost:47623 and Confluence under localhost:47624. The admin account
+should have the name `janustestadmin` with password `janusRocks`.
+
 # Deployment
 
 ## Prerequisites

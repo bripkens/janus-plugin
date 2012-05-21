@@ -4,7 +4,7 @@
     <f:section title="Janus JIRA and Confluence System Configuration">
         <f:entry title="Jira and Confluence"
                  description="List of JIRA and Confluence systems which can be configured using the Janus application.">
-            <a class="janusCIConfig"></a>
+            <a class="janusJiraConfig"></a>
             <f:repeatable var="inst" field="configurations">
                 <table width="100%">
                     <f:entry title="Name"

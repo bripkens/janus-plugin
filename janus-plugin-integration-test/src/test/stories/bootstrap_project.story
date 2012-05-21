@@ -35,7 +35,7 @@ Given a clean Jenkins installation
 And a build <creationBuild>
 And a build <checkoutBuild>
 And a build <commitBuild>
-And a VCS configuration <name> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>
+And a VCS configuration <vcsName> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>
 And a configured scaffold directory <scaffoldDir> and catalog <catalog> and working directory <tmpDir>
 
 When the project bootstrap page is accessed
@@ -47,6 +47,23 @@ Examples:
 | OurDetaultVCS | MERCURIAL | creationBuild | checkoutBuild   | commitBuild | ./src/test/resources/scaffolds | ./src/test/resources/catalog.json | ./target/applied-scaffolds |
 
 
+Scenario: Jenkins contains no JIRA configuration
+
+Given a clean Jenkins installation
+And a build <creationBuild>
+And a build <checkoutBuild>
+And a build <commitBuild>
+And a VCS configuration <vcsName> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>
+And a configured scaffold directory <scaffoldDir> and catalog <catalog> and working directory <tmpDir>
+And a CI configuration <ciName> is added with the default integration test user data
+
+When the project bootstrap page is accessed
+
+Then an invalid configuration error message is shown
+
+Examples:
+| vcsName       | type      | creationBuild | checkoutBuild   | commitBuild | scaffoldDir                    | catalog                           | tmpDir                     |
+| OurDetaultVCS | MERCURIAL | creationBuild | checkoutBuild   | commitBuild | ./src/test/resources/scaffolds | ./src/test/resources/catalog.json | ./target/applied-scaffolds |
 
 
 Scenario: Project bootstrap available scaffolds
@@ -58,6 +75,7 @@ And a build <commitBuild>
 And a VCS configuration <vcsName> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>
 And a configured scaffold directory <scaffoldDir> and catalog <catalog> and working directory <tmpDir>
 And a CI configuration <ciName> is added with the default integration test user data
+And a JIRA configuration training is added with the default integration test configuration
 
 When the project bootstrap page is accessed
 
@@ -71,6 +89,7 @@ Examples:
 
 
 
+
 Scenario: Project bootstrap
 
 Given a clean Jenkins installation
@@ -80,6 +99,7 @@ And a build <commitBuild>
 And a VCS configuration <vcsName> is added with <type> and builds <creationBuild>, <checkoutBuild> and <commitBuild>
 And a CI configuration <ciName> is added with the default integration test user data
 And the Janus generation is configured
+And a JIRA configuration training is added with the default integration test configuration
 
 When a project <projectName> with package <package> and VCS <vcsName> is bootstrapped
 

@@ -91,4 +91,20 @@ public class Config {
     public static String getDefaultApiToken() {
         return getString("auth.apiToken");
     }
+
+    public static String getDefaultJiraUsername() {
+        return getString("jira.username");
+    }
+
+    public static String getDefaultJiraPassword() {
+        return getString("jira.password");
+    }
+
+    public static String getDefaultJiraUrl() {
+        return getString("jira.url");
+    }
+
+    public static String getDefaultConfluenceUrl() {
+        return getString("confluence.url");
+    }
 }

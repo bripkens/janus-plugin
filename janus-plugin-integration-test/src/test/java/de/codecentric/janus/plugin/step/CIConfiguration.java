@@ -82,7 +82,7 @@ public class CIConfiguration extends AbstractStep {
     * ############################
     */
     private WebElement getAddCIConfigButton() {
-        return findByCSS(CSS_SELECTOR.ADD_VCS_CONFIG_BUTTON);
+        return findByCSS(CSS_SELECTOR.ADD_CI_CONFIG_BUTTON);
     }
 
     private WebElement getNameInputField() {
@@ -102,7 +102,7 @@ public class CIConfiguration extends AbstractStep {
     }
 
     public static interface CSS_SELECTOR {
-        String ADD_VCS_CONFIG_BUTTON = ".janusCIConfig + div .repeatable-add " +
+        String ADD_CI_CONFIG_BUTTON = ".janusCIConfig + div .repeatable-add " +
                 "button";
 
         String REPEATED_CHUNK_SELECTOR = ".janusCIConfig + div .repeated-chunk";

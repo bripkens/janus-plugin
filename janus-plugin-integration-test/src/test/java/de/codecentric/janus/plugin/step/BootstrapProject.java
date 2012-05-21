@@ -233,7 +233,7 @@ public class BootstrapProject extends AbstractStep {
     }
 
     public Select getScaffoldSelectField() {
-        return findAllSelectsByCSS(CSS_SELECTOR.SCAFFOLD_SELECT_BOX).get(2);
+        return findAllSelectsByCSS(CSS_SELECTOR.SCAFFOLD_SELECT_BOX).get(4);
     }
 
     public WebElement getScaffoldDescriptionDIV() {
